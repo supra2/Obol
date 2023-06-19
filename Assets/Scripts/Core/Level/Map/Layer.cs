@@ -14,7 +14,7 @@ public class Layer : ScriptableObject
     [SerializeField]
     protected MapCells[,] _mcells;
     [SerializeField]
-    protected MapCells[,] _depth;
+    protected int _depth;
     #endregion
 
     #region Getters

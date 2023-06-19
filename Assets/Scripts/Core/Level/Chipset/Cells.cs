@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Cells : ScriptableObject,IDisplayable
+public class Cells : ScriptableObject
 {
 
     #region Inner Type
@@ -11,7 +10,6 @@ public class Cells : ScriptableObject,IDisplayable
     #endregion
 
     #region Members
-
     [Flags]
     public enum CelluleType
     {
@@ -43,9 +41,22 @@ public class Cells : ScriptableObject,IDisplayable
     protected CelluleType celluleType;
     #endregion
 
-
     #region Getter
-    protected GetSprite()
+    //----------------------------------------------------------
+
+    /// <summary>
+    /// get sprite 
+    /// </summary>
+    /// <returns></returns>
+    protected Sprite GetSprite()
+    {
+
+        //Time.deltaTime 
+        //return;
+        throw new NotImplementedException();
+    }
+
+    //----------------------------------------------------------
     #endregion
 
 }

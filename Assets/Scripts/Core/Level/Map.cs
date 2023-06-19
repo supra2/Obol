@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(menuName = "LevelsData/Map")]
-public class Map : ScriptableObject,IDisplayable,IEnumerable<Layer>
+public class Map : ScriptableObject,IEnumerable<Layer>
 {
 
     #region Members

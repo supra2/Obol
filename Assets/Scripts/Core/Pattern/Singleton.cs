@@ -7,12 +7,12 @@ public class Singleton<T> : MonoBehaviour where T:UnityEngine.Object
 
     #region Members
     #region Hidden
-    protected T _instance;
+    protected static T _instance;
     #endregion
     #endregion
 
     #region Getter
-    public T Instance
+    public static T Instance
     {
         get
         {
