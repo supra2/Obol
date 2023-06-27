@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class Deck<T> : MonoBehaviour where T : ICard
+public class Deck<T>  where T : ICard
 {
 
     #region members
@@ -11,6 +11,15 @@ public class Deck<T> : MonoBehaviour where T : ICard
     protected List<T> _cards;
     protected int nbShuffle = 1000;
     #endregion
+    public Deck()
+    {
+        _cards = new List<T>();
+    }
+
+    public Deck( List<T> cards)
+    {
+        _cards = cards;
+    }
 
     #region methods
     public void Shuffle()

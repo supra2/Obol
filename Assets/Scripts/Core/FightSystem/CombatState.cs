@@ -1,13 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class InitalState : ICombatState
 {
-    
+
+
+    #region Members 
+    #region Hidden 
+    /// <summary>
+    /// Keep count of the nbchar already resolved
+    /// for continuous effect to resolve
+    /// </summary>
+    protected int nbCharResolved;
+    #endregion
+    #endregion
+
+    #region Methods
     public void Start(CombatVar var)
     {
-        switch ( var.FightInitiative)
+        switch ( var.FightInitiative )
         {
             case CombatVar.Initiative.Normal:
                 break;
@@ -18,27 +30,27 @@ public class InitalState : ICombatState
                 }
                 break;
             case CombatVar.Initiative.Surprised:
-                foreach (Characters characters in var.Party)
-                {
-                    characters.Discard(1);
-                }
+                nbCharResolved = 0;
                 break;
         }
     }
 
-    public void Exec(CombatVar vars)
+    public void Exec(CombatVar var)
     {
-        throw new System.NotImplementedException();
+        switch (var.FightInitiative)
+        {
+            case CombatVar.Initiative.Surprised:
+                
+                break;
+        }
+            
     }
 
     public void Stop(CombatVar vars)
     {
-        throw new System.NotImplementedException();
+     
     }
 
-    public ICombatState GetNextState()
-    {
-        throw new System.NotImplementedException();
-    }
+    #endregion
 
-}
+}*/

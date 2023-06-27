@@ -6,14 +6,14 @@ public class PlayerController : MonoBehaviour
 {
 
     #region members
-    protected List<Characters> _characters;
+    protected List<Character> _characters;
     #endregion
 
     #region Debug
     public void Generate_StartTeam()
     {
-        _characters = new List<Characters>();
-        Characters character = new Characters();
+        _characters = new List<Character>();
+        Character character = new Character();
         
         _characters.Add(character);
     }

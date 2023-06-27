@@ -7,12 +7,14 @@ using UnityEngine;
 public class CombatVar : MonoBehaviour
 {
 
+    #region Initiative
     public enum Initiative
     {
         Normal,
         Opportunity,
         Surprised
     }
+    #endregion
 
     #region Members
     [SerializeField]
@@ -22,26 +24,52 @@ public class CombatVar : MonoBehaviour
     [SerializeField]
     protected List<Adversaire> _adversaires;
     [SerializeField]
-    protected List<Characters> _party;
+    protected List<Character> _party;
+    [SerializeField]
+    protected int  _nbturn;
     #endregion
 
     #region Getters
     /// <summary>
     /// Getter: illumination Value for the fight 
     /// </summary>
-    public int LightValue => _lightValue;
+    public int LightValue
+    {
+        get => _lightValue;
+        set => _lightValue = value;
+    }
+
     /// <summary>
     /// Getter for Initiative type
     /// </summary>
-    public Initiative  FightInitiative => _initiative;
+    public Initiative FightInitiative
+    {
+        get => _initiative;
+        set => _initiative = value;
+    }
     /// <summary>
     /// Adversaires
     /// </summary>
-    public List<Adversaire> Adversaires => _adversaires;
+    public List<Adversaire> Adversaires {
+        get => _adversaires;
+        set => _adversaires = value;
+    }
     /// <summary>
     /// Heroes party
     /// </summary>
-    public List<Characters> Party => _party;   
+    public List<Character> Party
+    {
+        get => _party;
+        set => _party = value;
+    }
+    /// <summary>
+    ///number of turn already spent in fight
+    /// </summary>
+    public int NbTurn
+    {
+        get => _nbturn;
+        set => _nbturn = value;
+    }
     #endregion
 
-}
+    }

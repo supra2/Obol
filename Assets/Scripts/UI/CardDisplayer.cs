@@ -12,9 +12,9 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
     public enum CardMode
     {
         NotInteractable,
-        Display_Library,
         Display_Hand,
-        Pickable
+        Pickable,
+        Playable
     }
     #endregion
 
@@ -29,8 +29,8 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
     [SerializeField]
     protected Color _colorSelected;
     
-    public Characters.UnityCardEvent CardPicked;
-    public Characters.UnityCardEvent CardUnpicked;
+    public UnityCardEvent CardPicked;
+    public UnityCardEvent CardUnpicked;
     #endregion
     #region hidden
     protected CardMode _currentMode;

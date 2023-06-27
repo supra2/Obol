@@ -10,6 +10,5 @@ public interface ICombatState
 
     public void Stop(CombatVar vars);
 
-    public ICombatState GetNextState();
 
 }

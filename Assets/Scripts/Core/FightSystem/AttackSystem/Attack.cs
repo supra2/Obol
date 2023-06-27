@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Attack", menuName = "Obol/Characters/Attack", order = 2)]
-public class Attack : MonoBehaviour
+public class Attack : ScriptableObject
 {
 
     #region members
@@ -15,6 +15,9 @@ public class Attack : MonoBehaviour
     protected string _effect;
     [SerializeField]
     protected Sprite _illustration;
+    [SerializeField]
+    protected int _stamina;
+
     #endregion
 
 

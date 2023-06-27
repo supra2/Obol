@@ -9,10 +9,10 @@ public class HandDisplayer : MonoBehaviour
 
     #region members
     [SerializeField]
-    protected Characters character;
+    protected Character character;
 
     [SerializeField]
-    protected List<CardDisplayer> _handDisplayers;
+    protected List<CardDisplayer> _cardDisplayers;
 
     [SerializeField]
     protected Vector3 offset = new Vector3(0, 0.3f, 0f);
@@ -30,13 +30,13 @@ public class HandDisplayer : MonoBehaviour
     /// </summary>
     public void Init()
     {
-        if (_handDisplayers == null)
+        if (_cardDisplayers == null)
         {
-            _handDisplayers = new List<CardDisplayer>();
+            _cardDisplayers = new List<CardDisplayer>();
         }
         else
         {
-            _handDisplayers.Clear();
+            _cardDisplayers.Clear();
         }
     }
 
@@ -52,7 +52,7 @@ public class HandDisplayer : MonoBehaviour
 
         RectTransform rt = transform as RectTransform;
         Vector3 position = rt.position;
-        int nbCardInHand = _handDisplayers.Count;
+        int nbCardInHand = _cardDisplayers.Count;
         List<Task> tasks = new List<Task>();
         for (int i = 0; i < nbCardInHand; i++)
         {
@@ -61,8 +61,8 @@ public class HandDisplayer : MonoBehaviour
             Quaternion newRotation = Quaternion.AngleAxis(angleCard, Vector3.forward);
             if (i < nbCardInHand - 1)
             {
-                tasks.Add(_handDisplayers[i].Replace(
-                (_handDisplayers[i].transform as RectTransform).position
+                tasks.Add(_cardDisplayers[i].Replace(
+                (_cardDisplayers[i].transform as RectTransform).position
                     = position + newRotation * offset, newRotation, 0.1f));
             }
             else
@@ -73,7 +73,8 @@ public class HandDisplayer : MonoBehaviour
             }
         }
         Task.WaitAll(tasks.ToArray());
-        _handDisplayers.Add(cardDisplayer);
+        _cardDisplayers.Add(cardDisplayer);
+        cardDisplayer.ChangeMode(CardDisplayer.CardMode.Display_Hand);
     }
 
     //_______________________________________________________
@@ -82,7 +83,7 @@ public class HandDisplayer : MonoBehaviour
     /// Discard i card from hand
     /// </summary>
     /// <param name="nbcard">number of card to select </param>
-    public async void DiscardCard(int nbcard)
+    public void DiscardCard(int nbcard)
     {
 
         //first of all check if the nbcard not superior to the total of 
@@ -90,16 +91,11 @@ public class HandDisplayer : MonoBehaviour
         // Todo: UI INSTRUCTION DISCLAIMING THE REMAINING CARD TO PICK
         selection = new CardDisplayer[nbcard];
         selectionSize = 0;
-        foreach ( CardDisplayer cd in _handDisplayers )
+        foreach ( CardDisplayer cd in _cardDisplayers )
         {
             cd.ChangeMode( CardDisplayer.CardMode.Pickable );
             cd.CardPicked.AddListener( SelectCard);
             cd.CardUnpicked.AddListener(DeselectCard);
-        }
-        // Todo : add user validation
-        while (selectionSize > 3 )
-        {
-            await Task.Delay(10);
         }
 
     }
@@ -108,13 +104,34 @@ public class HandDisplayer : MonoBehaviour
 
     public void SelectCard(ICard card)
     {
-        int index =_handDisplayers.FindIndex(x=> x == card);
-        if( index != -1)
+        int index = _cardDisplayers.FindIndex(x => x == card);
+        if (index != -1)
         {
-            selection[selectionSize] = _handDisplayers[index];
+            selection[selectionSize] = _cardDisplayers[index];
             selectionSize++;
         }
     }
+
+    //_______________________________________________________
+
+    public void PlayCardMode()
+    {
+        foreach (CardDisplayer cd in _cardDisplayers)
+        {
+            cd.ChangeMode(CardDisplayer.CardMode.Playable);
+        }
+    }
+
+    //_______________________________________________________
+
+    public void StopPlayCardMode( )
+    {
+        foreach (CardDisplayer cd in _cardDisplayers)
+        {
+            cd.ChangeMode(CardDisplayer.CardMode.Display_Hand);
+        }
+    }
+
     //_______________________________________________________
 
     public void DeselectCard(ICard card)
@@ -134,6 +151,8 @@ public class HandDisplayer : MonoBehaviour
         }
         selectionSize--;
     }
+
     //_______________________________________________________
     #endregion
+
 }
