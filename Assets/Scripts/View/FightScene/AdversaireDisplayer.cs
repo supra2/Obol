@@ -1,22 +1,81 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class AdversaireDisplayer : MonoBehaviour
+/// <summary>
+/// Adversaire Displayer
+/// </summary>
+public class AdversaireDisplayer : MonoBehaviour, IPointerUpHandler
 {
+
+    #region Enum 
+    public enum AdversaireDisplayerMode
+    {
+        Neutral,
+        Selection
+    }
+    #endregion
 
     #region Members
     #region Visible
+    /// <summary>
+    /// inner Adversaire Data class
+    /// </summary>
     [SerializeField]
-    protected Adversaire _adversaire;
+    protected Core.FightSystem.Adversaire _adversaire;
+    /// <summary>
+    /// Image displaying adversaire Illustration
+    /// </summary>
     [SerializeField]
-    protected Sprite _sprite;
+    protected Image _image;
+    #endregion
+    #region Hidden 
+    protected AdversaireDisplayerMode _currentMode;
+    protected bool _picked;
     #endregion
     #endregion
 
-    protected void Awake()
+    #region Event
+    public UnityCharacterEvent _onAdversairePicked;
+    #endregion
+
+    #region Getter
+    public Core.FightSystem.Adversaire Adversaire
     {
-        _sprite = _adversaire.Illustration;
+        get => _adversaire;
+        set
+        {
+            _adversaire = value;
+            _image.sprite = _adversaire.Illustration;
+        }
     }
+    #endregion
+
+    #region Public Methods
+
+    public void SetMode( AdversaireDisplayerMode newmode )
+    {
+        switch (newmode)
+        {
+            case AdversaireDisplayerMode.Selection:
+                _picked = false;
+                break;
+        }
+        _currentMode = newmode;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (_currentMode == AdversaireDisplayerMode.Selection)
+        {
+
+            _picked = !_picked;
+            _onAdversairePicked?.Invoke(_adversaire);
+        }
+    }
+
+    #endregion
 
 }

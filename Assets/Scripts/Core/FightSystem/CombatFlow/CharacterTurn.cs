@@ -6,6 +6,7 @@ namespace Core.FightSystem.CombatFlow
 {
     public class CharacterTurn : ICommand
     {
+
         #region members
          protected bool turnEnded;
         /// <summary>
@@ -16,11 +17,15 @@ namespace Core.FightSystem.CombatFlow
         /// character turn
         /// </summary>
         protected FightingCharacter _character;
+        /// <summary>
+        /// Turn is Ended
+        /// </summary>
+        protected bool _turnEnded;
         #endregion
 
         #region Initialisation 
 
-        public CharacterTurn(FightingCharacter character,int nbTurn)
+        public CharacterTurn( FightingCharacter character , int nbTurn )
         {
             _character = character;
             _nbTurn = nbTurn;
@@ -29,12 +34,13 @@ namespace Core.FightSystem.CombatFlow
         #endregion
         
         #region ICommand Interface Implementation
+
         public void Execute()
         {
             if (_nbTurn != 0)
-                _character.Draw(1);
+                _character.Draw( 1 );
 
-            _character.StartTurn();
+            _character.StartTurn( );
             _character.OnTurnEnded.AddListener(OnEndTurn);
             turnEnded = false;
             while (!turnEnded) ;
@@ -50,10 +56,18 @@ namespace Core.FightSystem.CombatFlow
         {
             if(_character == character)
             { 
-            _character.OnTurnEnded.RemoveListener(OnEndTurn);
-            turnEnded = true;
+                 _character.OnTurnEnded.RemoveListener( OnEndTurn );
+                turnEnded = true;
             }
         }
+
+        public bool IsCommandEnded()
+        {
+            return _turnEnded;
+        }
+
         #endregion
+
     }
+
 }

@@ -8,6 +8,9 @@ namespace Core.FightSystem.AttackSystem
 {
     public interface IEffect
     {
+        public  void CreateFromLine(string[] words);
+
         public void Apply(ITargetable itargetable);
+
     }
 }

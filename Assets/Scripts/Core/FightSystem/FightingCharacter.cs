@@ -1,8 +1,10 @@
 using Core.CardSystem;
+using Core.FightSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class FightingCharacter : MonoBehaviour
 {
 
@@ -11,12 +13,12 @@ public class FightingCharacter : MonoBehaviour
     [SerializeField]
     protected HandDisplayer _displayer;
     [SerializeField]
-    protected Button  _skipTurn;
+    protected Button _skipTurn;
     [SerializeField]
     protected Button _fleeFight;
     #endregion
     #region Hidden
-    protected Character _character;
+    protected PlayableCharacter _character;
     // Hand of cards in combat
     protected List<PlayerCard> _hand;
     // Deck ( card not drawed
@@ -39,7 +41,7 @@ public class FightingCharacter : MonoBehaviour
     #endregion
 
     #region Getter
-    public Character Character=> _character;
+    public PlayableCharacter Character => _character;
     public bool Active
     {
         get => _active;
@@ -60,11 +62,10 @@ public class FightingCharacter : MonoBehaviour
         _deck = new Deck<PlayerCard>();
     }
 
-    public void Setup( Character character )
+    public void Setup(PlayableCharacter character)
     {
-
         _character = character;
-        _deck  = new Deck<PlayerCard>(_character.CardList);
+        _deck = new Deck<PlayerCard>(_character.CardList);
         _deck.Shuffle();
         _hand.Clear();
     }
@@ -78,6 +79,7 @@ public class FightingCharacter : MonoBehaviour
         _displayer.PlayCardMode();
         _skipTurn.interactable = true;
     }
+
 
     public void EndTurn()
     {
@@ -103,6 +105,11 @@ public class FightingCharacter : MonoBehaviour
     public void Flee()
     {
         //TODO implement
+    }
+
+    public void PlayTargetedAttack( )
+    {
+      //  monsters.
     }
 
     #endregion

@@ -9,5 +9,8 @@ namespace Core.FightSystem.CombatFlow
     public interface ICommand
     {
         public void Execute();
+
+        public bool IsCommandEnded();
+
     }
 }

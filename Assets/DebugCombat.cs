@@ -5,17 +5,23 @@ using UnityEngine;
 public class DebugCombat : MonoBehaviour
 {
 
+    #region Members
+    #region Visible
     [SerializeField]
     protected CombatManager _combatManager;
 
     [SerializeField]
-    protected List<Character> _heroParty;
+    protected List<Core.FightSystem.PlayableCharacter> _heroParty;
 
     [SerializeField]
-    protected List<Adversaire> _adversaires;
+    protected List<Core.FightSystem.Adversaire> _adversaires;
 
     [SerializeField]
     protected CombatVar.Initiative _initState;
+    #endregion
+    #endregion
+
+    #region Initialisation
 
     public void Awake()
     {
@@ -25,4 +31,7 @@ public class DebugCombat : MonoBehaviour
         combat.FightInitiative = _initState;
         _combatManager.StartCombat(combat);
     }
+
+    #endregion
+
 }

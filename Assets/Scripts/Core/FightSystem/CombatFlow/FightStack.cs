@@ -16,6 +16,10 @@ public class FightStack : MonoBehaviour
     /// Command Execution Thread
     /// </summary>
     protected Thread _commandThread ;
+    /// <summary>
+    /// Command Execution Thread
+    /// </summary>
+    protected ICommand _command;
     #endregion
 
     #region Initialisation
@@ -47,11 +51,15 @@ public class FightStack : MonoBehaviour
 
     public void Run()
     {
-        while (_commandStack.Count == 0)
+        while ( _commandStack.Count == 0 )
         {
             Thread.Sleep(10);
         };
-        DepileAction();
+        if( _command == null || _command.IsCommandEnded() )
+        {
+            DepileAction();
+        }
+     
     }
     #endregion
 

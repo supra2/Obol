@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class CardDisplayer : MonoBehaviour,IPointerUpHandler
+public class CardDisplayer : MonoBehaviour, IPointerUpHandler
 {
 
     #region enum
@@ -20,16 +20,21 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
 
     #region Members
     #region Visible 
+
     [SerializeField]
     protected ICard _baseCard;
+
     [SerializeField]
     protected Highlight _highlight;
+
     [SerializeField]
     protected Color _colorSelectable;
+
     [SerializeField]
     protected Color _colorSelected;
-    
+
     public UnityCardEvent CardPicked;
+
     public UnityCardEvent CardUnpicked;
     #endregion
     #region hidden
@@ -38,6 +43,10 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
     protected bool _picked;
     #endregion
     #endregion
+
+    #region Getters
+    public ICard Card => _baseCard;
+    #endregion 
 
     #region Initialisation
     public void Init()
@@ -54,13 +63,12 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
         Vector2 originPosition = (transform as RectTransform).position;
         Quaternion originRotation = (transform as RectTransform).rotation;
         float t = 0f;
-        while( t < replacementTime)
+        while (t < replacementTime)
         {
             t += Time.deltaTime;
             transform.position = Vector3.Slerp(originPosition, newposition, t / replacementTime);
             transform.rotation = Quaternion.Slerp(originRotation, newRotation, t / replacementTime);
-             await Task.Delay(10);
-            // await new WaitForSeconds
+            await Task.Delay(10);
         }
     }
 
@@ -68,9 +76,12 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
 
     public void ChangeMode(CardMode newMode)
     {
-        switch(_currentMode)
+        switch (_currentMode)
         {
             case CardMode.Pickable:
+                _picked = false;
+                break;
+            case CardMode.Playable:
                 _picked = false;
                 break;
         }
@@ -82,15 +93,39 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        _picked = !_picked;
+        switch (_currentMode)
+        {
+            case CardMode.Pickable:
+                TogglePick();
+                break;
+            case CardMode.Playable:
+                TogglePick();
+                break;
+
+        }
         UpdateState();
     }
 
-   
     //_______________________________________________________
     #endregion
 
     #region Private methods
+    //_______________________________________________________
+
+    protected void TogglePick()
+    {
+        _picked = !_picked;
+        if(_picked)
+        {
+            CardPicked?.Invoke(_baseCard);
+        }
+        else
+        {
+            CardUnpicked?.Invoke(_baseCard);
+        }
+    }
+
+    //_______________________________________________________
 
     protected void UpdateState()
     {
@@ -100,9 +135,12 @@ public class CardDisplayer : MonoBehaviour,IPointerUpHandler
                 _highlight.Display(true);
                 _highlight.SetColor(_picked? _colorSelected:_colorSelectable);
             break;
+            case CardMode.Playable:
+                _highlight.Display(true);
+                break;
         }
-
     }
 
+  //________________________________________________________
     #endregion
 }

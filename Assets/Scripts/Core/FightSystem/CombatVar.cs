@@ -22,9 +22,9 @@ public class CombatVar : MonoBehaviour
     [SerializeField]
     protected Initiative _initiative;
     [SerializeField]
-    protected List<Adversaire> _adversaires;
+    protected List<Core.FightSystem.Adversaire> _adversaires;
     [SerializeField]
-    protected List<Character> _party;
+    protected List<Core.FightSystem.PlayableCharacter> _party;
     [SerializeField]
     protected int  _nbturn;
     #endregion
@@ -50,14 +50,14 @@ public class CombatVar : MonoBehaviour
     /// <summary>
     /// Adversaires
     /// </summary>
-    public List<Adversaire> Adversaires {
+    public List<Core.FightSystem.Adversaire> Adversaires {
         get => _adversaires;
         set => _adversaires = value;
     }
     /// <summary>
     /// Heroes party
     /// </summary>
-    public List<Character> Party
+    public List<Core.FightSystem.PlayableCharacter> Party
     {
         get => _party;
         set => _party = value;

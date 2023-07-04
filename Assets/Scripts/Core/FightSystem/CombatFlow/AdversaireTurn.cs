@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ namespace Core.FightSystem.CombatFlow
 
     public class AdversaireTurn : ICommand
     {
+
         #region Members
         protected Adversaire _adversaire;
         protected int _nbturn;
@@ -18,9 +20,20 @@ namespace Core.FightSystem.CombatFlow
             _nbturn = nbturn;
         }
 
+        #region Interface
+
         public void Execute()
         {
             //TODO : Implement Adversaire Turn
         }
+
+        public bool IsCommandEnded()
+        {
+            //TODO : Over
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
     }
 }

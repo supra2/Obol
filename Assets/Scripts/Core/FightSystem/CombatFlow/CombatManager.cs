@@ -34,6 +34,10 @@ public class CombatManager : Singleton<CombatManager>
     [SerializeField]
     protected List<FightingCharacter> _fightingCharacter;
     [SerializeField]
+    protected List<FightingAdversaire> _fightingAdversaires;
+    [SerializeField]
+    protected AdversaireLayout  _adversaireLayout;
+    [SerializeField]
     protected FightStack _fightStack;
     [Header("Developper")]
     [SerializeField]
@@ -52,7 +56,14 @@ public class CombatManager : Singleton<CombatManager>
     /// current phase
     /// </summary>
     protected CombatPhase _combatPhase;
-
+    /// <summary>
+    /// Character
+    /// </summary>
+    protected Character _currentCharacter;
+    /// <summary>
+    /// the X value
+    /// </summary>
+    public int X;
     #endregion
     #endregion
 
@@ -74,8 +85,14 @@ public class CombatManager : Singleton<CombatManager>
         for (int j = 0;  j < _fightingCharacter.Count; j++ )
         {
             _fightingCharacter[j].Active = j < vars.Party.Count;
-
             _fightingCharacter[j].Setup( vars.Party[j] );
+            _fightingCharacter[j].OnTurnStarted.AddListener(
+                (X)=> CharacterStartTurn(_fightingCharacter[j].Character));
+        }
+
+        foreach( Core.FightSystem.Adversaire adersaire in vars.Adversaires )
+        { 
+              _adversaireLayout.AddAdversaire(adersaire);
         }
 
         InitializeUI( _vars );
@@ -83,7 +100,7 @@ public class CombatManager : Singleton<CombatManager>
         UpdateOrder( );
 
         InitiativePhase(0 );
-
+    
     }
 
     /// <summary>
@@ -116,9 +133,8 @@ public class CombatManager : Singleton<CombatManager>
                     i++;
                 }
                 Core.FightSystem.CombatFlow.CharacterTurn characterTurn =
-                       new Core.FightSystem.CombatFlow.CharacterTurn(character, nbTurn);
+                       new Core.FightSystem.CombatFlow.CharacterTurn( character, nbTurn);
                 _fightStack.Pile(characterTurn);
-               
             }
         }
     }
@@ -140,7 +156,17 @@ public class CombatManager : Singleton<CombatManager>
         }
     }
 
-    
+    protected void CharacterStartTurn( PlayableCharacter character )
+    {
+        _currentCharacter = character;
+    }
+
+    public Character GetCurrentCharacter( )
+    {
+        return _currentCharacter;
+
+    }
+
     #endregion
 
 }

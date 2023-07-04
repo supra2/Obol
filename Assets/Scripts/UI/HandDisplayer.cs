@@ -1,4 +1,5 @@
 using Core.CardSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,18 +9,27 @@ public class HandDisplayer : MonoBehaviour
 {
 
     #region members
+    #region Hidden
     [SerializeField]
-    protected Character character;
+    protected Core.FightSystem.PlayableCharacter character;
 
     [SerializeField]
     protected List<CardDisplayer> _cardDisplayers;
 
     [SerializeField]
     protected Vector3 offset = new Vector3(0, 0.3f, 0f);
+    #endregion
 
-    protected CardDisplayer[] selection;
-
-    protected int selectionSize;
+    #region hidden
+    /// <summary>
+    /// Current  Selection
+    /// </summary>
+    protected CardDisplayer[] _selection;
+    /// <summary>
+    /// Selection maximum size 
+    /// </summary>
+    protected int _selectionSize;
+    #endregion
     #endregion
 
     #region Methods
@@ -46,7 +56,7 @@ public class HandDisplayer : MonoBehaviour
     /// Add Card display in hand
     /// </summary>
     /// <param name="cardDisplayer"></param>
-    public async void AddCard(CardDisplayer cardDisplayer)
+    public  void AddCard( CardDisplayer cardDisplayer )
     {
         //first off determine destination position
 
@@ -83,32 +93,30 @@ public class HandDisplayer : MonoBehaviour
     /// Discard i card from hand
     /// </summary>
     /// <param name="nbcard">number of card to select </param>
-    public void DiscardCard(int nbcard)
+    public void DiscardCard(int nbcard, Action Discarded   )
     {
-
         //first of all check if the nbcard not superior to the total of 
         //card in hands; elsewhere the discard autoresolve by emptying hand automtically
         // Todo: UI INSTRUCTION DISCLAIMING THE REMAINING CARD TO PICK
-        selection = new CardDisplayer[nbcard];
-        selectionSize = 0;
+        _selection = new CardDisplayer[nbcard];
+        _selectionSize = nbcard;
         foreach ( CardDisplayer cd in _cardDisplayers )
         {
             cd.ChangeMode( CardDisplayer.CardMode.Pickable );
             cd.CardPicked.AddListener( SelectCard);
             cd.CardUnpicked.AddListener(DeselectCard);
         }
-
     }
 
     //_______________________________________________________
 
     public void SelectCard(ICard card)
     {
-        int index = _cardDisplayers.FindIndex(x => x == card);
+        int index = _cardDisplayers.FindIndex(x => x.Card == card);
         if (index != -1)
         {
-            selection[selectionSize] = _cardDisplayers[index];
-            selectionSize++;
+            _selection[_selectionSize] = _cardDisplayers[index];
+            _selectionSize++;
         }
     }
 
@@ -118,7 +126,7 @@ public class HandDisplayer : MonoBehaviour
     {
         foreach (CardDisplayer cd in _cardDisplayers)
         {
-            cd.ChangeMode(CardDisplayer.CardMode.Playable);
+            cd.ChangeMode( CardDisplayer.CardMode.Playable );
         }
     }
 
@@ -137,19 +145,19 @@ public class HandDisplayer : MonoBehaviour
     public void DeselectCard(ICard card)
     {
         int indextoReplace = -1;
-        for( int i =0; i <selectionSize;i++)
+        for( int i =0; i <_selectionSize;i++)
         {
             if(indextoReplace !=-1)
             {
-                selection[indextoReplace] = selection[i];
+                _selection[indextoReplace] = _selection[i];
                     indextoReplace++;
             }
-            if( selection[i] == card)
+            if( _selection[i].Card == card)
             {
                 indextoReplace = i;
             }
         }
-        selectionSize--;
+        _selectionSize--;
     }
 
     //_______________________________________________________
