@@ -11,11 +11,13 @@ using UnityEngine;
 using UnityEngine.Events;
 
 //TODO MOVE THEM TO A PROPER FILE
+[Serializable]
 public class UnityCardEvent : UnityEvent<ICard>
 {
 
 }
 
+[Serializable]
 public class UnityCharacterEvent : UnityEvent<Character>
 {
 
@@ -23,14 +25,20 @@ public class UnityCharacterEvent : UnityEvent<Character>
 
 namespace Core.FightSystem
 {
-    [CreateAssetMenu(fileName = "PlayerCard", menuName = "Obol/Character/PlayableCharacter", order = 0)]
-    public class PlayableCharacter : Character,ICharacteristic,ITargetable
+    [CreateAssetMenu(fileName = "PlayerCard",
+        menuName = "Obol/Character/PlayableCharacter", 
+        order = 0)]
+    public class PlayableCharacter : Character , ICharacteristic , ITargetable
     {
 
         #region Members
         #region Visible
         [SerializeField]
         protected List<PlayerCard> _cardList;
+        /// <summary>
+        /// Mental health Maximum Value
+        [SerializeField]
+        protected int _maxSan;
         #endregion
         #region Hidden
         /// <summary>
@@ -50,7 +58,9 @@ namespace Core.FightSystem
         {
             _tempModifiers = new List<Tuple<string, int>>();
             _permModifiers = new List<Tuple<string, int>>();
-    
+            _life = _maxlife;
+            _san = _maxSan;
+
         }
 
         /// <summary>
@@ -88,7 +98,7 @@ namespace Core.FightSystem
             base.Inflict(damagetype, value);
         }
 
- 
     }
+
 }
 

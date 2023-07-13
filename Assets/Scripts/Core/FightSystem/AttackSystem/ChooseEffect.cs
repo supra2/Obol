@@ -12,12 +12,11 @@ namespace Core.FightSystem.AttackSystem
         #region Members
         #region Hidden
         /// <summary>
-        /// Choices 
+        /// Choices 1 effect
         /// </summary>
         protected List<IEffect> _choices1;
-
         /// <summary>
-        /// Choices 
+        /// Choices 2 effect
         /// </summary>
         protected List<IEffect> _choices2;
         /// <summary>
@@ -45,6 +44,12 @@ namespace Core.FightSystem.AttackSystem
             get => _choices2;
             set => _choices2 = value;
         }
+
+        public string TextKey => _locDescriptionKey;
+
+        public string ChoiceKey1 => _choicekey[0];
+
+        public string ChoiceKey2 => _choicekey[1];
         #endregion
 
         #region Initialisation
@@ -76,21 +81,10 @@ namespace Core.FightSystem.AttackSystem
 
         public void Apply(ITargetable itargetable)
         {
-            UICombatController.Instance.DisplayChoice( 
-                (IEffect)this , ExecuteChoice1 , ExecuteChoice2 );
-            if ( choose == 0 )
-            {
-           
-            }
-            else
-            {
-                foreach (IEffect choices in _choices2 )
-                {
-
-                }
-                    
-            }
-        }
+            UICombatController.Instance.DisplayChoice(
+                (IEffect)this, () => ExecuteChoice1(itargetable),
+                () => ExecuteChoice2(itargetable));
+                  }
 
         //-------------------------------------------------------------
 
@@ -116,20 +110,20 @@ namespace Core.FightSystem.AttackSystem
         #endregion
         //-------------------------------------------------------------
 
-        protected void ExecuteChoice1()
+        protected void ExecuteChoice1(ITargetable targetable)
         {
             foreach (IEffect choices in _choices1)
             {
-
+                choices.Apply(targetable);
             }
         }
 
         //-------------------------------------------------------------
-        protected void ExecuteChoice2()
+        protected void ExecuteChoice2(ITargetable targetable)
         {
             foreach (IEffect choices in _choices2)
             {
-
+                choices.Apply(targetable);
             }
         }
         //-------------------------------------------------------------

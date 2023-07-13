@@ -70,7 +70,6 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerUpHandler
     {
         if (_currentMode == AdversaireDisplayerMode.Selection)
         {
-
             _picked = !_picked;
             _onAdversairePicked?.Invoke(_adversaire);
         }

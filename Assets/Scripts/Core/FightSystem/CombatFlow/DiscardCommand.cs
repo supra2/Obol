@@ -24,18 +24,20 @@ namespace Core.FightSystem.CombatFlow
         #endregion
 
         #region Initialisation
-        public DiscardCommand(HandDisplayer displayer,int nbcard)
+
+        public DiscardCommand ( HandDisplayer displayer , int nbcard )
         {
             _nbcard = nbcard;
             _displayer.DiscardCard(_nbcard, Discarded);
         }
+
         #endregion
 
         #region Interface implementation
 
-        public  void Execute()
+        public void Execute()
         {
-            _displayer.DiscardCard(_nbcard, Discarded);
+            _displayer.DiscardCard( _nbcard , Discarded );
         }
 
         public bool IsCommandEnded()
@@ -45,9 +47,10 @@ namespace Core.FightSystem.CombatFlow
 
         #endregion
 
-        protected void Discarded()
+        protected void Discarded(List<ICard> discarded)
         {
             _discarded = true;
         }
+
     }
 }

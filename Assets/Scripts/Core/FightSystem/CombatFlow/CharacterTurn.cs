@@ -43,6 +43,7 @@ namespace Core.FightSystem.CombatFlow
             _character.StartTurn( );
             _character.OnTurnEnded.AddListener(OnEndTurn);
             turnEnded = false;
+
             while (!turnEnded) ;
             RecoveryPhase();
         }

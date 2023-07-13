@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class CombatVar : MonoBehaviour
+public class CombatVar 
 {
 
     #region Initiative

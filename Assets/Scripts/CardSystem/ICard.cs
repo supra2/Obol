@@ -4,5 +4,10 @@ using UnityEngine;
 
 public interface ICard
 {
-  
+    public Sprite GetIllustration();
+
+    public string DescriptionKey();
+
+    public string TitleKey();
+
 }

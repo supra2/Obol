@@ -25,11 +25,14 @@ public class DebugCombat : MonoBehaviour
 
     public void Awake()
     {
+
+        SeedManager.GenerateRandomSeed();
         CombatVar combat = new CombatVar();
         combat.Adversaires = _adversaires;
         combat.Party = _heroParty;
         combat.FightInitiative = _initState;
         _combatManager.StartCombat(combat);
+
     }
 
     #endregion

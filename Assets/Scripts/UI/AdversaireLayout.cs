@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using static AdversaireDisplayer;
+using System;
+using Core.FightSystem.AttackSystem;
 
 public class Adversaire : UnityEvent<AdversaireDisplayer>
 { 
@@ -43,13 +45,22 @@ public class AdversaireLayout : MonoBehaviour
         _displayers = new List<AdversaireDisplayer>();
     }
 
-    public void SelectAdversaireMode( )
+    public void SelectAdversaireMode( Action<ITargetable> callback )
     {
         foreach(AdversaireDisplayer advDisplayer in _displayers)
         {
            advDisplayer.SetMode( AdversaireDisplayerMode.Selection );
+            advDisplayer._onAdversairePicked.AddListener((character) =>
+           {
+               if (character is ITargetable)
+               {
+                 callback((ITargetable)character);
+               }
+           });
         }
     }
+
+
 
     #endregion
 

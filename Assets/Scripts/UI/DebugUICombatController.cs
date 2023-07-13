@@ -8,9 +8,10 @@ public class DebugUICombatController : MonoBehaviour
     {
 
         Debug.Log(" Encountering an ennemy encounter");
-        Debug.LogFormat(" Enemy composition :  ", string.Join(" ", vars.Adversaires));
+        
+        Debug.Log(" Enemy composition : "+ string.Join(" ", vars.Adversaires));
         Debug.Log(" Your party is ");
-        Debug.LogFormat(" Enemy composition :  ", string.Join(" ", vars.Party));
+        Debug.Log(" Party: " + string.Join(" ", vars.Party));
     }
 }
 

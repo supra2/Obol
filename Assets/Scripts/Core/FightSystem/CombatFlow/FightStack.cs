@@ -11,7 +11,7 @@ public class FightStack : MonoBehaviour
     /// <summary>
     /// Stack: command
     /// </summary>
-    protected Stack<ICommand> _commandStack;
+    protected List<ICommand> _commandStack;
     /// <summary>
     /// Command Execution Thread
     /// </summary>
@@ -23,44 +23,68 @@ public class FightStack : MonoBehaviour
     #endregion
 
     #region Initialisation
-    public void Start()
+    public void Awake()
     {
-        _commandStack = new Stack<ICommand>();
+        _commandStack = new List<ICommand>();
         _commandThread = new Thread(new ThreadStart(Run)); ;
+        _commandThread.Start();
     }
 
     #endregion
 
     #region Public Methods
 
-    public void Pile(ICommand command)
+    public void Pile(ICommand command, bool insertIntoTurn = false)
     {
-        _commandStack.Push(command);
-        if(_commandStack.Count==1)
+        if (insertIntoTurn)
         {
-            DepileAction();
+            int insertbefore = _commandStack.FindIndex(
+                (x) => x is CharacterTurn|| x is AdversaireTurn);
+            _commandStack.Insert(insertbefore, command);
+        }
+        else
+        {
+            _commandStack.Add(command);
+        }
+    }
+
+    public void Pile(Action action,bool insertIntoTurn = false)
+    {
+        ActionCommand cmd = new ActionCommand(action);
+        if (insertIntoTurn)
+        {
+            int insertbefore = _commandStack.FindIndex(
+                (x) => x is CharacterTurn || x is AdversaireTurn);
+            _commandStack.Insert(insertbefore, cmd);
+        }
+        else
+        {
+            _commandStack.Add(cmd);
         }
     }
 
     public void DepileAction( )
     {
-       ICommand command = _commandStack.Pop();
-        command.Execute();
+       ICommand command = _commandStack[0];
+        _commandStack.RemoveAt(0);
+       command.Execute();
     }
-
 
     public void Run()
     {
-        while ( _commandStack.Count == 0 )
-        {
-            Thread.Sleep(10);
-        };
-        if( _command == null || _command.IsCommandEnded() )
-        {
-            DepileAction();
+        while(true)
+        { 
+            while ( _commandStack.Count == 0 )
+            {
+                Thread.Sleep(10);
+            };
+            if( _command == null || _command.IsCommandEnded() )
+            {
+                DepileAction();
+            }
         }
-     
     }
+
     #endregion
 
 }

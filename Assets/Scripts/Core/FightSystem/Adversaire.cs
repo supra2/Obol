@@ -39,8 +39,6 @@ namespace Core.FightSystem
         protected List<Attack> _attacks;
         [SerializeField]
         protected Sprite _illustrations;
-        [SerializeField]
-        protected string _name;
         #endregion
         #endregion
 
@@ -67,8 +65,7 @@ namespace Core.FightSystem
 
         public void Attack(int degat)
         {
-            _currentlife = Mathf.Clamp(_lifeMax, 0, _lifeMax);
-
+            _currentlife = Mathf.Clamp(degat, 0, _maxlife);
         }
 
         //--------------------------------------------------------------
@@ -86,13 +83,13 @@ namespace Core.FightSystem
             {
                 _tempModifiers.Clear();
             }
-
+            _currentlife = _maxlife;
         }
 
         //--------------------------------------------------------------
         public override string ToString()
         {
-            return string.Format(" [ {0} PV: {1}/{2} ]", _name, _currentlife, _lifeMax);
+            return string.Format(" [ {0} PV: {1}/{2} ]", _characterNameKey, _currentlife, _maxlife);
         }
 
         //--------------------------------------------------------------

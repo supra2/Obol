@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Core.FightSystem
 {
-    public abstract class Character : ScriptableObject, ICharacteristic
+    public abstract class Character : ScriptableObject
     {
 
         #region Members
@@ -35,13 +35,7 @@ namespace Core.FightSystem
         protected int _speed;
         [SerializeField]
         protected int _maxlife;
-        /// <summary>
-        /// Mental health Maximum Value
         /// </summary>
-        [SerializeField]
-        protected int _maxSan;
-        [SerializeField]
-        protected int _lifeMax;
         [SerializeField]
         protected string _characterNameKey;
         #endregion
@@ -122,6 +116,14 @@ namespace Core.FightSystem
             return _tempModifiers.SkipWhile(x => x.Item1 == compName)
            .TakeWhile(x => x.Item1 != compName)
            .Sum(x => x.Item2);
+        }
+
+        //--------------------------------------------------------------
+
+        public void AddTempCompetenceModifier(string comp, int modifier  )
+        {
+
+            _tempModifiers.Add(new Tuple<string,int>(comp, modifier));
         }
 
         //--------------------------------------------------------------

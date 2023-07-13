@@ -1,8 +1,10 @@
 using Core.CardSystem;
 using Core.FightSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class FightingCharacter : MonoBehaviour
@@ -10,65 +12,90 @@ public class FightingCharacter : MonoBehaviour
 
     #region Members
     #region Visible
-    [SerializeField]
-    protected HandDisplayer _displayer;
-    [SerializeField]
-    protected Button _skipTurn;
-    [SerializeField]
-    protected Button _fleeFight;
     #endregion
     #region Hidden
+    /// <summary>
+    /// Associated characters
+    /// </summary>
     protected PlayableCharacter _character;
-    // Hand of cards in combat
-    protected List<PlayerCard> _hand;
-    // Deck ( card not drawed
+    // Hand of Cards in combat
+    protected Hand<PlayerCard> _hand;
+    // Deck Card not drawed
     protected Deck<PlayerCard> _deck;
+    // Deck Card not drawed
+    protected Deck<PlayerCard> _discard;
     // Stamina meter
     protected int _stamina;
     /// <summary>
     /// is the fighting character currently active in fight
     /// </summary>
     protected bool _active;
+    /// <summary>
+    /// Callback 
+    /// </summary>
+    protected UnityAction _discardCallback;
     #endregion
     #endregion
 
     #region Event
     [Header("Events")]
     public UnityCardEvent OnCardDrawn;
-    public UnityCardEvent OnCardDiscard;
+
+    public UnityEvent OnCardDiscarded;
+
+    public UnityIntEvent OnCardDiscard;
+
     public UnityCharacterEvent OnTurnStarted;
+
     public UnityCharacterEvent OnTurnEnded;
     #endregion
 
     #region Getter
+
     public PlayableCharacter Character => _character;
+
     public bool Active
     {
         get => _active;
         set => _active = value;
     }
+
     public int Stamina
     {
         get => _stamina;
         set => _stamina = value;
     }
+
+    public Deck<PlayerCard> DiscardPile  => _discard;
+
+    public Deck<PlayerCard> Deck => _deck;
+
+    public Hand<PlayerCard> Hand => _hand;
+
     #endregion
 
     #region Initialisation
 
-    public void Awake()
-    {
-        _hand = new List<PlayerCard>();
-        _deck = new Deck<PlayerCard>();
-    }
 
+    /// <summary>
+    /// Setup
+    /// </summary>
+    /// <param name="character"></param>
     public void Setup(PlayableCharacter character)
     {
         _character = character;
         _deck = new Deck<PlayerCard>(_character.CardList);
         _deck.Shuffle();
-        _hand.Clear();
+        if ( _hand == null )
+        {
+            _hand = new Hand<PlayerCard>();
+        }
+        else 
+        { 
+            _hand.Clear();
+        }
     }
+
 
     #endregion
 
@@ -76,24 +103,22 @@ public class FightingCharacter : MonoBehaviour
 
     public void StartTurn()
     {
-        _displayer.PlayCardMode();
-        _skipTurn.interactable = true;
+        OnTurnStarted?.Invoke(Character);
     }
-
 
     public void EndTurn()
     {
-        _displayer.StopPlayCardMode();
-        _skipTurn.interactable = false;
+        OnTurnEnded?.Invoke(Character);
     }
 
     #endregion
 
     #region Action Implementation
 
-    public void Draw(int nbcard)
+    public void Draw( int nbcard  )
     {
-        for (int i = 0; i <= nbcard; i++)
+        List<PlayerCard> drawnCard = new List<PlayerCard>();
+        for (int i = 0; i < nbcard; i++)
         {
             PlayerCard drawncard = _deck.Draw();
             _hand.Add(drawncard);
@@ -102,14 +127,22 @@ public class FightingCharacter : MonoBehaviour
 
     }
 
+    public void Discard( int nbcard , UnityAction callback )
+    {
+        OnCardDiscard?.Invoke(nbcard);
+        OnCardDiscarded.RemoveListener(_discardCallback);
+        _discardCallback = callback;  
+        OnCardDiscarded.AddListener(_discardCallback);
+    }
+
     public void Flee()
     {
         //TODO implement
     }
 
-    public void PlayTargetedAttack( )
+    public void Discarded ( List<PlayerCard> discardedCards)
     {
-      //  monsters.
+        OnCardDiscarded?.Invoke();
     }
 
     #endregion

@@ -35,6 +35,7 @@ public  class SeedManager
             seed = string.Format("{0}{1}", seed,
                 r.Next(0, alphanumerics.Length));
         }
+        SetSeed(seed);
     }
   
 }

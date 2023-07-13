@@ -25,6 +25,7 @@ namespace Core.FightSystem.CombatFlow
         public void Execute()
         {
             //TODO : Implement Adversaire Turn
+            Debug.Log(" Start Adversaire turn ");
         }
 
         public bool IsCommandEnded()

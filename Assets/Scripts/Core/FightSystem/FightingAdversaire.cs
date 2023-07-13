@@ -19,8 +19,6 @@ namespace Core.FightSystem
         public void Setup(Adversaire adversaire)
         {
             _adversaire = adversaire;
-            
-            
         }
         #endregion
 
