@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Core.FightSystem
 {
-    public abstract class Character : ScriptableObject
+    public abstract class Character : ScriptableObject, ITargetable
     {
 
         #region Members
@@ -38,24 +38,70 @@ namespace Core.FightSystem
         /// </summary>
         [SerializeField]
         protected string _characterNameKey;
+        [Header("Event")]
+        public UnityIntEvent LifeChangeEvent;
+
+        public AlterationEvent AlterationAddedEvent;
         #endregion
         #region Hidden
-        protected List<Tuple<string, int>> _permModifiers;
-        protected List<Tuple<string, int>> _tempModifiers;
-
         /// <summary>
-        /// current life 
+        /// Perm Modifier
+        /// </summary>
+        protected List<Tuple<string, int>> _permModifiers;
+        /// <summary>
+        /// temp Modifier
+        /// </summary>
+        protected List<Tuple<string, int>> _tempModifiers;
+        /// <summary>
+        /// Current Life 
         /// </summary>
         protected int _life;
+        protected Dictionary<AlterationType,IAlteration> _alterations;
+        protected int _stamina;
         #endregion
+        #endregion
+        public int Life
+        {
+            set
+            {
+                int damages = _life - value;
+                _life = value;
+                LifeChangeEvent?.Invoke(damages);
+            }
+            get => _life;
+        }
+
+        public int MaxLife
+        {
+            set
+            {
+                _maxlife = value;
+                if( Life > _maxlife)
+                { 
+                    int damages = Life - _maxlife;
+                    Life = _maxlife;
+                    LifeChangeEvent?.Invoke(damages);
+                }
+            }
+            get => _maxlife;
+        }
+
+        #region  Initialisation
+        protected Character()
+        {
+            _permModifiers = new List<Tuple<string, int>>();
+            _alterations = new Dictionary<AlterationType, IAlteration>();
+           
+        }
         #endregion
 
-        #region 
+        #region Inner Methods
 
         protected int ComputeValue(int damage, int defbasevalue, string competence)
         {
+
             Tuple<string, int> t =
-                _permModifiers.Find(X => X.Item1 == competence);
+                _permModifiers.Find( X => X.Item1 == competence );
             float defense = 0;
             if (t == null)
             {
@@ -65,17 +111,23 @@ namespace Core.FightSystem
             {
                 defense = _constitution + t.Item2;
             }
+            Debug.Log(" Inflict " + (int)Mathf.Clamp(damage - defense, 0f, 9999f) + " Damage");
             return (int)Mathf.Clamp(damage - defense, 0f, 9999f);
         }
 
-        public virtual void Inflict(DamageType damagetype, int value)
+        public virtual void Inflict( DamageType damagetype , int value )
         {
             switch (damagetype)
             {
                 case DamageType.Health:
-                    _life -= ComputeValue(value, _constitution, "Resistance");
+                   int damages = ComputeValue( value, _constitution, "Resistance" );
+                    value += 
+                    Life = Mathf.Clamp( Life - damages , 0 , _maxlife );
+                  
+                    Debug.Log("Inflict " + damages + " To " + this.ToString());
                     break;
             }
+          
         }
 
         #endregion
@@ -88,11 +140,14 @@ namespace Core.FightSystem
         /// </summary>
         /// <param name="characName"> charac Name </param>
         /// <returns></returns>
-        public int GetCharacteristicsByName(string characName)
+        public  virtual int GetCharacteristicsByName(string characName)
         {
             int carac = 0;
             switch (characName.ToUpper())
             {
+                case "STAMINA":
+                    carac  = _stamina;
+                    break;
                 case "INTELLIGENCE":
                     carac = _intelligence;
                     break;
@@ -105,28 +160,95 @@ namespace Core.FightSystem
                 case "SPEED":
                     carac = _speed;
                     break;
+              
             }
             return carac;
         }
 
         //--------------------------------------------------------------
 
-        public int GetCompetenceModifierByName(string compName)
+        /// <summary>
+        /// Characteristics by NAME
+        /// </summary>
+        /// <param name="characName"> charac Name </param>
+        /// <param name="newValue"> new  Value </param>
+        /// <returns></returns>
+        public virtual void SetCharacteristicsByName(string characName,int newValue)
         {
+            switch (characName.ToUpper())
+            {
+                case "INTELLIGENCE":
+                    _intelligence = newValue;
+                    break;
+                case "STRENGTH":
+                    _strength = newValue;
+                    break;
+                case "CONSTITUTION":
+                     _constitution = newValue;
+                    break;
+                case "SPEED":
+                     _speed = newValue;
+                    break;
+
+            }
+        }
+
+        //--------------------------------------------------------------
+
+        public int GetCompetenceModifierByName( string compName )
+        {
+
+            if( _tempModifiers.Find((x) => x.Item1 == compName )  == null)
+                return 0;
+            
             return _tempModifiers.SkipWhile(x => x.Item1 == compName)
            .TakeWhile(x => x.Item1 != compName)
            .Sum(x => x.Item2);
+
         }
 
         //--------------------------------------------------------------
 
         public void AddTempCompetenceModifier(string comp, int modifier  )
         {
-
             _tempModifiers.Add(new Tuple<string,int>(comp, modifier));
         }
 
         //--------------------------------------------------------------
         #endregion
+
+        #region Event
+
+        #endregion
+
+        //--------------------------------------------------------------
+        /// <summary>
+        /// Character Recovery of stamina after turn End
+        /// </summary>
+        public void Recover()
+        {
+            _stamina++;
+        }
+
+        //--------------------------------------------------------------
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        public void AddAlteration(AlterationType type, IAlteration value)
+        {
+            if (!_alterations.ContainsKey(type))
+            {
+                _alterations.Add(type, value);
+                AlterationAddedEvent?.Invoke(value);
+            }
+            else
+            {
+                _alterations[type].Merge(value);
+            }
+        }
     }
+
 }

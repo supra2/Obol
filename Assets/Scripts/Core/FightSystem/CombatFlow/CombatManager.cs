@@ -2,22 +2,11 @@ using Core.FightSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CombatManager : Singleton<CombatManager>
 {
-
-    #region InnerClass
-
-    public class InitiativeSorter : IComparer<ICharacteristic>
-    {
-        public int Compare(ICharacteristic x, ICharacteristic y)
-        {
-            return y.GetCharacteristicsByName("Speed") - x.GetCharacteristicsByName("Speed");
-        }
-    }
-
-    #endregion
 
     #region Enum
     public enum CombatPhase
@@ -49,10 +38,6 @@ public class CombatManager : Singleton<CombatManager>
     #endregion
     #region Hidden
     /// <summary>
-    /// nb turn done
-    /// </summary>
-    protected int nbTurn;
-    /// <summary>
     /// character init id
     /// </summary>
     protected int _characterID;
@@ -65,7 +50,7 @@ public class CombatManager : Singleton<CombatManager>
     /// </summary>
     protected CombatPhase _combatPhase;
     /// <summary>
-    /// Character
+    /// Fighting Character currentlyPlaying
     /// </summary>
     protected Character _currentCharacter;
     /// <summary>
@@ -76,6 +61,7 @@ public class CombatManager : Singleton<CombatManager>
     #endregion
 
     #region Getter
+
     public FightStack CommandStack => _fightStack;
 
     public CombatPhase CurrentCombatPhase
@@ -90,20 +76,22 @@ public class CombatManager : Singleton<CombatManager>
             ChangeState(_combatPhase);
         }
     }
+
+    public CombatVar Var => _vars;
+
     #endregion
 
-    #region public Method
-
+    #region Public Method
 
     /// <summary>
     /// Start Combat
     /// </summary>
     /// <param name="vars"></param>
-    public void StartCombat(CombatVar vars)
+    public void StartCombat( CombatVar vars)
     {
         _vars = vars;
 
-        nbTurn = 0;
+        _vars.NbRound = 0;
 
         CurrentCombatPhase = CombatPhase.Initialisation;
 
@@ -127,20 +115,55 @@ public class CombatManager : Singleton<CombatManager>
     }
 
     /// <summary>
-    /// from Vars initialise UI + data structurs
-    /// then prepare the state of the game befor turns.
+    /// End Fight 
     /// </summary>
-    public void InitiativePhase()
+    public void EndFight()
     {
-
-        InitializeHero(_vars);
-
-        InitializeAdversairesUI(_vars);
-
-        InitializeUI(_vars);
-
-        InitiativePhase(0);
+        PartyManager.Instance.UpdateGroup(_vars.Party );
+        SceneManager.LoadScene("AdventureScene");
     }
+
+    /// <summary>
+    /// Get  Current Character
+    /// </summary>
+    /// <returns></returns>
+    public Character GetCurrentCharacter()
+    {
+        return _currentCharacter;
+
+    }
+
+    /// <summary>
+    /// End the turn of the Current Character
+    /// </summary>
+    public void EndTurn()
+    {
+       FightingCharacter character = 
+            _fightingCharacter.Find((x) => x.Character == _currentCharacter);
+       character.EndTurn();
+    }
+
+    public void StartNewRound()
+    {
+      
+        _vars.NbRound++;
+        UpdateOrder();
+    }
+
+    #endregion
+
+    #region Private Method
+
+    protected void InitiativePhase()
+{
+    InitializeHero(_vars);
+
+    InitializeAdversairesUI(_vars);
+
+    InitializeUI(_vars);
+
+    InitiativePhase(0);
+}
 
     private void InitializeAdversairesUI(CombatVar vars)
     {
@@ -160,9 +183,11 @@ public class CombatManager : Singleton<CombatManager>
     {
         for ( int j = 0 ; j < vars.Party.Count ; j++ )
         {
+            vars.Party[j].Init();
             _heroesLayout.Add( vars.Party[j],
              (X)=> CharacterStartTurn(X) );
-            _fightingCharacter.Add(_heroesLayout[j].GetComponent<FightingCharacter>());
+            _fightingCharacter.Add(
+                _heroesLayout[j].GetComponent<FightingCharacter>() );
             _fightingCharacter[j].Active = true;
         }
     }
@@ -181,57 +206,62 @@ public class CombatManager : Singleton<CombatManager>
     ///  Update Orders 
     /// </summary>
     protected void UpdateOrder()
-    {
-        _vars.Party.Sort(new InitiativeSorter());
-        _vars.Adversaires.Sort(new InitiativeSorter());
+    { 
         int i = 0;
-        foreach (FightingCharacter character in _fightingCharacter)
+        for (int k = 5 ; k >= 0 ; k--)
         {
-            if (character.Active == true)
-            {
-                while (character.Character.GetCharacteristicsByName("Speed") <=
-                    _vars.Adversaires[i].GetCharacteristicsByName("Speed")
-                    && i < _vars.Adversaires.Count)
+            foreach ( Core.FightSystem.Adversaire advers
+                in _vars.Adversaires )
+            { 
+                if( advers.GetCharacteristicsByName("Speed") == k )
                 {
-
                     Core.FightSystem.CombatFlow.AdversaireTurn adversaireTurn =
-                       new Core.FightSystem.CombatFlow.AdversaireTurn(_vars.Adversaires[i], nbTurn);
-                    _fightStack.Pile(adversaireTurn);
-                    i++;
+                        new Core.FightSystem.CombatFlow.AdversaireTurn(_vars.Adversaires[i], _vars.NbRound);
+                    _fightStack.PileBottom( adversaireTurn );
                 }
-                Core.FightSystem.CombatFlow.CharacterTurn characterTurn =
-                       new Core.FightSystem.CombatFlow.CharacterTurn(character, nbTurn);
-                _fightStack.Pile(characterTurn);
+            }
+            foreach (FightingCharacter character in _fightingCharacter)
+            { 
+                if (_fightingCharacter[i].Active == true && 
+                    character.Character.GetCharacteristicsByName("Speed") == k )
+                {
+                    Core.FightSystem.CombatFlow.CharacterTurn characterTurn =
+                    new Core.FightSystem.CombatFlow.CharacterTurn( character , _vars.NbRound);
+                    _fightStack.PileBottom(characterTurn);
+                }
             }
         }
+        _fightStack.PileBottom(new Core.FightSystem.CombatFlow.StartNewRound());
     }
 
+    /// <summary>
+    /// Resolve Initiative Phase ( Draw phase 
+    /// for the Party before any turn)
+    /// </summary>
+    /// <param name="CharacterID"> Character Id beeing initialised</param>
     protected void InitiativePhase(int CharacterID)
     {
         if( _fightingCharacter.Count > CharacterID)
         {
-            Debug.Log("Initiative Phase " + CharacterID);
             switch (_vars.FightInitiative)
             {
                 case CombatVar.Initiative.Normal:
-                    _fightingCharacter[CharacterID].Draw( 2 );
-                    InitiativePhase(CharacterID + 1);
+                    _fightingCharacter[CharacterID].Draw( 2 ,
+                        () => InitiativePhase( CharacterID + 1 ) );
                     break;
                 case CombatVar.Initiative.Opportunity:
-                    _fightingCharacter[CharacterID].Draw(3);
-                    InitiativePhase(CharacterID + 1);
+                    _fightingCharacter[CharacterID].Draw(3, 
+                        () =>  InitiativePhase( CharacterID + 1 ) );
                     break;
                 case CombatVar.Initiative.Surprised:
-
-                    _fightingCharacter[CharacterID].Draw(2);
+                    _fightingCharacter[CharacterID].Draw(2, () =>
                     _fightingCharacter[CharacterID].Discard(1,
-                    ()=> InitiativePhase(CharacterID + 1));
+                    ()=> InitiativePhase(CharacterID + 1)));
                     break;
             }
         }
         else
         {
-            Debug.Log("Go to combat phase ");
             CurrentCombatPhase = CombatPhase.Combat;
         }
 
@@ -242,17 +272,16 @@ public class CombatManager : Singleton<CombatManager>
         _currentCharacter = character;
     }
 
-    public Character GetCurrentCharacter()
-    {
-        return _currentCharacter;
-
-    }
-
     protected void MainPhase()
     {
         UpdateOrder();
     }
 
+    protected void LootScreen()
+    { 
+
+    }
+  
     #endregion
 
 }

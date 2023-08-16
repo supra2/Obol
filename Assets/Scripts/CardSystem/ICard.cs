@@ -10,4 +10,8 @@ public interface ICard
 
     public string TitleKey();
 
+    public void Play(  );
+
+    public void Resolve();
+
 }

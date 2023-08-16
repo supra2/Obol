@@ -1,5 +1,6 @@
 using Core.CardSystem;
 using Core.FightSystem;
+using Core.FightSystem.AttackSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,8 +25,6 @@ public class FightingCharacter : MonoBehaviour
     protected Deck<PlayerCard> _deck;
     // Deck Card not drawed
     protected Deck<PlayerCard> _discard;
-    // Stamina meter
-    protected int _stamina;
     /// <summary>
     /// is the fighting character currently active in fight
     /// </summary>
@@ -62,11 +61,11 @@ public class FightingCharacter : MonoBehaviour
 
     public int Stamina
     {
-        get => _stamina;
-        set => _stamina = value;
+        get => _character.GetCharacteristicsByName("STAMINA");
+        set => _character.SetCharacteristicsByName("STAMINA", value);
     }
 
-    public Deck<PlayerCard> DiscardPile  => _discard;
+    public Deck<PlayerCard> DiscardPile => _discard;
 
     public Deck<PlayerCard> Deck => _deck;
 
@@ -76,26 +75,37 @@ public class FightingCharacter : MonoBehaviour
 
     #region Initialisation
 
-
-    /// <summary>
-    /// Setup
-    /// </summary>
-    /// <param name="character"></param>
     public void Setup(PlayableCharacter character)
     {
         _character = character;
-        _deck = new Deck<PlayerCard>(_character.CardList);
+
+        _deck = new Deck<PlayerCard>();
+        foreach (PlayerCard card in _character.CardList)
+        {
+            if(card is ChoiceCard)
+            {
+                _deck.AddTop((ChoiceCard)((ChoiceCard)card).Clone());
+            }
+            else 
+            {
+                _deck.AddTop((PlayerCard)card.Clone());
+            }
+          
+        }
+        _discard = new Deck<PlayerCard>();
         _deck.Shuffle();
-        if ( _hand == null )
+        _deck.OnDeckIsEmpty += RefillDrawpile;
+      
+        if (_hand == null)
         {
             _hand = new Hand<PlayerCard>();
+            _hand.CardPlayed.AddListener(CardPlayed);
         }
-        else 
-        { 
+        else
+        {
             _hand.Clear();
         }
     }
-
 
     #endregion
 
@@ -115,7 +125,7 @@ public class FightingCharacter : MonoBehaviour
 
     #region Action Implementation
 
-    public void Draw( int nbcard  )
+    public void Draw(int nbcard, Action callBack)
     {
         List<PlayerCard> drawnCard = new List<PlayerCard>();
         for (int i = 0; i < nbcard; i++)
@@ -124,25 +134,57 @@ public class FightingCharacter : MonoBehaviour
             _hand.Add(drawncard);
             OnCardDrawn?.Invoke(drawncard);
         }
-
+        StartCoroutine(WaitForStartDrawing(callBack));
     }
 
-    public void Discard( int nbcard , UnityAction callback )
+    public IEnumerator WaitForStartDrawing(Action callBack)
+    {
+        HandDisplayer handDisplayer = GetComponentInChildren<HandDisplayer>();
+        while (handDisplayer.Drawing)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        callBack?.Invoke();
+    }
+
+    public void Discard(int nbcard, UnityAction callback)
     {
         OnCardDiscard?.Invoke(nbcard);
         OnCardDiscarded.RemoveListener(_discardCallback);
-        _discardCallback = callback;  
+        _discardCallback = callback;
         OnCardDiscarded.AddListener(_discardCallback);
     }
 
-    public void Flee()
-    {
-        //TODO implement
-    }
-
-    public void Discarded ( List<PlayerCard> discardedCards)
+    public void Discarded(List<PlayerCard> discardedCards)
     {
         OnCardDiscarded?.Invoke();
+    }
+
+    public void RefillDrawpile(Deck<PlayerCard> deck)
+    {
+        int length = _discard.Count;
+        for (int i = 0; i < length; i++)
+        {
+            PlayerCard card = _discard.Draw();
+            _deck.AddTop(card);
+        }
+        _deck.Shuffle();
+    }
+
+    public void Inflict(DamageType damagetype, int value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CardPlayed( ICard card )
+    {
+        OnTurnEnded?.Invoke(Character);
+    }
+
+    public void Skip()
+    {
+        _character.Recover();
+        CombatManager.Instance.EndTurn();
     }
 
     #endregion

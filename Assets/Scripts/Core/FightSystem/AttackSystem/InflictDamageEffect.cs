@@ -81,6 +81,11 @@ namespace Core.FightSystem.AttackSystem
                     break;
             }
         }
+
+        public bool SelfTarget()
+        {
+            return false;
+        }
     }
 
 }

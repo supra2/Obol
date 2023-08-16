@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace Core.FightSystem.CombatFlow
 {
+
     public class CharacterTurn : ICommand
     {
 
         #region members
-         protected bool turnEnded;
+        protected bool turnEnded;
         /// <summary>
         /// turn Number
         /// </summary>
@@ -29,44 +30,44 @@ namespace Core.FightSystem.CombatFlow
         {
             _character = character;
             _nbTurn = nbTurn;
+            _character.OnTurnEnded.AddListener( TurnEnded );
         }
 
         #endregion
-        
+
         #region ICommand Interface Implementation
 
         public void Execute()
         {
-            if (_nbTurn != 0)
-                _character.Draw( 1 );
-
-            _character.StartTurn( );
-            _character.OnTurnEnded.AddListener(OnEndTurn);
-            turnEnded = false;
-
-            while (!turnEnded) ;
-            RecoveryPhase();
-        }
-
-        private void RecoveryPhase()
-        {
-            _character.Stamina +=1;
-        }
-
-        public void OnEndTurn(Character character)
-        {
-            if(_character == character)
-            { 
-                 _character.OnTurnEnded.RemoveListener( OnEndTurn );
-                turnEnded = true;
+            if ( _nbTurn != 0 )
+            {
+                _character.Draw( 1 , ContinueTurn );
             }
+            else
+            {
+                ContinueTurn();
+            }
+        }
+
+        protected void ContinueTurn()
+        {   
+            _character.StartTurn();
+         
+        }
+
+        protected void TurnEnded(Character character)
+        {
+            _character.Character.Recover();
+            _character.OnTurnEnded.RemoveListener(TurnEnded);
+            _turnEnded = true;
+            Debug.Log(" Character "+ character +"Turn Ended");
         }
 
         public bool IsCommandEnded()
         {
             return _turnEnded;
         }
-
+        
         #endregion
 
     }

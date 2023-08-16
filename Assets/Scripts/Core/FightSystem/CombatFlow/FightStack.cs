@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
+
 public class FightStack : MonoBehaviour
 {
 
@@ -15,76 +16,69 @@ public class FightStack : MonoBehaviour
     /// <summary>
     /// Command Execution Thread
     /// </summary>
-    protected Thread _commandThread ;
-    /// <summary>
-    /// Command Execution Thread
-    /// </summary>
     protected ICommand _command;
     #endregion
 
     #region Initialisation
+
     public void Awake()
     {
         _commandStack = new List<ICommand>();
-        _commandThread = new Thread(new ThreadStart(Run)); ;
-        _commandThread.Start();
+        StartCoroutine(Run());
     }
 
     #endregion
 
     #region Public Methods
+    //__________________________________________________________________
 
-    public void Pile(ICommand command, bool insertIntoTurn = false)
+    public void PileOnTop(ICommand command)
     {
-        if (insertIntoTurn)
-        {
-            int insertbefore = _commandStack.FindIndex(
-                (x) => x is CharacterTurn|| x is AdversaireTurn);
-            _commandStack.Insert(insertbefore, command);
-        }
-        else
-        {
-            _commandStack.Add(command);
-        }
+        _commandStack.Add(command);
     }
 
-    public void Pile(Action action,bool insertIntoTurn = false)
+    //__________________________________________________________________
+
+    public void PileOnTop(Action action)
     {
         ActionCommand cmd = new ActionCommand(action);
-        if (insertIntoTurn)
-        {
-            int insertbefore = _commandStack.FindIndex(
-                (x) => x is CharacterTurn || x is AdversaireTurn);
-            _commandStack.Insert(insertbefore, cmd);
-        }
-        else
-        {
-            _commandStack.Add(cmd);
-        }
+        PileOnTop(cmd);
     }
+
+    //__________________________________________________________________
+
+    public void PileBottom( ICommand command )
+    {
+        if(_commandStack.Count>0)
+            _commandStack.Insert(_commandStack.Count, command );
+        else
+            _commandStack.Add( command);
+    }
+
+    //__________________________________________________________________
 
     public void DepileAction( )
     {
-       ICommand command = _commandStack[0];
+        _command = _commandStack[0];
         _commandStack.RemoveAt(0);
-       command.Execute();
+        _command.Execute();
     }
 
-    public void Run()
+    //__________________________________________________________________
+
+    public IEnumerator Run()
     {
         while(true)
-        { 
-            while ( _commandStack.Count == 0 )
-            {
-                Thread.Sleep(10);
-            };
-            if( _command == null || _command.IsCommandEnded() )
+        {
+            yield return new WaitForEndOfFrame();
+            if((_command == null || _command.IsCommandEnded()) && _commandStack.Count> 0 )
             {
                 DepileAction();
             }
         }
     }
 
+    //__________________________________________________________________
     #endregion
 
 }

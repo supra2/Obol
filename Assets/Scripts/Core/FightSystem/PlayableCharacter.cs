@@ -25,9 +25,11 @@ public class UnityCharacterEvent : UnityEvent<Character>
 
 namespace Core.FightSystem
 {
+
     [CreateAssetMenu(fileName = "PlayerCard",
         menuName = "Obol/Character/PlayableCharacter", 
         order = 0)]
+    [Serializable]
     public class PlayableCharacter : Character , ICharacteristic , ITargetable
     {
 
@@ -45,6 +47,7 @@ namespace Core.FightSystem
         /// current mental health value
         /// </summary>
         protected int _san;
+
         #endregion
         #endregion
 
@@ -76,7 +79,23 @@ namespace Core.FightSystem
             {
                 _tempModifiers.Clear();
             }
-        
+
+            if (_permModifiers == null)
+            {
+                _permModifiers = new List<Tuple<string, int>>();
+            }
+            foreach ( PlayerCard card in _cardList )
+            {
+                if( card is ChoiceCard )
+                {
+                    ((ChoiceCard)card).Init();
+                }
+                else
+                {
+                    card.Init();
+                }
+            }
+            _stamina = 1;
         }
 
         #endregion
@@ -96,6 +115,30 @@ namespace Core.FightSystem
                     break;
             }
             base.Inflict(damagetype, value);
+        }
+
+        public override int GetCharacteristicsByName(string characName)
+        {
+           switch( characName.ToUpper() )
+            {
+               
+                   
+                 default:
+                    return base.GetCharacteristicsByName(characName);
+            }
+        }
+
+        public override void SetCharacteristicsByName(string characName,int newValue)
+        {
+            switch (characName.ToUpper())
+            {
+                case "STAMINA":
+                     _stamina = newValue;
+                    break;
+                default:
+                     base.SetCharacteristicsByName(characName, newValue);
+                    break;
+            }
         }
 
     }

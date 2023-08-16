@@ -7,6 +7,19 @@ using UnityEngine;
 public class CombatVar 
 {
 
+
+    #region InnerClass
+
+    public class InitiativeSorter : IComparer<ICharacteristic>
+    {
+        public int Compare(ICharacteristic x, ICharacteristic y)
+        {
+            return y.GetCharacteristicsByName("Speed") - x.GetCharacteristicsByName("Speed");
+        }
+    }
+
+    #endregion
+
     #region Initiative
     public enum Initiative
     {
@@ -54,6 +67,7 @@ public class CombatVar
         get => _adversaires;
         set => _adversaires = value;
     }
+
     /// <summary>
     /// Heroes party
     /// </summary>
@@ -62,10 +76,25 @@ public class CombatVar
         get => _party;
         set => _party = value;
     }
+
+    /// <summary>
+    /// Sorted Hero list ( by Initiative)
+    /// </summary>
+    public List<Core.FightSystem.PlayableCharacter> SortedParty
+    {
+        get
+        {
+            List<Core.FightSystem.PlayableCharacter> sortedlist = new List<Core.FightSystem.PlayableCharacter>(Party);
+            sortedlist.Sort(new InitiativeSorter());
+            return sortedlist;
+        }
+      
+    }
+
     /// <summary>
     ///number of turn already spent in fight
     /// </summary>
-    public int NbTurn
+    public int NbRound
     {
         get => _nbturn;
         set => _nbturn = value;

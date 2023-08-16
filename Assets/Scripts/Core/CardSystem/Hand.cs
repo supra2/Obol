@@ -8,30 +8,40 @@ namespace Core.CardSystem
 {
     public class Hand<T> where T : ICard
     {
+
         #region Members
+        /// <summary>
+        /// card list in hand
+        /// </summary>
         List<T> _cards;
         bool _isDirty;
         #endregion
+
         #region Getter
         public bool IsDirty {
             get => _isDirty;
             set => _isDirty = value;
 
         }
-        #endregion
 
-        #region Getter
         public T this[int i]
         {
             get => _cards[i];
             set => _cards[i]=value;
         }
+
+        #endregion
+
+        #region Event
+        public UnityCardEvent CardPlayed;
         #endregion
 
         #region Method
+
         public Hand()
         {
             _cards = new List<T>();
+            CardPlayed = new UnityCardEvent();
         }
 
         public void Add(T c)
@@ -39,11 +49,17 @@ namespace Core.CardSystem
             _cards.Add( c );
             _isDirty = true;
         }
-        public void InsertBefore(T card , T cardtoplaceBefore )
+
+        public void InsertBefore( T card , T cardtoplaceBefore )
         {
-            int index =  _cards.FindIndex((x) => x.Equals( cardtoplaceBefore));
-            _cards.Insert(index, card);
+            int index =  _cards.FindIndex( (x) => x.Equals( cardtoplaceBefore ) );
+            _cards.Insert( index , card );
             _isDirty = true;
+        }
+
+        public void Play(T card)
+        {
+            CardPlayed?.Invoke(card);
         }
 
         public void Remove( T card)
@@ -57,6 +73,8 @@ namespace Core.CardSystem
             _cards.Clear();
             _isDirty = true;
         }
+
         #endregion
+
     }
 }

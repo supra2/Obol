@@ -16,11 +16,21 @@ public class Deck<T>  where T : ICard , ICloneable
     protected int nbShuffle = 200;
     #endregion
 
+    #region Events
+    public delegate void DeckEvent(Deck<T> deck);
+    public DeckEvent OnDeckIsEmpty;
+    #endregion
+
+    #region Getter 
+
     /// <summary>
     /// getter on Cards cound
     /// </summary>
     public int Count => _cards.Count;
 
+    #endregion
+
+    #region Constructors
     public Deck()
     {
         _cards = new List<T>( );
@@ -30,8 +40,9 @@ public class Deck<T>  where T : ICard , ICloneable
     {
         _cards = new List<T>( cards);
     }
+    #endregion
 
-    #region Methods
+    #region Public Methods
 
     public void Shuffle()
     {
@@ -55,6 +66,10 @@ public class Deck<T>  where T : ICard , ICloneable
     {
         T x = _cards[0];
         _cards.RemoveAt(0);
+        if ( _cards.Count == 0 )
+        {
+            OnDeckIsEmpty ?.Invoke(this);
+        }
         return x;
 
     }

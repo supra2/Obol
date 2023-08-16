@@ -6,14 +6,18 @@ using UnityEngine;
 public class Tooltip : MonoBehaviour
 {
 
-    #region members 
+    #region members
+
     [SerializeField]
     protected TextMeshProUGUI _text;
+
     [SerializeField]
     protected Animator _animator;
+
     #endregion
 
     #region Public Methods
+
     public void SetContent( string content )
     {
         _text.text = content;
@@ -26,14 +30,21 @@ public class Tooltip : MonoBehaviour
 
     public void Show ( )
     {
+        ResetAllTriggers();
         _animator.SetTrigger("Show");
     }
 
     public void Hide()
     {
+        ResetAllTriggers();
         _animator.SetTrigger("Hide");
     }
 
+    public void ResetAllTriggers()
+    {
+        _animator.ResetTrigger("Hide");
+        _animator.ResetTrigger("Show");
+    }
     #endregion
 
 }

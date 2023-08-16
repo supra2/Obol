@@ -10,8 +10,9 @@ using UnityEngine.Events;
 namespace Core.FightSystem
 {
     [CreateAssetMenu(fileName = "Adversaire", menuName = "Obol/Characters/Enemy", order = 1)]
-    public class Adversaire : Character, ICharacteristic, ITargetable
+    public class Adversaire : Character, ICharacteristic
     {
+
         #region Enum
         public enum EnnemyState
         {
@@ -29,10 +30,6 @@ namespace Core.FightSystem
         /// Current State
         /// </summary>
         protected EnnemyState _currentState;
-        /// <summary>
-        /// Current Life
-        /// </summary>
-        protected int _currentlife;
         #endregion
         #region Visible
         [SerializeField]
@@ -44,9 +41,9 @@ namespace Core.FightSystem
 
         #region Getters
 
-        public int Life
+        public int MaxLife
         {
-            get => _currentlife;
+            get => _maxlife;
         }
 
         public Sprite Illustration
@@ -56,7 +53,13 @@ namespace Core.FightSystem
 
         public bool IsDead()
         {
-            return _currentlife == 0;
+            return _life == 0;
+        }
+
+        public List<Attack> AttackList
+        {
+            get => _attacks;
+
         }
 
         #endregion
@@ -65,7 +68,7 @@ namespace Core.FightSystem
 
         public void Attack(int degat)
         {
-            _currentlife = Mathf.Clamp(degat, 0, _maxlife);
+            _life = Mathf.Clamp(degat, 0, _maxlife);
         }
 
         //--------------------------------------------------------------
@@ -83,18 +86,20 @@ namespace Core.FightSystem
             {
                 _tempModifiers.Clear();
             }
-            _currentlife = _maxlife;
+            Life = _maxlife;
+            _stamina = 1;
         }
 
         //--------------------------------------------------------------
+
         public override string ToString()
         {
-            return string.Format(" [ {0} PV: {1}/{2} ]", _characterNameKey, _currentlife, _maxlife);
+            return string.Format(" [ {0} PV: {1}/{2} ]",
+                _characterNameKey, _life, _maxlife);
         }
 
-        //--------------------------------------------------------------
 
-     
+        //--------------------------------------------------------------
 
 
     }

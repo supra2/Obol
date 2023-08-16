@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Core.FightSystem.AttackSystem
 {
+
     public class GainEffect : IEffect
     {
 
@@ -12,6 +13,8 @@ namespace Core.FightSystem.AttackSystem
         protected int _modifier;
         #endregion
 
+
+        #region public methods
         public GainEffect(string comp,int modifier)
         {
             _competence = comp;
@@ -27,21 +30,33 @@ namespace Core.FightSystem.AttackSystem
             }
         }
 
-        public void CreateFromLine(string[] words)
+        public void CreateFromLine( string[] words )
         {
+
             int val = 0;
-            if( words.Length == 3 && int.TryParse( words[2] , out val )  )
+
+            if( words.Length == 3 && int.TryParse( words[1] , out val )  )
             {
-                _competence = words[1];
+
+                _competence = words[2];
+
                 _modifier = val;
+
             }
             else
             {
-                Debug.LogError("Incorrectyl formated command");
+
+                Debug.LogError("Incorrectly formated command");
+
             }
 
         }
-
       
+        public bool SelfTarget()
+        {
+            return true;
+        }
+        #endregion
     }
+
 }

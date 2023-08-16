@@ -7,15 +7,17 @@ using UnityEngine.UI;
 /// <summary>
 /// Adversaire Displayer
 /// </summary>
-public class AdversaireDisplayer : MonoBehaviour, IPointerUpHandler
+public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
 {
 
     #region Enum 
+
     public enum AdversaireDisplayerMode
     {
         Neutral,
         Selection
     }
+
     #endregion
 
     #region Members
@@ -25,11 +27,16 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerUpHandler
     /// </summary>
     [SerializeField]
     protected Core.FightSystem.Adversaire _adversaire;
+
     /// <summary>
     /// Image displaying adversaire Illustration
     /// </summary>
     [SerializeField]
     protected Image _image;
+    [SerializeField]
+    protected Slider _lifeslider;
+    [SerializeField]
+    protected HorizontalLayoutGroup _alterationLayout;
     #endregion
     #region Hidden 
     protected AdversaireDisplayerMode _currentMode;
@@ -49,8 +56,15 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerUpHandler
         {
             _adversaire = value;
             _image.sprite = _adversaire.Illustration;
+
+            Adversaire.LifeChangeEvent.AddListener(LifeChanged);
         }
     }
+    #endregion
+
+    #region Init
+
+
     #endregion
 
     #region Public Methods
@@ -66,13 +80,18 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerUpHandler
         _currentMode = newmode;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (_currentMode == AdversaireDisplayerMode.Selection)
         {
             _picked = !_picked;
             _onAdversairePicked?.Invoke(_adversaire);
         }
+    }
+
+    public void LifeChanged( int Diff  )
+    {
+        _lifeslider.value = (float)Adversaire.Life / _adversaire.MaxLife;
     }
 
     #endregion

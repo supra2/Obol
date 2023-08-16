@@ -26,6 +26,10 @@ public class Attack : ScriptableObject
     #endregion
     #endregion
 
+    #region Getters
+    public int Stamina => _stamina;
+    #endregion
+
     #region Initialisation
     public Attack()
     {
@@ -42,6 +46,7 @@ public class Attack : ScriptableObject
         {
             ieffect.Apply(targetable);
         }
+        
     }
 
     #endregion

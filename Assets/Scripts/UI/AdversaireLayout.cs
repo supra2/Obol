@@ -18,13 +18,24 @@ public class AdversaireLayout : MonoBehaviour
     #region Members
     #region Visible
     /// <summary>
-    /// prefabD
+    /// Prefab for Displaying Adversaries
     /// </summary>
     [SerializeField]
     protected AdversaireDisplayer _prefabDisplayers;
+    /// <summary>
+    /// Message displayed when picking an adversaries
+    /// </summary>
+    [SerializeField]
+    protected RectTransform _messagePicking;
+    /// <summary>
+    /// Popup Screen for adversaire selection
+    /// </summary>
+    [SerializeField]
+    protected RectTransform _adversaireScreen;
     #endregion
     #region Hidden
     protected List<AdversaireDisplayer> _displayers;
+    protected Action<ITargetable> _callback;
     #endregion
     #endregion
 
@@ -32,36 +43,68 @@ public class AdversaireLayout : MonoBehaviour
     public void Awake()
     {
         _displayers = new List<AdversaireDisplayer>();
+        _adversaireScreen.gameObject.SetActive(false);
     }
     #endregion
 
     #region Public Methods
+    //-------------------------------------------------------
 
-    public void AddAdversaire(Core.FightSystem.Adversaire _adversaire)
-    { 
-        AdversaireDisplayer displayer =
-            GameObject.Instantiate(_prefabDisplayers,transform);
-        displayer.Adversaire = _adversaire;
-        _displayers = new List<AdversaireDisplayer>();
-    }
-
-    public void SelectAdversaireMode( Action<ITargetable> callback )
+    public void AddAdversaire(
+        Core.FightSystem.Adversaire _adversaire)
     {
-        foreach(AdversaireDisplayer advDisplayer in _displayers)
-        {
-           advDisplayer.SetMode( AdversaireDisplayerMode.Selection );
-            advDisplayer._onAdversairePicked.AddListener((character) =>
-           {
-               if (character is ITargetable)
-               {
-                 callback((ITargetable)character);
-               }
-           });
-        }
+        AdversaireDisplayer displayer =
+            GameObject.Instantiate(_prefabDisplayers, transform);
+        displayer.Adversaire = _adversaire;
+        _displayers.Add(displayer);
     }
 
+    //-------------------------------------------------------
 
+    public void SelectAdversaireMode( 
+        Action<ITargetable> callback )
+    {
+        foreach (AdversaireDisplayer advDisplayer 
+            in _displayers)
+        {
+            advDisplayer.SetMode(
+                AdversaireDisplayerMode.Selection);
+            _callback = callback;
+            advDisplayer._onAdversairePicked.AddListener(
+                AdversarySelected);
+            advDisplayer._onAdversairePicked.AddListener(
+                StopSelectingAdversaries);
+        }
+        _adversaireScreen.gameObject.SetActive(true);
+    }
 
+    //-------------------------------------------------------
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="character"></param>
+    public void AdversarySelected( Character character )
+    {
+        _callback?.Invoke((ITargetable)character);
+    }
+
+    //-------------------------------------------------------
+
+    public void StopSelectingAdversaries( Character character )
+    {
+        foreach (AdversaireDisplayer advDisplayer in _displayers)
+        {
+            advDisplayer.SetMode( AdversaireDisplayerMode.Neutral );
+            advDisplayer._onAdversairePicked.RemoveListener(AdversarySelected);
+            advDisplayer._onAdversairePicked.RemoveListener(
+                StopSelectingAdversaries);
+        }
+
+        _adversaireScreen.gameObject.SetActive(false);
+    }
+   
+    //-------------------------------------------------------
     #endregion
 
 }
