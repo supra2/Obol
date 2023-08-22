@@ -63,7 +63,6 @@ namespace Core.FightSystem
             _permModifiers = new List<Tuple<string, int>>();
             _life = _maxlife;
             _san = _maxSan;
-
         }
 
         /// <summary>
@@ -95,7 +94,7 @@ namespace Core.FightSystem
                     card.Init();
                 }
             }
-            _stamina = 1;
+            Stamina = 1;
         }
 
         #endregion
@@ -133,7 +132,7 @@ namespace Core.FightSystem
             switch (characName.ToUpper())
             {
                 case "STAMINA":
-                     _stamina = newValue;
+                     Stamina = newValue;
                     break;
                 default:
                      base.SetCharacteristicsByName(characName, newValue);

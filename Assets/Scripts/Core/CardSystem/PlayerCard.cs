@@ -97,6 +97,7 @@ namespace Core.CardSystem
         public PlayerCard(string cardName, Type type,Nature nature, Sprite illustration,string effect,
             List<IEffect> effectList, bool targetMonster,string description)
         {
+
             _cardName = cardName;
             _type = type;
             _nature = nature;
@@ -106,13 +107,14 @@ namespace Core.CardSystem
                 _effects = new List<IEffect>(effectList);
             _targetMonster = targetMonster;
             _description = description;
-            _instanceID = _lastID++;
+         
             CardPlayed = new UnityCardEvent();
         }
 
         public virtual void Init()
         {
             _effects = EffectFactory.ParseEffect(_effect);
+            _instanceID = _lastID++;
         }
 
         #endregion

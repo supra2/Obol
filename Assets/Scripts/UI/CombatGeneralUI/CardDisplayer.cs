@@ -67,6 +67,7 @@ public class CardDisplayer : MonoBehaviour
     #endregion
 
     #region Getters
+    //_______________________________________________________
 
     public ICard Card {
 
@@ -76,7 +77,8 @@ public class CardDisplayer : MonoBehaviour
             _baseCard = value;
             _illustration.sprite = _baseCard.GetIllustration();
             _titleLocalisation.SetEntry(_baseCard.TitleKey());
-            _descriptionLocalisation.SetEntry(_baseCard.DescriptionKey());
+            _descriptionLocalisation.SetEntry(
+                _baseCard.DescriptionKey());
             if (_baseCard is PlayerCard)
             {
                 ((PlayerCard)_baseCard).CardPlayed.
@@ -84,6 +86,8 @@ public class CardDisplayer : MonoBehaviour
             }
         }
     }
+
+    //_______________________________________________________
 
     public Vector2 Size
     {
@@ -93,6 +97,7 @@ public class CardDisplayer : MonoBehaviour
         }
     }
 
+    //_______________________________________________________
     #endregion
 
     #region Event
@@ -117,20 +122,30 @@ public class CardDisplayer : MonoBehaviour
     public void Init()
     {
         _currentMode = CardMode.NotInteractable;
-
     }
 
     //_______________________________________________________
 
     public virtual void OnEnable()
     {
-    
+        if ((PlayerCard)_baseCard != null )
+        {   
+           ((PlayerCard)_baseCard).CardPlayed.
+                       RemoveListener(OnCardPlayed);
+            ((PlayerCard)_baseCard).CardPlayed.
+                           AddListener(OnCardPlayed);
+        }
     }
 
     //_______________________________________________________
 
     public void OnDisable()
     {
+        if ((PlayerCard)_baseCard != null)
+        {
+            ((PlayerCard)_baseCard).CardPlayed.
+                       AddListener(OnCardPlayed);
+        }
     }
 
     //_______________________________________________________
@@ -237,6 +252,10 @@ public class CardDisplayer : MonoBehaviour
     #region Private methods
     //_______________________________________________________
 
+    /// <summary>
+    /// Card Played
+    /// </summary>
+    /// <param name="card"></param>
     protected void OnCardPlayed(ICard card)
     {
         CardPlayed?.Invoke(card);

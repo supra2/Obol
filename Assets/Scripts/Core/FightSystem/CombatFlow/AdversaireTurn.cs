@@ -27,7 +27,6 @@ namespace Core.FightSystem.CombatFlow
 
         public void Execute()
         {
-            Debug.Log(" Start Adversaire turn ");
             List<Attack> AvailableAttack = new List<Attack>();
             foreach( Attack attack in _adversaire.AttackList )
             {

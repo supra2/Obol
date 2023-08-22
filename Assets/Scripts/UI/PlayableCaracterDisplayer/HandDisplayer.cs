@@ -313,7 +313,8 @@ public class HandDisplayer : MonoBehaviour
     public void CardPlayed( ICard card )
     {
        CardDisplayer displayer =
-            _cardDisplayers.Find( (x) => ((PlayerCard)x.Card).GetHashCode() == 
+            _cardDisplayers.Find( (x) => (
+            (PlayerCard)x.Card).GetHashCode() == 
             ((PlayerCard)card).GetHashCode());
         _cardDisplayers.Remove( displayer );
 
@@ -324,7 +325,7 @@ public class HandDisplayer : MonoBehaviour
 
         _hand.Remove( (PlayerCard)card );
         displayer.transform.SetParent(null);
-        GameObject.DestroyImmediate( displayer );
+        GameObject.DestroyImmediate( displayer.gameObject );
 
         OnCardPlayed?.Invoke( card );
     }

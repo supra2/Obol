@@ -40,11 +40,13 @@ public class AdversaireLayout : MonoBehaviour
     #endregion
 
     #region Initialisation
+    
     public void Awake()
     {
         _displayers = new List<AdversaireDisplayer>();
         _adversaireScreen.gameObject.SetActive(false);
     }
+
     #endregion
 
     #region Public Methods
@@ -91,6 +93,10 @@ public class AdversaireLayout : MonoBehaviour
 
     //-------------------------------------------------------
 
+    /// <summary>
+    /// Stop Selecting Adversaries
+    /// </summary>
+    /// <param name="character"></param>
     public void StopSelectingAdversaries( Character character )
     {
         foreach (AdversaireDisplayer advDisplayer in _displayers)

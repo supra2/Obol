@@ -41,7 +41,9 @@ namespace Core.FightSystem
         [Header("Event")]
         public UnityIntEvent LifeChangeEvent;
 
-        public AlterationEvent AlterationAddedEvent;
+        public UnityIntEvent StaminaChangeEvent;
+
+        public AlterationEvent AlterationAppliedEvent;
         #endregion
         #region Hidden
         /// <summary>
@@ -56,10 +58,13 @@ namespace Core.FightSystem
         /// Current Life 
         /// </summary>
         protected int _life;
-        protected Dictionary<AlterationType,IAlteration> _alterations;
+        protected Dictionary<AlterationType, IAlteration> _alterations;
         protected int _stamina;
         #endregion
         #endregion
+
+        #region Getter
+        
         public int Life
         {
             set
@@ -76,8 +81,8 @@ namespace Core.FightSystem
             set
             {
                 _maxlife = value;
-                if( Life > _maxlife)
-                { 
+                if (Life > _maxlife)
+                {
                     int damages = Life - _maxlife;
                     Life = _maxlife;
                     LifeChangeEvent?.Invoke(damages);
@@ -85,6 +90,18 @@ namespace Core.FightSystem
             }
             get => _maxlife;
         }
+        
+        public int Stamina
+        {
+            get => _stamina;
+            set
+            {
+                _stamina = value;
+                StaminaChangeEvent?.Invoke(_stamina);
+            }
+        }
+
+        #endregion
 
         #region  Initialisation
         protected Character()
@@ -93,6 +110,7 @@ namespace Core.FightSystem
             _alterations = new Dictionary<AlterationType, IAlteration>();
            
         }
+
         #endregion
 
         #region Inner Methods
@@ -146,7 +164,7 @@ namespace Core.FightSystem
             switch (characName.ToUpper())
             {
                 case "STAMINA":
-                    carac  = _stamina;
+                    carac  = Stamina;
                     break;
                 case "INTELLIGENCE":
                     carac = _intelligence;
@@ -217,17 +235,14 @@ namespace Core.FightSystem
         //--------------------------------------------------------------
         #endregion
 
-        #region Event
-
-        #endregion
-
         //--------------------------------------------------------------
+
         /// <summary>
         /// Character Recovery of stamina after turn End
         /// </summary>
         public void Recover()
         {
-            _stamina++;
+            Stamina++;
         }
 
         //--------------------------------------------------------------
@@ -242,13 +257,43 @@ namespace Core.FightSystem
             if (!_alterations.ContainsKey(type))
             {
                 _alterations.Add(type, value);
-                AlterationAddedEvent?.Invoke(value);
+                AlterationAppliedEvent?.Invoke(value);
             }
             else
             {
                 _alterations[type].Merge(value);
+                AlterationAppliedEvent?.Invoke(_alterations[type]);
             }
         }
+
+        //--------------------------------------------------------------
+
+        /// <summary>
+        /// Apply Alteration
+        /// </summary>
+        /// <param name="turnBegin"> turn Begin</param>
+        public void ApplyAlteration(bool turnBegin)
+        {
+            List<AlterationType> toRemove = new List<AlterationType>();
+            foreach(KeyValuePair<AlterationType,IAlteration> alteration in _alterations)
+            {
+                if( alteration.Value.StartTurnAlteration() == turnBegin )
+                {
+                    alteration.Value.Apply(this);
+                    AlterationAppliedEvent?.Invoke( alteration.Value );
+                    if (!alteration.Value.StillGoingOn())
+                    {
+                        toRemove.Add(alteration.Key);
+                    }
+                }
+            }
+            foreach( AlterationType type in toRemove)
+            {
+                _alterations.Remove(type);
+            }
+        }
+
+        //-------------------------------------------------------------
     }
 
 }

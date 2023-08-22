@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ public class EffectIcon : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected Image _icon;
+    [SerializeField]
+    protected TextMeshProUGUI _counter;
     #endregion 
 
     #region Getter
@@ -27,4 +30,21 @@ public class EffectIcon : MonoBehaviour
     }
     #endregion
 
+
+    public void Setup(IAlteration alteration)
+    {
+      _icon.sprite =  GameObject.Instantiate( Resources.Load(alteration.GetIconPath())) as Sprite;
+        UpdateAlteration(alteration);
+    }
+
+    public void UpdateAlteration(IAlteration alteration)
+    {
+        switch( alteration.AlterationType())
+        {
+            case AlterationType.Bleeding:
+                Bleed bleed = (Bleed)alteration;
+                _counter.text = bleed.BleedValue.ToString();
+                break;
+        }
+    }
 }

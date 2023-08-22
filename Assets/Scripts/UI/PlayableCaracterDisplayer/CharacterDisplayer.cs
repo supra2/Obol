@@ -3,7 +3,12 @@ using Core.FightSystem;
 using Core.FightSystem.CombatFlow;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.SmartFormat.Extensions;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(FightingCharacter))]
@@ -22,6 +27,8 @@ public class CharacterDisplayer : MonoBehaviour
     protected Button _skipTurn;
     [SerializeField]
     protected Slider _lifeslider;
+    [SerializeField]
+    protected LocalizeStringEvent _staminaDisplay;
     #endregion
 
     #region Event
@@ -48,7 +55,8 @@ public class CharacterDisplayer : MonoBehaviour
         GetComponent<FightingCharacter>().OnTurnStarted.AddListener(OnStartTurn);
         GetComponent<FightingCharacter>().OnTurnEnded.AddListener(OnEndTurn);
         GetComponent<FightingCharacter>().OnCardDiscard.AddListener(OnDiscard);
-      
+        GetComponent<FightingCharacter>().Initialized.AddListener(CharacterSetup);
+
     }
 
     public void OnDisable()
@@ -57,6 +65,7 @@ public class CharacterDisplayer : MonoBehaviour
         GetComponent<FightingCharacter>().OnTurnStarted.RemoveListener(OnStartTurn);
         GetComponent<FightingCharacter>().OnTurnEnded.RemoveListener(OnEndTurn);
         GetComponent<FightingCharacter>().OnCardDiscard.RemoveListener(OnDiscard);
+        GetComponent<FightingCharacter>().Initialized.RemoveListener(CharacterSetup);
     }
 
 
@@ -98,10 +107,24 @@ public class CharacterDisplayer : MonoBehaviour
         _discardDisplayer.Deck.AddTop( (PlayerCard) card );
     }
 
-    protected void OnLifeChanged( int damages)
+    protected void OnLifeChanged( int damages )
     {
         _lifeslider.value = GetComponent<FightingCharacter>().Character.Life /
             GetComponent<FightingCharacter>().Character.MaxLife;
+    }
+
+    protected void OnStaminaChanged( int stamina )
+    {
+        IntVariable intvariable = new IntVariable();
+        intvariable.Value = stamina;
+        _staminaDisplay.StringReference["stamina"] = intvariable;
+        _staminaDisplay.StringReference.RefreshString();
+    }
+
+    protected void CharacterSetup(Character character)
+    {
+        character.LifeChangeEvent.AddListener(OnLifeChanged);
+        character.StaminaChangeEvent.AddListener(OnStaminaChanged);
     }
 
     #endregion

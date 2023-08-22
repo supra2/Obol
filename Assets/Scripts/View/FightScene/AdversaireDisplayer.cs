@@ -27,7 +27,6 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
     /// </summary>
     [SerializeField]
     protected Core.FightSystem.Adversaire _adversaire;
-
     /// <summary>
     /// Image displaying adversaire Illustration
     /// </summary>
@@ -36,7 +35,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     protected Slider _lifeslider;
     [SerializeField]
-    protected HorizontalLayoutGroup _alterationLayout;
+    protected AlterationsDisplayer _alterationDisplayer;
     #endregion
     #region Hidden 
     protected AdversaireDisplayerMode _currentMode;
@@ -49,6 +48,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
     #endregion
 
     #region Getter
+
     public Core.FightSystem.Adversaire Adversaire
     {
         get => _adversaire;
@@ -58,8 +58,13 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
             _image.sprite = _adversaire.Illustration;
 
             Adversaire.LifeChangeEvent.AddListener(LifeChanged);
+            if (Adversaire.AlterationAppliedEvent == null)
+                Adversaire.AlterationAppliedEvent = new AlterationEvent();
+            Adversaire.AlterationAppliedEvent.AddListener(
+                _alterationDisplayer.OnAlterationApplied);
         }
     }
+
     #endregion
 
     #region Init
@@ -94,6 +99,12 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         _lifeslider.value = (float)Adversaire.Life / _adversaire.MaxLife;
     }
 
+    public void AlterationChanged(IAlteration alteration)
+    {
+        Image image = GameObject.Instantiate( Resources.Load( alteration.GetIconPath()) )as Image;
+        
+    }
+    
     #endregion
 
 }

@@ -36,6 +36,12 @@ public class Attack : ScriptableObject
         _listEffect = new List<IEffect>();
     }
 
+    public void Init()
+    {
+
+
+    }
+
     #endregion
 
     #region Attack Resolution
@@ -49,6 +55,10 @@ public class Attack : ScriptableObject
         
     }
 
+    public void Init()
+    {
+
+    }
     #endregion
 
    

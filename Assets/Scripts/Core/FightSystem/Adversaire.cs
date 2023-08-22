@@ -41,11 +41,6 @@ namespace Core.FightSystem
 
         #region Getters
 
-        public int MaxLife
-        {
-            get => _maxlife;
-        }
-
         public Sprite Illustration
         {
             get => _illustrations;
@@ -87,7 +82,7 @@ namespace Core.FightSystem
                 _tempModifiers.Clear();
             }
             Life = _maxlife;
-            _stamina = 1;
+            Stamina = 1;
         }
 
         //--------------------------------------------------------------

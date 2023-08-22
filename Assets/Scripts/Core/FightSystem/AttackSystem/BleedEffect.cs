@@ -18,8 +18,8 @@ public class BleedEffect : IEffect
     /// <param name="itargetable"> target for effect</param>
     public void Apply(ITargetable itargetable)
     {
-        Bleed bleed = new Bleed();
-        bleed.BleedValue = _bleedValue;
+        Bleed bleed = new Bleed(_bleedValue);
+     
         itargetable.AddAlteration(AlterationType.Bleeding, bleed);
     }
 
@@ -32,6 +32,10 @@ public class BleedEffect : IEffect
         System.Int32.TryParse(words[1], out _bleedValue);
     }
 
+    /// <summary>
+    /// Self Target
+    /// </summary>
+    /// <returns></returns>
     public bool SelfTarget()
     {
        return  false;

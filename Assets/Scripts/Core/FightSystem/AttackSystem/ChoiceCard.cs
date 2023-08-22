@@ -29,7 +29,12 @@ namespace Core.FightSystem.AttackSystem
         /// <summary>
         /// Cards 
         /// </summary>
-        public List<PlayerCard> Cards => _cards;
+        public List<PlayerCard> Cards
+        {
+
+            get => _cards;
+            set => _cards = value;
+        }
         #endregion
 
         #region Init
@@ -39,10 +44,13 @@ namespace Core.FightSystem.AttackSystem
             List<IEffect> effectList, bool targetMonster, string description, List<PlayerCard> cards) :
             base(cardName, type, nature, illustration, effect, effectList, targetMonster, description)
         {
+            Debug.Log("Choice card instanciated");
             _cards = new List<PlayerCard>();
             foreach( PlayerCard Card  in cards)
             {
-                _cards.Add( ScriptableObject.Instantiate(Card));
+                PlayerCard pc = ScriptableObject.Instantiate(Card);
+                pc.Init();
+                _cards.Add(pc);
             }
         }
         //-------------------------------------------------------------
@@ -108,10 +116,27 @@ namespace Core.FightSystem.AttackSystem
         }
 
         //-------------------------------------------------------------
+
+        public override object Clone()
+        {
+            ChoiceCard choiceCardClone=(ChoiceCard)  base.Clone();
+            List<PlayerCard> instanciatedCards = new List<PlayerCard>();
+            foreach (PlayerCard Card in _cards)
+            {
+                PlayerCard playerCard = ScriptableObject.Instantiate(Card);
+                playerCard.Init();
+                instanciatedCards.Add(playerCard);
+            }
+            choiceCardClone.Cards = instanciatedCards; 
+            choiceCardClone.OnEnable();
+            return choiceCardClone;
+        }
+        //-------------------------------------------------------------
         #endregion
 
         #region Public Methods
         //-------------------------------------------------------------
+
         public bool SelfTarget()
         {
             return true;
@@ -124,7 +149,8 @@ namespace Core.FightSystem.AttackSystem
         /// </summary>
         public override void Init()
         {
-            foreach(PlayerCard card in _cards )
+            _instanceID = _lastID++;
+            foreach (PlayerCard card in _cards )
             {
                 card.Init();
             }
@@ -133,7 +159,7 @@ namespace Core.FightSystem.AttackSystem
         //-------------------------------------------------------------
 
         /// <summary>
-        /// 
+        /// Play 
         /// </summary>
         public override void Play()
         {

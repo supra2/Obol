@@ -92,7 +92,7 @@ MonoBehaviour:
   _adversaire: {fileID: 0}
   _image: {fileID: 9042976113763728148}
   _lifeslider: {fileID: 5865109959197443442}
-  _alterationLayout: {fileID: 2463270077392529178}
+  _alterationDisplayer: {fileID: 6207912462654948203}
   _onAdversairePicked:
     m_PersistentCalls:
       m_Calls: []
@@ -206,17 +206,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 29065550528673174, guid: df628c6bd46274a49bbaa7dee754bf7d, type: 3}
   m_PrefabInstance: {fileID: 1864115525653168999}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2463270077392529178 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4319479963688215677, guid: df628c6bd46274a49bbaa7dee754bf7d, type: 3}
-  m_PrefabInstance: {fileID: 1864115525653168999}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5865109959197443442 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5240964420028909077, guid: df628c6bd46274a49bbaa7dee754bf7d, type: 3}
@@ -226,5 +215,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6207912462654948203 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5762430832595550220, guid: df628c6bd46274a49bbaa7dee754bf7d, type: 3}
+  m_PrefabInstance: {fileID: 1864115525653168999}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be19721f321d5845b5a09519faf35f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

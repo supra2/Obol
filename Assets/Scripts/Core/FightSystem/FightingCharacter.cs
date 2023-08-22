@@ -47,6 +47,8 @@ public class FightingCharacter : MonoBehaviour
     public UnityCharacterEvent OnTurnStarted;
 
     public UnityCharacterEvent OnTurnEnded;
+
+    public UnityCharacterEvent Initialized;
     #endregion
 
     #region Getter
@@ -75,27 +77,17 @@ public class FightingCharacter : MonoBehaviour
 
     #region Initialisation
 
-    public void Setup(PlayableCharacter character)
+    public void Setup( PlayableCharacter character )
     {
         _character = character;
-
         _deck = new Deck<PlayerCard>();
         foreach (PlayerCard card in _character.CardList)
-        {
-            if(card is ChoiceCard)
-            {
-                _deck.AddTop((ChoiceCard)((ChoiceCard)card).Clone());
-            }
-            else 
-            {
-                _deck.AddTop((PlayerCard)card.Clone());
-            }
-          
+        { 
+           _deck.AddTop((PlayerCard)card.Clone());   
         }
         _discard = new Deck<PlayerCard>();
         _deck.Shuffle();
         _deck.OnDeckIsEmpty += RefillDrawpile;
-      
         if (_hand == null)
         {
             _hand = new Hand<PlayerCard>();
@@ -105,6 +97,7 @@ public class FightingCharacter : MonoBehaviour
         {
             _hand.Clear();
         }
+        Initialized?.Invoke(_character);
     }
 
     #endregion
@@ -131,7 +124,7 @@ public class FightingCharacter : MonoBehaviour
         for (int i = 0; i < nbcard; i++)
         {
             PlayerCard drawncard = _deck.Draw();
-            _hand.Add(drawncard);
+            //_hand.Add(drawncard);
             OnCardDrawn?.Invoke(drawncard);
         }
         StartCoroutine(WaitForStartDrawing(callBack));
@@ -169,11 +162,6 @@ public class FightingCharacter : MonoBehaviour
             _deck.AddTop(card);
         }
         _deck.Shuffle();
-    }
-
-    public void Inflict(DamageType damagetype, int value)
-    {
-        throw new NotImplementedException();
     }
 
     public void CardPlayed( ICard card )
