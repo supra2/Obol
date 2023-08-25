@@ -14,4 +14,5 @@ public interface ICard
 
     public void Resolve();
 
+    public int GetCardId();
 }

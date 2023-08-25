@@ -41,6 +41,11 @@ namespace Core.CardSystem
         [SerializeField]
         protected Nature _nature;
         /// <summary>
+        /// Unique card Id
+        /// </summary>
+        [SerializeField]
+        protected int _cardID;
+        /// <summary>
         /// Sprite : Illustration
         /// </summary>
         [SerializeField]
@@ -78,6 +83,11 @@ namespace Core.CardSystem
         /// </summary>
         [SerializeField]
         protected bool _dynamicStaminaCost;
+        /// <summary>
+        /// Is the card Playable
+        /// </summary>
+        [SerializeField]
+        protected bool _playable;
         #region Hidden 
         public UnityCardEvent _playCardEvent;
         protected int _instanceID;
@@ -217,6 +227,7 @@ namespace Core.CardSystem
             return clone;
         }
 
+       
         #endregion
 
         #region Events
@@ -239,7 +250,12 @@ namespace Core.CardSystem
             return ((PlayerCard)other).InstanceID == _instanceID;
         }
 
-        #endregion 
+        public int GetCardId()
+        {
+            return _cardID;
+        }
+
+        #endregion
     }
 
 }

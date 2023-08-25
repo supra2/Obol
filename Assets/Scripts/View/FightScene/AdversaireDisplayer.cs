@@ -62,6 +62,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
                 Adversaire.AlterationAppliedEvent = new AlterationEvent();
             Adversaire.AlterationAppliedEvent.AddListener(
                 _alterationDisplayer.OnAlterationApplied);
+            Adversaire.Attacked.AddListener(AdversaireAttacked);
         }
     }
 
@@ -104,7 +105,12 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         Image image = GameObject.Instantiate( Resources.Load( alteration.GetIconPath()) )as Image;
         
     }
-    
+
+    public void AdversaireAttacked( Attack attack_Launch )
+    {
+        transform.GetComponentInParent<AdversaireLayout>().ShowAttack(attack_Launch);
+    }
+
     #endregion
 
 }

@@ -114,6 +114,7 @@ namespace Core.FightSystem
         #endregion
 
         #region Inner Methods
+        //--------------------------------------------------------------
 
         protected int ComputeValue(int damage, int defbasevalue, string competence)
         {
@@ -133,21 +134,19 @@ namespace Core.FightSystem
             return (int)Mathf.Clamp(damage - defense, 0f, 9999f);
         }
 
+        //--------------------------------------------------------------
+
         public virtual void Inflict( DamageType damagetype , int value )
         {
             switch (damagetype)
             {
                 case DamageType.Health:
-                   int damages = ComputeValue( value, _constitution, "Resistance" );
-                    value += 
+                   int damages = ComputeValue( value, _constitution, "Resistance" ); 
                     Life = Mathf.Clamp( Life - damages , 0 , _maxlife );
-                  
-                    Debug.Log("Inflict " + damages + " To " + this.ToString());
                     break;
             }
-          
         }
-
+        //--------------------------------------------------------------
         #endregion
 
         #region  Characteristics Interface
@@ -158,7 +157,7 @@ namespace Core.FightSystem
         /// </summary>
         /// <param name="characName"> charac Name </param>
         /// <returns></returns>
-        public  virtual int GetCharacteristicsByName(string characName)
+        public virtual int GetCharacteristicsByName(string characName)
         {
             int carac = 0;
             switch (characName.ToUpper())

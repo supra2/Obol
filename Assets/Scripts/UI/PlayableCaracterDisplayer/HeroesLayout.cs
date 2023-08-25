@@ -61,7 +61,7 @@ public class HeroesLayout : MonoBehaviour
         characterDisplayer.Init(fightingCharacter.Deck, fightingCharacter.DiscardPile, fightingCharacter.Hand);
 
         if (StartTurnCallBack != null)
-        fightingCharacter.OnTurnStarted.AddListener(StartTurnCallBack);
+            fightingCharacter.OnTurnStarted.AddListener(StartTurnCallBack);
         if (EndTurnCallBack != null)
             fightingCharacter.OnTurnEnded.AddListener(EndTurnCallBack);
     }

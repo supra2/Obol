@@ -19,7 +19,6 @@ public class BleedEffect : IEffect
     public void Apply(ITargetable itargetable)
     {
         Bleed bleed = new Bleed(_bleedValue);
-     
         itargetable.AddAlteration(AlterationType.Bleeding, bleed);
     }
 

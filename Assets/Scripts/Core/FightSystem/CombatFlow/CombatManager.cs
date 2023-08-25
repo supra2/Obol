@@ -167,10 +167,11 @@ public class CombatManager : Singleton<CombatManager>
 
     private void InitializeAdversairesUI(CombatVar vars)
     {
-        foreach (Core.FightSystem.Adversaire adersaire in vars.Adversaires)
+        foreach (Core.FightSystem.Adversaire adversary in vars.Adversaires)
         {
-            adersaire.Init();
-            _adversaireLayout.AddAdversaire(adersaire);
+            adversary.Init();
+            adversary.OnStartTurn.AddListener( CharacterStartTurn);
+            _adversaireLayout.AddAdversaire(adversary);
         }
     }
 

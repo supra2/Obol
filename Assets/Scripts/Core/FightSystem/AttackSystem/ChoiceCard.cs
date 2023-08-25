@@ -44,7 +44,6 @@ namespace Core.FightSystem.AttackSystem
             List<IEffect> effectList, bool targetMonster, string description, List<PlayerCard> cards) :
             base(cardName, type, nature, illustration, effect, effectList, targetMonster, description)
         {
-            Debug.Log("Choice card instanciated");
             _cards = new List<PlayerCard>();
             foreach( PlayerCard Card  in cards)
             {
@@ -164,7 +163,6 @@ namespace Core.FightSystem.AttackSystem
         public override void Play()
         {
             UICombatController.Instance.DisplayChoice(this);
-           
         }
 
         //-------------------------------------------------------------

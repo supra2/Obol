@@ -36,11 +36,21 @@ namespace Core.FightSystem
         protected List<Attack> _attacks;
         [SerializeField]
         protected Sprite _illustrations;
+        #region Hidden
+        /// <summary>
+        /// Individual instance for Attacks
+        /// </summary>
+        protected List<Attack> _instanciatedAttacks;
         #endregion
+        #endregion
+        #endregion
+
+        #region Event
+        public UnityCharacterEvent OnStartTurn;
         #endregion
 
         #region Getters
-
+        public UnityAttackEvent Attacked;
         public Sprite Illustration
         {
             get => _illustrations;
@@ -53,7 +63,7 @@ namespace Core.FightSystem
 
         public List<Attack> AttackList
         {
-            get => _attacks;
+            get => _instanciatedAttacks;
 
         }
 
@@ -83,6 +93,19 @@ namespace Core.FightSystem
             }
             Life = _maxlife;
             Stamina = 1;
+            _instanciatedAttacks = new List<Attack>();
+            foreach (Attack attack in _attacks)
+            {
+              Attack instance =  ScriptableObject.Instantiate(attack);
+               instance.Init();
+                instance.AttackLaunched.AddListener(OnAttackLaunched);
+              _instanciatedAttacks.Add(instance);
+            }
+            if (Attacked == null)
+            {
+                Attacked = new UnityAttackEvent();
+            }
+
         }
 
         //--------------------------------------------------------------
@@ -96,6 +119,12 @@ namespace Core.FightSystem
 
         //--------------------------------------------------------------
 
+        public void OnAttackLaunched( Attack attack )
+        {
+            Attacked?.Invoke(attack);
+        }
+
+        //--------------------------------------------------------------
 
     }
 }

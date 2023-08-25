@@ -32,6 +32,11 @@ public class AdversaireLayout : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected RectTransform _adversaireScreen;
+    /// <summary>
+    /// Attack Display : attack display
+    /// </summary>
+    [SerializeField]
+    protected AttackDisplay _attackDisplay;
     #endregion
     #region Hidden
     protected List<AdversaireDisplayer> _displayers;
@@ -109,7 +114,13 @@ public class AdversaireLayout : MonoBehaviour
 
         _adversaireScreen.gameObject.SetActive(false);
     }
-   
+
+    //-------------------------------------------------------
+
+    public void ShowAttack(Attack attack)
+    {
+        _attackDisplay.ShowAttackDescription(attack);
+    }
     //-------------------------------------------------------
     #endregion
 

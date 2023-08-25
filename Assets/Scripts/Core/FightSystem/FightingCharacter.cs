@@ -107,11 +107,13 @@ public class FightingCharacter : MonoBehaviour
     public void StartTurn()
     {
         OnTurnStarted?.Invoke(Character);
+        Character.ApplyAlteration(true);
     }
 
     public void EndTurn()
     {
         OnTurnEnded?.Invoke(Character);
+        Character.ApplyAlteration(false);
     }
 
     #endregion

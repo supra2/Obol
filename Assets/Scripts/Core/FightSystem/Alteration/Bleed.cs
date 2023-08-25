@@ -56,6 +56,7 @@ public class Bleed : IAlteration
     public Bleed( int bleed)
     {
         _alterationTriggered = new AlterationEvent();
+        _bleed = bleed;
     }
 
     #region Public Methods
@@ -67,6 +68,7 @@ public class Bleed : IAlteration
 
     public void Apply( ITargetable targetable )
     {
+        Debug.Log(" Inflict " + _bleed + " damages ");
         targetable.Inflict( DamageType.Health , _bleed );
         _bleed--;
         _alterationTriggered?.Invoke(this);
@@ -98,7 +100,7 @@ public class Bleed : IAlteration
 
     public string GetIconPath()
     {
-        return "UI/Icons/Beta_Bleed";
+        return "UI/Icon/Beta_BleedIcon";
     }
 
     public AlterationType AlterationType()

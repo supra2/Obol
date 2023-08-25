@@ -33,7 +33,8 @@ public class AlterationsDisplayer : MonoBehaviour
     {
         if( !_alterationIconDictionary.ContainsKey( alteration.AlterationType( )) )
         {
-            EffectIcon effectIcon = GameObject.Instantiate<EffectIcon>(_alterationPrefabs);
+            EffectIcon effectIcon =
+            GameObject.Instantiate<EffectIcon>(_alterationPrefabs,transform);
             effectIcon.Setup(alteration);
 
         }

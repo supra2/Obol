@@ -11,9 +11,9 @@ scopes = {
 	"last_search.B655092D" = "st:sword"
 	"OpenInspectorPreview.B655092D" = "0"
 	"currentGroup.B655092D" = "all"
-	"picker_window_position_offset.45F317DD" = "-479.3334;64;320;550"
-	"picker_search_text.45F317DD" = "UI sta"
-	"last_search.45F317DD" = "UI sta"
+	"picker_window_position_offset.45F317DD" = "-479.3333;64;320;550"
+	"picker_search_text.45F317DD" = "Attac "
+	"last_search.45F317DD" = "Attac "
 	"OpenInspectorPreview.45F317DD" = "0"
 	"currentGroup.45F317DD" = "all"
 }

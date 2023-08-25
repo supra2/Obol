@@ -28,16 +28,18 @@ namespace Core.FightSystem.CombatFlow
         public void Execute()
         {
             List<Attack> AvailableAttack = new List<Attack>();
-            foreach( Attack attack in _adversaire.AttackList )
+            _adversaire.ApplyAlteration(true);
+            _adversaire.OnStartTurn?.Invoke(_adversaire);
+            foreach ( Attack attack in _adversaire.AttackList )
             {
-                if( attack.Stamina <= _adversaire.GetCharacteristicsByName("Stamina") )
+                if( attack.Stamina <= _adversaire.Stamina )
                 {
                     AvailableAttack.Add(attack);
                 }
             }
+
             if( AvailableAttack.Count > 0 )
             {
-                
                 int attackLaunched = SeedManager.NextInt( 0 , AvailableAttack.Count-1 );
                 // Select Target
                 int totalrange = 0;
@@ -63,16 +65,14 @@ namespace Core.FightSystem.CombatFlow
                     }
                     break;
                 }
-                AvailableAttack[attackLaunched].PlayAttack( pickedCharacter );
-                Debug.Log(AvailableAttack);
-                int stamina = _adversaire.GetCharacteristicsByName("Stamina") -
-                    AvailableAttack[attackLaunched].Stamina;
-                _adversaire.SetCharacteristicsByName("Stamina", stamina);
+                AvailableAttack[attackLaunched].PlayAttack(pickedCharacter);
+                 _adversaire.Stamina -= AvailableAttack[attackLaunched].Stamina;
             }
             else
             {
                 Debug.Log( "Skipping Adversaries turn ");
             }
+            _adversaire.ApplyAlteration(false);
             _adversaire.Recover();
         }
 

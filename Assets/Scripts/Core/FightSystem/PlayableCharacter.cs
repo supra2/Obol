@@ -99,6 +99,8 @@ namespace Core.FightSystem
 
         #endregion
 
+        #region Public Methods
+
         public bool IsDead()
         {
             throw new NotImplementedException();
@@ -140,6 +142,11 @@ namespace Core.FightSystem
             }
         }
 
+        public void Exchange(ICard card1, ICard card2)
+        {
+            // todo: create Id unique for card type
+        }
+        #endregion
     }
 
 }
