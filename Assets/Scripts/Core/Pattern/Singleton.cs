@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Singleton<T> : MonoBehaviour where T:UnityEngine.Object
+public class Singleton<T> : MonoBehaviour where T:UnityEngine.MonoBehaviour
 {
 
     #region Members
@@ -20,6 +20,11 @@ public class Singleton<T> : MonoBehaviour where T:UnityEngine.Object
             if (_instance == null)
             {
                 _instance = FindObjectOfType<T>();
+            }
+            if( _instance == null)
+            {
+                GameObject gameObject = new GameObject(typeof(T).Name);
+                _instance = gameObject.AddComponent<T>();
             }
             return _instance;
         }

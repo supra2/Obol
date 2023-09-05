@@ -11,7 +11,7 @@ public class CoinFlipManager : Singleton<CoinFlipManager>
     public void Awake()
     {
         //Todo Animate coin
-        _CoinAnimator = (GameObject.Instantiate(Resources.Load("Prefabs/Coin")) as GameObject).GetComponent<Animator>();
+        //_CoinAnimator = (GameObject.Instantiate(Resources.Load("Prefabs/Coin")) as GameObject).GetComponent<Animator>();
     }
     public  bool Flip( int val_comp1 , int val_comp2,bool Silent = true )
     {

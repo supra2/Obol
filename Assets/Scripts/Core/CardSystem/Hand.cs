@@ -14,6 +14,9 @@ namespace Core.CardSystem
         /// card list in hand
         /// </summary>
         List<T> _cards;
+        /// <summary>
+        /// Is Dirty
+        /// </summary>
         bool _isDirty;
         #endregion
 
@@ -72,6 +75,16 @@ namespace Core.CardSystem
         {
             _cards.Clear();
             _isDirty = true;
+        }
+
+        public List<T> Filter(Predicate<T> filter)
+        {
+            return _cards.FindAll(filter);
+        }
+
+        public bool Contains(T card)
+        {
+            return _cards.Contains(card);
         }
 
         #endregion

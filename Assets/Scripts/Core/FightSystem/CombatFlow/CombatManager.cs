@@ -145,7 +145,6 @@ public class CombatManager : Singleton<CombatManager>
 
     public void StartNewRound()
     {
-      
         _vars.NbRound++;
         UpdateOrder();
     }
@@ -167,11 +166,12 @@ public class CombatManager : Singleton<CombatManager>
 
     private void InitializeAdversairesUI(CombatVar vars)
     {
-        foreach (Core.FightSystem.Adversaire adversary in vars.Adversaires)
+        foreach ( Core.FightSystem.Adversaire adversary in vars.Adversaires )
         {
-            adversary.Init();
-            adversary.OnStartTurn.AddListener( CharacterStartTurn);
-            _adversaireLayout.AddAdversaire(adversary);
+            Core.FightSystem.Adversaire adversaire = ScriptableObject.Instantiate(adversary);
+            adversaire.Init();
+            adversaire.OnStartTurn.AddListener( CharacterStartTurn );
+            _adversaireLayout.AddAdversaire(adversaire);
         }
     }
 
@@ -212,12 +212,12 @@ public class CombatManager : Singleton<CombatManager>
         for (int k = 5 ; k >= 0 ; k--)
         {
             foreach ( Core.FightSystem.Adversaire advers
-                in _vars.Adversaires )
+                in _adversaireLayout )
             { 
                 if( advers.GetCharacteristicsByName("Speed") == k )
                 {
                     Core.FightSystem.CombatFlow.AdversaireTurn adversaireTurn =
-                        new Core.FightSystem.CombatFlow.AdversaireTurn(_vars.Adversaires[i], _vars.NbRound);
+                   new Core.FightSystem.CombatFlow.AdversaireTurn( _vars.Adversaires[i], _vars.NbRound );
                     _fightStack.PileBottom( adversaireTurn );
                 }
             }
@@ -282,7 +282,13 @@ public class CombatManager : Singleton<CombatManager>
     { 
 
     }
-  
+
+    public FightingCharacter GetFightingCharacter(Character character)
+    {
+        return _fightingCharacter.Find(x => x.Character == character);
+
+    }
+
     #endregion
 
 }

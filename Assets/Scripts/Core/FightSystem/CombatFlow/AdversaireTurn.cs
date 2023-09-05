@@ -14,6 +14,9 @@ namespace Core.FightSystem.CombatFlow
         /// Adversaire 
         /// </summary>
         protected Adversaire _adversaire;
+        /// <summary>
+        /// Nbturn
+        /// </summary>
         protected int _nbturn;
         #endregion
 

@@ -1,3 +1,4 @@
+using Core.CardSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,12 +11,19 @@ public class CardManager : Singleton<CardManager>
 
     #region Members
     [SerializeField]
-    protected List<ICard> _cardList;
+    protected List<PlayerCard> _cardList;
     #endregion
 
+    #region Public Methods
     public ICard Instantiate(int cardId)
     {
-        return _cardList[cardId];
+        PlayerCard card = _cardList.Find( (x) => x.GetCardId() == cardId);
+        if( card == null)
+        { throw new System.Exception("CARD ID NOT CONTAINED IN CARD MANAGER, INSTANCIATION FAILED"); }
+        PlayerCard _instanceCard =  ScriptableObject.Instantiate(card);
+        _instanceCard.Init();
+        return _instanceCard;
     }
+    #endregion
 
 }

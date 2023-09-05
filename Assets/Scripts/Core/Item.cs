@@ -21,6 +21,8 @@ public class Item : ScriptableObject
     protected Sprite[] _illustration;
     [SerializeField]
     protected string _nameKey;
+    [SerializeField]
+    protected string _descriptionKey;
     #endregion
     #endregion
 }

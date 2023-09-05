@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [Serializable]
 public class PartyManager : Singleton<PartyManager>
 {
@@ -29,19 +30,20 @@ public class PartyManager : Singleton<PartyManager>
     #endregion
 
     #region Method
+
     public void UpdateGroup(List<PlayableCharacter> playable_character)
     {
         _characterParty = playable_character;
     }
+
     public void Save ( string filename )
     {
-
-        //todo
-       //JsonUtility.FromJson
     }
+
     public void Load(string filename)
     {
     
     }
+
     #endregion
 }

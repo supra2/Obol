@@ -22,9 +22,9 @@ public class FightingCharacter : MonoBehaviour
     // Hand of Cards in combat
     protected Hand<PlayerCard> _hand;
     // Deck Card not drawed
-    protected Deck<PlayerCard> _deck;
+    protected PlayerCardDeck<PlayerCard> _deck;
     // Deck Card not drawed
-    protected Deck<PlayerCard> _discard;
+    protected PlayerCardDeck<PlayerCard> _discard;
     /// <summary>
     /// is the fighting character currently active in fight
     /// </summary>
@@ -67,9 +67,9 @@ public class FightingCharacter : MonoBehaviour
         set => _character.SetCharacteristicsByName("STAMINA", value);
     }
 
-    public Deck<PlayerCard> DiscardPile => _discard;
+    public PlayerCardDeck<PlayerCard> DiscardPile => _discard;
 
-    public Deck<PlayerCard> Deck => _deck;
+    public PlayerCardDeck<PlayerCard> Deck => _deck;
 
     public Hand<PlayerCard> Hand => _hand;
 
@@ -80,14 +80,18 @@ public class FightingCharacter : MonoBehaviour
     public void Setup( PlayableCharacter character )
     {
         _character = character;
-        _deck = new Deck<PlayerCard>();
+        _deck = new PlayerCardDeck<PlayerCard>();
         foreach (PlayerCard card in _character.CardList)
         { 
            _deck.AddTop((PlayerCard)card.Clone());   
         }
-        _discard = new Deck<PlayerCard>();
+        _discard = new PlayerCardDeck<PlayerCard>();
         _deck.Shuffle();
         _deck.OnDeckIsEmpty += RefillDrawpile;
+        if (_character.CardExchanged == null)
+            _character.CardExchanged = new ExchangeEvent();
+        _character.CardExchanged.AddListener( OnCardExchanged );
+
         if (_hand == null)
         {
             _hand = new Hand<PlayerCard>();
@@ -103,6 +107,33 @@ public class FightingCharacter : MonoBehaviour
     #endregion
 
     #region Turn Management
+
+    public void OnCardExchanged(int cardIdRemoved,int cardIdAdded)
+    {
+        // Gather all card matching id in hand/deck and discard
+        List<PlayerCard> matchingCard = 
+            Deck.Filter((x) => x.GetCardId() == cardIdRemoved);
+        matchingCard.AddRange(DiscardPile.Filter((x) => x.GetCardId() == cardIdRemoved));
+        matchingCard.AddRange(Hand.Filter( (x) => x.GetCardId() == cardIdRemoved) );
+        PlayerCard toExchange = matchingCard[SeedManager.NextInt(0, matchingCard.Count - 1)];
+        if( Hand.Contains(toExchange))
+        {
+            Hand.Remove(toExchange);
+            Hand.Add(CardManager.Instance.Instantiate(cardIdAdded) as PlayerCard);
+        }
+        else if ( Deck.Contains(toExchange))
+        {
+           int index =  Deck.FindIndex(toExchange);
+            Deck.Remove(toExchange);
+            Deck.InsertAt(index, CardManager.Instance.Instantiate(cardIdAdded) as PlayerCard);
+        }
+        else if (DiscardPile.Contains(toExchange))
+        {
+            int index = DiscardPile.FindIndex(toExchange);
+            DiscardPile.Remove(toExchange);
+            DiscardPile.InsertAt(index, CardManager.Instance.Instantiate(cardIdAdded) as PlayerCard);
+        }
+    }
 
     public void StartTurn()
     {

@@ -7,12 +7,12 @@ using static AdversaireDisplayer;
 using System;
 using Core.FightSystem.AttackSystem;
 
-public class Adversaire : UnityEvent<AdversaireDisplayer>
+public class AdversaireEvent : UnityEvent<AdversaireDisplayer>
 { 
 
 }
 
-public class AdversaireLayout : MonoBehaviour
+public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adversaire>
 {
 
     #region Members
@@ -50,6 +50,18 @@ public class AdversaireLayout : MonoBehaviour
     {
         _displayers = new List<AdversaireDisplayer>();
         _adversaireScreen.gameObject.SetActive(false);
+    }
+
+    #endregion
+
+    #region Getters
+
+    public Core.FightSystem.Adversaire this[int i]
+    {
+        get
+        {
+            return _displayers[i].Adversaire;
+        }
     }
 
     #endregion
@@ -121,7 +133,62 @@ public class AdversaireLayout : MonoBehaviour
     {
         _attackDisplay.ShowAttackDescription(attack);
     }
+
+    //-------------------------------------------------------
+
+    public IEnumerator<Core.FightSystem.Adversaire> GetEnumerator()
+    {
+        return (IEnumerator<Adversaire>)
+        new AdversaireLayoutEnum(_displayers);
+
+    }
+
+    //-------------------------------------------------------
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return (IEnumerator<AdversaireEvent>)
+            new AdversaireLayoutEnum(_displayers);
+    }
+
     //-------------------------------------------------------
     #endregion
 
+}
+
+public class AdversaireLayoutEnum : IEnumerator<Core.FightSystem.Adversaire>
+{
+
+    #region Members
+    List<AdversaireDisplayer> _adversaireDisplayers;
+    int i = -1;
+    public Core.FightSystem.Adversaire Current =>  _adversaireDisplayers[i].Adversaire;
+    #endregion
+
+    object IEnumerator.Current => _adversaireDisplayers[i].Adversaire;
+
+    public AdversaireLayoutEnum(List<AdversaireDisplayer> adversaireDisplayer)
+    {
+        _adversaireDisplayers = adversaireDisplayer;
+    }
+
+    public void Dispose()
+    {
+        
+    }
+
+    public bool MoveNext()
+    {
+        bool not_end = i < _adversaireDisplayers.Count-1;
+        if (not_end)
+        {
+            i++;
+        }
+        return not_end;
+    }
+
+    public void Reset()
+    {
+        i = 0;
+    }
 }

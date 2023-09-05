@@ -87,7 +87,7 @@ namespace Core.CardSystem
         /// Is the card Playable
         /// </summary>
         [SerializeField]
-        protected bool _playable;
+        protected bool _playable = true;
         #region Hidden 
         public UnityCardEvent _playCardEvent;
         protected int _instanceID;
@@ -96,10 +96,13 @@ namespace Core.CardSystem
         #endregion
 
         #region Getters
+
         public Nature CardNature => _nature;
         public Type CardType => _type;
         public string CardName => _cardName;
         public int InstanceID => _instanceID;
+        public bool Playable => _playable;
+
         #endregion
 
         #region Initialisation
@@ -190,16 +193,31 @@ namespace Core.CardSystem
 
         public void Resolve(ITargetable target)
         {
-            foreach (IEffect effect in _effects)
+            // Allow to dodge physical Attack
+            bool AttackLanded = true;
+            if(_type == Type.Action && _nature == Nature.Physique)
             {
-                if(effect.SelfTarget())
+                AttackLanded = CoinFlipManager.Instance.Flip(
+                    CombatManager.Instance.GetCurrentCharacter().GetCharacteristicsByName("Speed"),
+                    ((Character)target).GetCompetenceModifierByName("Distance"));
+                if( !AttackLanded )
                 {
-                    effect.Apply(
-                        (ITargetable)CombatManager.Instance.GetCurrentCharacter() );
+                    CombatManager.Instance.GetCurrentCharacter().Dodged();
                 }
-                else
+            }
+            if (AttackLanded)
+            {
+                foreach (IEffect effect in _effects)
                 {
-                    effect.Apply(target);
+                    if (effect.SelfTarget())
+                    {
+                        effect.Apply(
+                            (ITargetable)CombatManager.Instance.GetCurrentCharacter());
+                    }
+                    else
+                    {
+                        effect.Apply(target);
+                    }
                 }
             }
             CardPlayed?.Invoke(this);
@@ -255,7 +273,13 @@ namespace Core.CardSystem
             return _cardID;
         }
 
+        public bool Equals(ICard other)
+        {
+            return Equals(other);
+        }
+
         #endregion
+
     }
 
 }

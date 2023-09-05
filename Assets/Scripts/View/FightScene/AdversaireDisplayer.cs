@@ -55,13 +55,17 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         set
         {
             _adversaire = value;
+
             _image.sprite = _adversaire.Illustration;
 
             Adversaire.LifeChangeEvent.AddListener(LifeChanged);
+
             if (Adversaire.AlterationAppliedEvent == null)
                 Adversaire.AlterationAppliedEvent = new AlterationEvent();
+
             Adversaire.AlterationAppliedEvent.AddListener(
                 _alterationDisplayer.OnAlterationApplied);
+
             Adversaire.Attacked.AddListener(AdversaireAttacked);
         }
     }

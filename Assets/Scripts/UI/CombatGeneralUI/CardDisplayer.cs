@@ -200,7 +200,6 @@ public class CardDisplayer : MonoBehaviour
         switch (_currentMode)
         {
             case CardMode.Pickable:
-
                 CardPicked.AddListener(selectEvent);
                 CardUnpicked.AddListener(deselectEvent);
                 _picked = false;
@@ -278,6 +277,9 @@ public class CardDisplayer : MonoBehaviour
 
     //_______________________________________________________
 
+    /// <summary>
+    /// Diplay
+    /// </summary>
     protected void UpdateState()
     {
         switch(_currentMode)
@@ -287,7 +289,14 @@ public class CardDisplayer : MonoBehaviour
                 _highlight.SetColor(_picked? _colorSelected:_colorSelectable);
             break;
             case CardMode.Playable:
-                _highlight.Display(true);
+                if(!(Card is PlayerCard) || ((PlayerCard) Card).Playable)
+                { 
+                    _highlight.SetColor( _colorSelectable);
+                    _highlight.Display(true);
+                }
+                break;
+            case CardMode.Display_Hand:
+                _highlight.Display(false);
                 break;
         }
     }

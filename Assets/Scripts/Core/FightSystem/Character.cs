@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Core.FightSystem
 {
@@ -63,8 +64,13 @@ namespace Core.FightSystem
         #endregion
         #endregion
 
+        #region Event
+        public UnityEvent _dodged;
+        public UnityEvent _died;
+        #endregion
+
         #region Getter
-        
+
         public int Life
         {
             set
@@ -293,6 +299,12 @@ namespace Core.FightSystem
         }
 
         //-------------------------------------------------------------
+
+        public void Dodged()
+        {
+
+        }
+        //--------------------------------------------------------------
     }
 
 }
