@@ -1,6 +1,7 @@
 using Core.FightSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UI.ItemSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -82,6 +83,7 @@ public class CombatManager : Singleton<CombatManager>
     #endregion
 
     #region Public Method
+    //---------------------------------------------------
 
     /// <summary>
     /// Start Combat
@@ -96,6 +98,8 @@ public class CombatManager : Singleton<CombatManager>
         CurrentCombatPhase = CombatPhase.Initialisation;
 
     }
+
+    //---------------------------------------------------
 
     /// <summary>
     /// Handle Change State
@@ -114,17 +118,37 @@ public class CombatManager : Singleton<CombatManager>
         }
     }
 
+    //---------------------------------------------------
+
     /// <summary>
     /// End Fight 
     /// </summary>
     public void EndFight()
     {
         PartyManager.Instance.UpdateGroup(_vars.Party );
-        SceneManager.LoadScene("AdventureScene");
     }
 
+    //---------------------------------------------------
+
+    public void WinFight()
+    {
+
+        PartyManager.Instance.UpdateGroup(_vars.Party);
+        LootWindow._adversaireFought = _vars.Adversaires;
+        SceneManager.LoadScene("LootScene");
+    }
+
+    //---------------------------------------------------
+
+    public void LoseFight()
+    {
+        SceneManager.LoadScene("GameOver");
+    }
+
+    //---------------------------------------------------
+
     /// <summary>
-    /// Get  Current Character
+    /// Get Current Character
     /// </summary>
     /// <returns></returns>
     public Character GetCurrentCharacter()
@@ -132,6 +156,16 @@ public class CombatManager : Singleton<CombatManager>
         return _currentCharacter;
 
     }
+
+    //---------------------------------------------------
+
+    public FightingCharacter GetFightingCharacter(Character character)
+    {
+        return _fightingCharacter.Find(x => x.Character == character);
+
+    }
+
+    //---------------------------------------------------
 
     /// <summary>
     /// End the turn of the Current Character
@@ -143,12 +177,15 @@ public class CombatManager : Singleton<CombatManager>
        character.EndTurn();
     }
 
+    //---------------------------------------------------
+
     public void StartNewRound()
     {
         _vars.NbRound++;
         UpdateOrder();
     }
 
+    //---------------------------------------------------
     #endregion
 
     #region Private Method
@@ -217,7 +254,7 @@ public class CombatManager : Singleton<CombatManager>
                 if( advers.GetCharacteristicsByName("Speed") == k )
                 {
                     Core.FightSystem.CombatFlow.AdversaireTurn adversaireTurn =
-                   new Core.FightSystem.CombatFlow.AdversaireTurn( _vars.Adversaires[i], _vars.NbRound );
+                   new Core.FightSystem.CombatFlow.AdversaireTurn(_adversaireLayout[i], _vars.NbRound );
                     _fightStack.PileBottom( adversaireTurn );
                 }
             }
@@ -283,12 +320,7 @@ public class CombatManager : Singleton<CombatManager>
 
     }
 
-    public FightingCharacter GetFightingCharacter(Character character)
-    {
-        return _fightingCharacter.Find(x => x.Character == character);
-
-    }
-
+  
     #endregion
 
 }

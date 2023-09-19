@@ -197,12 +197,12 @@ namespace Core.CardSystem
             bool AttackLanded = true;
             if(_type == Type.Action && _nature == Nature.Physique)
             {
-                AttackLanded = CoinFlipManager.Instance.Flip(
+                AttackLanded = CoinFlipManager.Instance.ResolveFlip(
                     CombatManager.Instance.GetCurrentCharacter().GetCharacteristicsByName("Speed"),
                     ((Character)target).GetCompetenceModifierByName("Distance"));
                 if( !AttackLanded )
                 {
-                    CombatManager.Instance.GetCurrentCharacter().Dodged();
+                    target.Dodged();
                 }
             }
             if (AttackLanded)

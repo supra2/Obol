@@ -18,17 +18,19 @@ public class AlterationsDisplayer : MonoBehaviour
     #endregion
     #endregion
 
+    #region Initialisation
     public void Awake()
     {
         _alterationIconDictionary = new Dictionary<AlterationType, EffectIcon>();
     }
+    #endregion
 
-
+    #region Event Alteration
     /// <summary>
     /// Event Called On Alteration update ( first application or subsequent update);
     /// 
     /// </summary>
-    /// <param name="alteration"></param>
+    /// <param name="alteration"> list alteration</param>
     public void OnAlterationApplied(IAlteration alteration)
     {
         if( !_alterationIconDictionary.ContainsKey( alteration.AlterationType( )) )
@@ -50,6 +52,6 @@ public class AlterationsDisplayer : MonoBehaviour
             GameObject.Destroy(effectIcon.gameObject);
         }
     }
-
+    #endregion
 
 }

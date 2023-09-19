@@ -36,6 +36,8 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
     protected Slider _lifeslider;
     [SerializeField]
     protected AlterationsDisplayer _alterationDisplayer;
+    [SerializeField]
+    protected Animator _displayerAnimator;
     #endregion
     #region Hidden 
     protected AdversaireDisplayerMode _currentMode;
@@ -45,6 +47,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
 
     #region Event
     public UnityCharacterEvent _onAdversairePicked;
+    public UnityCharacterEvent _onDisplayDestroyed;
     #endregion
 
     #region Getter
@@ -58,22 +61,29 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
 
             _image.sprite = _adversaire.Illustration;
 
-            Adversaire.LifeChangeEvent.AddListener(LifeChanged);
-
-            if (Adversaire.AlterationAppliedEvent == null)
-                Adversaire.AlterationAppliedEvent = new AlterationEvent();
-
-            Adversaire.AlterationAppliedEvent.AddListener(
-                _alterationDisplayer.OnAlterationApplied);
-
-            Adversaire.Attacked.AddListener(AdversaireAttacked);
+            AttachListeners();
         }
     }
+
+
 
     #endregion
 
     #region Init
+    private void AttachListeners()
+    {
+        Adversaire.LifeChangeEvent.AddListener(LifeChanged);
 
+        if (Adversaire.AlterationAppliedEvent == null)
+            Adversaire.AlterationAppliedEvent = new AlterationEvent();
+
+        Adversaire.AlterationAppliedEvent.AddListener(
+            _alterationDisplayer.OnAlterationApplied);
+
+        Adversaire.Attacked.AddListener(AdversaireAttacked);
+        Adversaire._dodged.AddListener(DodgeAnimation);
+        Adversaire._died.AddListener(DiedAnimation);
+    }
 
     #endregion
 
@@ -115,6 +125,39 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         transform.GetComponentInParent<AdversaireLayout>().ShowAttack(attack_Launch);
     }
 
+    #endregion
+
+    #region InnerMethods
+
+    protected void DodgeAnimation()
+    {
+        _displayerAnimator.SetTrigger("Dodged");
+    }
+
+    protected void DiedAnimation()
+    {
+        _displayerAnimator.SetTrigger("_died");
+
+    }
+
+    protected void DestroyDisplayer()
+    {
+        DetachListener();
+        _onDisplayDestroyed?.Invoke(Adversaire);
+     
+    }
+
+
+    private void DetachListener()
+    {
+        Adversaire.LifeChangeEvent.RemoveListener(LifeChanged);
+        Adversaire.AlterationAppliedEvent.RemoveListener(
+            _alterationDisplayer.OnAlterationApplied);
+
+        Adversaire.Attacked.RemoveListener(AdversaireAttacked);
+        Adversaire._dodged.RemoveListener(DodgeAnimation);
+        Adversaire._died.RemoveListener(DiedAnimation);
+    }
     #endregion
 
 }

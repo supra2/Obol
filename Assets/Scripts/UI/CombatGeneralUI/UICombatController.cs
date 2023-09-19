@@ -40,7 +40,7 @@ public class UICombatController : Singleton<UICombatController>
         _fleeButton.onClick.AddListener( ( )=> _fleeWindow.RollFlee( vars ) );
     }
 
-    #region Player Specific UI 
+    #region PlayerSpecific UI 
 
     public void DisplayChoice( Core.FightSystem.AttackSystem.ChoiceCard Choicecards )
     {
@@ -51,6 +51,30 @@ public class UICombatController : Singleton<UICombatController>
                 playerCard.GetIllustration(),playerCard.CanPayStaminaCost() );
         }
         _choiceUI.Show(true);
+    }
+
+    public void DisplayChoice(string ChoicePromptKey,string keychoice1,string keychoice2,
+        Sprite Illustration1,Sprite Illustration2,Action action1,Action action2)
+    {
+        _choiceUI.InitChoice(ChoicePromptKey);
+        for(int i = 0 ; i<2 ; i++ )
+        {
+            if(i ==1)
+            {
+                _choiceUI.AddChoice(keychoice1, action1, Illustration1,true);
+            }
+            else
+            {
+                _choiceUI.AddChoice(keychoice2, action2, Illustration2, true);
+            }
+        }
+
+        _choiceUI.Show(true);
+    }
+    public void DisplayChoice()
+    {
+
+
     }
 
     public void SelectAdversaire( Action<ITargetable> callback )

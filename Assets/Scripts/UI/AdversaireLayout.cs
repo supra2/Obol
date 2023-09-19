@@ -44,8 +44,9 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
     #endregion
     #endregion
 
+
     #region Initialisation
-    
+
     public void Awake()
     {
         _displayers = new List<AdversaireDisplayer>();
@@ -75,6 +76,7 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
         AdversaireDisplayer displayer =
             GameObject.Instantiate(_prefabDisplayers, transform);
         displayer.Adversaire = _adversaire;
+        displayer._onDisplayDestroyed.AddListener(DisplayerDestroyed);
         _displayers.Add(displayer);
     }
 
@@ -154,6 +156,29 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
     //-------------------------------------------------------
     #endregion
 
+    #region Protected method 
+
+
+    protected void DisplayerDestroyed(Character c )
+    {
+        if( !(c is Adversaire ))
+        {
+            throw new Exception("Character not an adversaire");
+        }
+
+        Adversaire adv = c as Adversaire;
+        AdversaireDisplayer display = _displayers.Find((x) => x.Adversaire == adv);
+        _displayers.Remove(display);
+
+        GameObject.Destroy(display.gameObject);
+
+        if(_displayers.Count ==0)
+        {
+            CombatManager.Instance.WinFight();
+        }
+    }
+    #endregion
+
 }
 
 public class AdversaireLayoutEnum : IEnumerator<Core.FightSystem.Adversaire>
@@ -165,6 +190,8 @@ public class AdversaireLayoutEnum : IEnumerator<Core.FightSystem.Adversaire>
     public Core.FightSystem.Adversaire Current =>  _adversaireDisplayers[i].Adversaire;
     #endregion
 
+
+
     object IEnumerator.Current => _adversaireDisplayers[i].Adversaire;
 
     public AdversaireLayoutEnum(List<AdversaireDisplayer> adversaireDisplayer)
@@ -174,7 +201,7 @@ public class AdversaireLayoutEnum : IEnumerator<Core.FightSystem.Adversaire>
 
     public void Dispose()
     {
-        
+        _adversaireDisplayers = null;
     }
 
     public bool MoveNext()
@@ -189,6 +216,8 @@ public class AdversaireLayoutEnum : IEnumerator<Core.FightSystem.Adversaire>
 
     public void Reset()
     {
-        i = 0;
+        i = -1;
     }
+
+
 }

@@ -1,11 +1,13 @@
 using Core;
 using Core.FightSystem.AttackSystem;
+using Core.Items;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 namespace Core.FightSystem
 {
@@ -36,6 +38,10 @@ namespace Core.FightSystem
         protected List<Attack> _attacks;
         [SerializeField]
         protected Sprite _illustrations;
+        [SerializeField]
+        protected List<int> _lootProba;
+        [SerializeField]
+        protected List<Item> _lootItem;
         #region Hidden
         /// <summary>
         /// Individual instance for Attacks
@@ -50,7 +56,9 @@ namespace Core.FightSystem
         #endregion
 
         #region Getters
+
         public UnityAttackEvent Attacked;
+
         public Sprite Illustration
         {
             get => _illustrations;
@@ -65,6 +73,19 @@ namespace Core.FightSystem
         {
             get => _instanciatedAttacks;
 
+        }
+
+        public Dictionary<int, Item> LootTable
+        {
+            get
+            {
+                Dictionary<int, Item> dico = new Dictionary<int, Item>();
+                for(int i = 0 ; i < _lootProba.Count; i++ )
+                {
+                    dico.Add(_lootProba[i], _lootItem[i]);
+                }
+                return dico;
+            }
         }
 
         #endregion
@@ -97,8 +118,8 @@ namespace Core.FightSystem
             foreach (Attack attack in _attacks)
             {
               Attack instance =  ScriptableObject.Instantiate(attack);
-               instance.Init();
-                instance.AttackLaunched.AddListener(OnAttackLaunched);
+              instance.Init();
+              instance.AttackLaunched.AddListener(OnAttackLaunched);
               _instanciatedAttacks.Add(instance);
             }
             if (Attacked == null)

@@ -72,6 +72,7 @@ public class Attack : ScriptableObject
     /// <param name="targetable"> targetable </param>
     public void PlayAttack ( ITargetable targetable )
     {
+        
         foreach( IEffect ieffect in _listEffect )
         {
             ieffect.Apply(targetable);

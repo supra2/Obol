@@ -60,7 +60,6 @@ namespace Core.FightSystem.CombatFlow
             _character.Character.Recover();
             _character.OnTurnEnded.RemoveListener(TurnEnded);
             _turnEnded = true;
-            Debug.Log(" Character "+ character +"Turn Ended");
         }
 
         public bool IsCommandEnded()

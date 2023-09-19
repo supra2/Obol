@@ -26,9 +26,11 @@ public class CharacterDisplayer : MonoBehaviour
     [SerializeField]
     protected Button _skipTurn;
     [SerializeField]
-    protected Slider _lifeslider;
-    [SerializeField]
     protected LocalizeStringEvent _staminaDisplay;
+    [SerializeField]
+    protected TextMeshProUGUI _lifeDisplayer;
+    [SerializeField]
+    protected TextMeshProUGUI _sanDisplayer;
     #endregion
 
     #region Event
@@ -109,10 +111,12 @@ public class CharacterDisplayer : MonoBehaviour
 
     protected void OnLifeChanged( int damages )
     {
-        _lifeslider.value = GetComponent<FightingCharacter>().Character.Life /
-            GetComponent<FightingCharacter>().Character.MaxLife;
+        _lifeDisplayer.text = GetComponent<FightingCharacter>().Character.Life.ToString();
     }
-
+    protected void OnSanChanged(int damages)
+    {
+        _sanDisplayer.text = GetComponent<FightingCharacter>().Character.San.ToString();
+    }
     protected void OnStaminaChanged( int stamina )
     {
         IntVariable intvariable = new IntVariable();

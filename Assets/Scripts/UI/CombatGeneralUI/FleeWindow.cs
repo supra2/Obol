@@ -72,7 +72,7 @@ public class FleeWindow : MonoBehaviour
         foreach (Core.FightSystem.Character character in var.Party)
         {
             fleed[i]  = 
-            CoinFlipManager.Instance.Flip( 
+            CoinFlipManager.Instance.ResolveFlip( 
                 character.GetCharacteristicsByName("Speed") + 
                 character.GetCompetenceModifierByName("Distance"),
                 maxSpeed);
@@ -111,6 +111,12 @@ public class FleeWindow : MonoBehaviour
                 _buttonStay.onClick.AddListener(() => ShowSuccessScreenRoot(false));
             }
         }
+    }
+
+
+    public void CallBack_Roll(bool roll)
+    {
+
     }
 
     public void ShowSuccessScreenRoot(bool show)

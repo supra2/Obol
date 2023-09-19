@@ -23,6 +23,7 @@ public class UnityCharacterEvent : UnityEvent<Character>
 
 }
 
+
 namespace Core.FightSystem
 {
     public class ExchangeEvent:UnityEvent<int,int>
@@ -58,6 +59,8 @@ namespace Core.FightSystem
 
         #region Getter
         public List<PlayerCard> CardList => _cardList;
+
+        public int San => _san;
         #endregion
 
         #region Event
@@ -167,8 +170,6 @@ namespace Core.FightSystem
                 Debug.LogError("card not found in deck. Exchange chanceled");
             }
         }
-
-       
 
         #endregion
 

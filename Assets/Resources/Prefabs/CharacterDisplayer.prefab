@@ -1697,8 +1697,9 @@ MonoBehaviour:
   _deckDisplayer: {fileID: 2954598171907384847}
   _discardDisplayer: {fileID: 6041667697793885789}
   _skipTurn: {fileID: 8067360714921665519}
-  _lifeslider: {fileID: 0}
   _staminaDisplay: {fileID: 2897084553495600639}
+  _lifeDisplayer: {fileID: 4294279446181622555}
+  _sanDisplayer: {fileID: 2983344576208327815}
   OnCardDiscarded:
     m_PersistentCalls:
       m_Calls: []

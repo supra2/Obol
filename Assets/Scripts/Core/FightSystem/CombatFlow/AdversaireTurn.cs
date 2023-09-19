@@ -18,6 +18,12 @@ namespace Core.FightSystem.CombatFlow
         /// Nbturn
         /// </summary>
         protected int _nbturn;
+
+        protected bool _commandEnded;
+
+        protected PlayableCharacter _pickedCharacter;
+
+        protected Attack _Attack;
         #endregion
 
         public AdversaireTurn(Adversaire adversaire, int nbturn)
@@ -40,48 +46,69 @@ namespace Core.FightSystem.CombatFlow
                     AvailableAttack.Add(attack);
                 }
             }
-
             if( AvailableAttack.Count > 0 )
             {
-                int attackLaunched = SeedManager.NextInt( 0 , AvailableAttack.Count-1 );
+                int attackLaunched = SeedManager.NextInt( 0 , AvailableAttack.Count );
+                Debug.Log("AttackLaunched "+ attackLaunched);
                 // Select Target
                 int totalrange = 0;
                 foreach(  PlayableCharacter character in CombatManager.Instance.Var.Party )
                 {
-                    int prob = Mathf.FloorToInt( ( 1 / 
+                    int prob = Mathf.FloorToInt( (1.0f / 
                         character.GetCharacteristicsByName( "Speed") + 
                         character.GetCompetenceModifierByName("Distance")  ) * 100 );
                     totalrange += prob;
                 }
                 int Adversairepick = SeedManager.NextInt( 0 , totalrange );
                 int pointeur = 0;
-                PlayableCharacter pickedCharacter = new PlayableCharacter();
-                foreach (PlayableCharacter character in 
-                    CombatManager.Instance.Var.Party)
+                _pickedCharacter = null;
+                foreach ( PlayableCharacter character in 
+                    CombatManager.Instance.Var.Party )
                 {
-                    pointeur += Mathf.FloorToInt((1 /
+                    pointeur += Mathf.FloorToInt((1.0f /
                     character.GetCharacteristicsByName("Speed") +
                         character.GetCompetenceModifierByName("Distance")) * 100);
-                    if ( pointeur > Adversairepick )
+                    if ( pointeur >= Adversairepick )
                     {
-                        pickedCharacter = character;
+                        _pickedCharacter = character;
                     }
                     break;
                 }
-                AvailableAttack[attackLaunched].PlayAttack(pickedCharacter);
-                 _adversaire.Stamina -= AvailableAttack[attackLaunched].Stamina;
+                _Attack = AvailableAttack[attackLaunched];
+                // Todo  only dodge for physical Attack
+                CoinFlipManager.Instance.Flip(_pickedCharacter.GetCharacteristicsByName("Speed") +
+                       _pickedCharacter.GetCompetenceModifierByName("Distance"), _adversaire.GetCharacteristicsByName("Speed"),
+                       ResolveAttack, true);
+                //Remove distance to target
+                _adversaire.Stamina -= AvailableAttack[attackLaunched].Stamina;
             }
             else
             {
                 Debug.Log( "Skipping Adversaries turn ");
+                _commandEnded = true;
+            }
+          
+        }
+
+        public void ResolveAttack(bool dodged)
+        {
+            if( !dodged )
+            {
+                _Attack.PlayAttack(_pickedCharacter);
+            }
+            else
+            {
+                _pickedCharacter.Dodged();
             }
             _adversaire.ApplyAlteration(false);
             _adversaire.Recover();
+
+            _commandEnded = true;
         }
 
         public bool IsCommandEnded()
         {
-            return true;
+            return _commandEnded;
         }
 
         #endregion

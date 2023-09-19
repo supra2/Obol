@@ -142,6 +142,11 @@ namespace Core.FightSystem
 
         //--------------------------------------------------------------
 
+        /// <summary>
+        /// Inflict
+        /// </summary>
+        /// <param name="damagetype"> </param>
+        /// <param name="value"> </param>
         public virtual void Inflict( DamageType damagetype , int value )
         {
             switch (damagetype)
@@ -149,6 +154,10 @@ namespace Core.FightSystem
                 case DamageType.Health:
                    int damages = ComputeValue( value, _constitution, "Resistance" ); 
                     Life = Mathf.Clamp( Life - damages , 0 , _maxlife );
+                    if( Life == 0)
+                    {
+                        _died?.Invoke();
+                    }
                     break;
             }
         }
@@ -302,8 +311,9 @@ namespace Core.FightSystem
 
         public void Dodged()
         {
-
+            _dodged?.Invoke();
         }
+
         //--------------------------------------------------------------
     }
 
