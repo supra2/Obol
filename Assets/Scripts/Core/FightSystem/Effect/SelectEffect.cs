@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class SelectEffect : NestedEffect
 {
+
     #region Enum
     protected enum Method
     {
@@ -26,20 +27,21 @@ public class SelectEffect : NestedEffect
 
     protected string _comparisonStat;
     protected TestType _testType;
-
+    protected bool _staticValue;
     protected int _value;
     #endregion
 
     public void Apply(ITargetable itargetable)
     {
-        List<ITargetable> listTargetable = new List<ITargetable>(); 
+        List<ITargetable> listTargetable = new List<ITargetable>();
+
         switch(_methodSelection)
         {
             case Method.Random:
-                listTargetable = SelectRandom();
+                listTargetable = SelectRandom( );
                     break;
             case Method.StatsCriteria:
-                listTargetable = SelectByStatsCriteria();
+                listTargetable = SelectByStatsCriteria( );
                 break;
         }
 
@@ -60,18 +62,24 @@ public class SelectEffect : NestedEffect
             case "Random":
                 System.Int32.TryParse(words[1], out _value);
                 break;
-            case "Less":
-                _comparisonStat = words[1].Substring(1, words.Length - 2);
+            case "<":
+                _comparisonStat = words[1].Substring( 1 , words.Length - 2 );
                 _testType = TestType.LessThan;
+                _methodSelection = Method.StatsCriteria;
                 break;
-            case "More":
+            case ">":
+                _comparisonStat = words[1].Substring( 1 , words.Length - 2 );
                 _testType = TestType.MoreThan;
+                _methodSelection = Method.StatsCriteria;
                 break;
-            case "Equal":
+            case "=":
+                _comparisonStat = words[1].Substring( 1 , words.Length - 2 );
                 _testType = TestType.Equal;
+                _methodSelection = Method.StatsCriteria;
                 break;
 
         }
+        _staticValue = int.TryParse(words[2], out _value);
     }
 
     public bool SelfTarget()
@@ -101,10 +109,14 @@ public class SelectEffect : NestedEffect
         else
         { 
             int roll = 0;
-            do
+            while (itargetable.Count> _value )
             {
-                roll = SeedManager.NextInt(0, characters.Count - 1);
-            } while (!itargetable.Contains(characters[roll]));
+                 roll = SeedManager.NextInt(0, characters.Count - 1);
+                if (!itargetable.Contains(characters[roll]))
+                {
+                    itargetable.Add(characters[roll]);
+                }
+            } 
         }
         return itargetable;
     }
@@ -116,20 +128,21 @@ public class SelectEffect : NestedEffect
         List<PlayableCharacter> targetList = null;
 
         List<ITargetable> itargetable = new List<ITargetable>();
+
+        int comparisonValue = _staticValue ? _value: CombatManager.Instance.GetCurrentCharacter().GetCharacteristicsByName(_comparisonStat);
         switch (_testType)
         {
-
             case TestType.Equal:
-                targetList = characters.FindAll(x => x.GetCharacteristicsByName(_comparisonStat) ==
-                CombatManager.Instance.GetCurrentCharacter().GetCharacteristicsByName(_comparisonStat));
+                targetList = characters.FindAll(
+                    x => x.GetCharacteristicsByName(_comparisonStat) == comparisonValue);
                     break;
             case TestType.LessThan:
-                targetList = characters.FindAll(x => x.GetCharacteristicsByName(_comparisonStat) <
-                CombatManager.Instance.GetCurrentCharacter().GetCharacteristicsByName(_comparisonStat));
+                targetList = characters.FindAll(
+                    x => x.GetCharacteristicsByName(_comparisonStat) < comparisonValue);
                 break;
             case TestType.MoreThan:
-                targetList = characters.FindAll(x => x.GetCharacteristicsByName(_comparisonStat) >
-                CombatManager.Instance.GetCurrentCharacter().GetCharacteristicsByName(_comparisonStat));
+                targetList = characters.FindAll(
+                    x => x.GetCharacteristicsByName(_comparisonStat) >  comparisonValue);
                 break;
         }
         foreach (PlayableCharacter character in targetList)
@@ -138,4 +151,5 @@ public class SelectEffect : NestedEffect
         }
         return itargetable;
     }
+    
 }

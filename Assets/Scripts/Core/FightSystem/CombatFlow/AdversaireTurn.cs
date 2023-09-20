@@ -39,7 +39,7 @@ namespace Core.FightSystem.CombatFlow
             List<Attack> AvailableAttack = new List<Attack>();
             _adversaire.ApplyAlteration(true);
             _adversaire.OnStartTurn?.Invoke(_adversaire);
-            foreach ( Attack attack in _adversaire.AttackList )
+              foreach ( Attack attack in _adversaire.AttackList )
             {
                 if( attack.Stamina <= _adversaire.Stamina )
                 {

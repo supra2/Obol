@@ -27,7 +27,7 @@ namespace Core.FightSystem.AttackSystem
             foreach (string line in lines)
             {
                 string[] words = line.Split();
-                if (nestedEffect && words[0] != "}" )
+                if ( nestedEffect && words[0].CompareTo("}") != 0 && words[0].CompareTo( "{") != 0 )
                 {
                     nestedlines += line +" \n";
                 }
