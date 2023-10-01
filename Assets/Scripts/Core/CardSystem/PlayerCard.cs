@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace Core.CardSystem
 {
+
     [CreateAssetMenu(fileName = "Attack", menuName = "Obol/Character/PlayerCard", order = 3)]
     public  class PlayerCard : ScriptableObject, ICard , ICloneable
     {
@@ -281,5 +282,6 @@ namespace Core.CardSystem
         #endregion
 
     }
+
 
 }

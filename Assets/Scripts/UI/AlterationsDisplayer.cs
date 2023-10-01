@@ -26,6 +26,7 @@ public class AlterationsDisplayer : MonoBehaviour
     #endregion
 
     #region Event Alteration
+
     /// <summary>
     /// Event Called On Alteration update ( first application or subsequent update);
     /// 
@@ -36,9 +37,9 @@ public class AlterationsDisplayer : MonoBehaviour
         if( !_alterationIconDictionary.ContainsKey( alteration.AlterationType( )) )
         {
             EffectIcon effectIcon =
-            GameObject.Instantiate<EffectIcon>(_alterationPrefabs,transform);
+            GameObject.Instantiate<EffectIcon>( _alterationPrefabs,transform );
             effectIcon.Setup(alteration);
-
+            _alterationIconDictionary.Add(alteration.AlterationType(), effectIcon);
         }
         else
         {
@@ -51,7 +52,9 @@ public class AlterationsDisplayer : MonoBehaviour
             _alterationIconDictionary.Remove(alteration.AlterationType());
             GameObject.Destroy(effectIcon.gameObject);
         }
+
     }
+
     #endregion
 
 }

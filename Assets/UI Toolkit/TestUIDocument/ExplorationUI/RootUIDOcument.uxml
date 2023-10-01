@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(136, 139, 146, 0.87); height: 0; min-height: 5%; min-width: auto; max-height: 5%; flex-direction: row-reverse;">
+        <ui:Button text="Button" display-tooltip-when-elided="true" style="flex-direction: row-reverse; max-width: 10px; max-height: 10px; min-width: 3px; justify-content: flex-start; background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;); background-color: rgba(0, 0, 0, 0); font-size: 1px; color: rgba(27, 27, 27, 0);">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;);" />
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>

@@ -88,9 +88,9 @@ public class FightingCharacter : MonoBehaviour
         _discard = new PlayerCardDeck<PlayerCard>();
         _deck.Shuffle();
         _deck.OnDeckIsEmpty += RefillDrawpile;
-        if (_character.CardExchanged == null)
-            _character.CardExchanged = new ExchangeEvent();
-        _character.CardExchanged.AddListener( OnCardExchanged );
+        if ( _character._cardExchanged == null )
+            _character._cardExchanged = new ExchangeEvent();
+        _character._cardExchanged.AddListener( OnCardExchanged );
 
         if (_hand == null)
         {

@@ -28,4 +28,5 @@ public class InputManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
     #endregion
+
 }

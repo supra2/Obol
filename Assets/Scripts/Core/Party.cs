@@ -8,7 +8,8 @@ using UnityEngine;
 
 [Serializable]
 public class Party
- {
+{
+
     #region Hidden
     #region Visible
     [SerializeField]
@@ -23,15 +24,20 @@ public class Party
     #endregion
 
     #region Getter
+
     public List<PlayableCharacter> CharacterParty
     {
         get => _characterParty;
         set => _characterParty = value;
     }
+
     public int ObolNumber => _obolNumber;
+
     public  List<Core.Items.Item> Inventory  => _inventory;
 
     public int InventorySize => _inventorySize;
+
     #endregion
+
 }
 

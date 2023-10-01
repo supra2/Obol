@@ -71,6 +71,7 @@ public class UICombatController : Singleton<UICombatController>
 
         _choiceUI.Show(true);
     }
+
     public void DisplayChoice()
     {
 

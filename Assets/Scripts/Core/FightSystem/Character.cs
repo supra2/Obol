@@ -107,6 +107,8 @@ namespace Core.FightSystem
             }
         }
 
+
+        public string CharacterNameKey => _characterNameKey;
         #endregion
 
         #region  Initialisation
@@ -143,9 +145,9 @@ namespace Core.FightSystem
         //--------------------------------------------------------------
 
         /// <summary>
-        /// Inflict
+        /// Inflict Damage to a Jauge characteristique
         /// </summary>
-        /// <param name="damagetype"> </param>
+        /// <param name="damagetype"> jauge characteristique affected </param>
         /// <param name="value"> </param>
         public virtual void Inflict( DamageType damagetype , int value )
         {
@@ -161,6 +163,7 @@ namespace Core.FightSystem
                     break;
             }
         }
+
         //--------------------------------------------------------------
         #endregion
 
@@ -249,6 +252,7 @@ namespace Core.FightSystem
         //--------------------------------------------------------------
         #endregion
 
+        #region Members
         //--------------------------------------------------------------
 
         /// <summary>
@@ -315,6 +319,7 @@ namespace Core.FightSystem
         }
 
         //--------------------------------------------------------------
+        #endregion
     }
 
 }

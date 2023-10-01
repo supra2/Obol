@@ -12,15 +12,17 @@ public class PartyManager : Singleton<PartyManager>
 
     #region Members
     #region Hidden
-    Party party;
+    protected Party _party;
     #endregion
     #endregion
 
     #region Getter
 
-    public List<Core.Items.Item> Inventory => party.Inventory;
+    public List<Core.Items.Item> Inventory => _party.Inventory;
 
-    public int InventorySize => party.InventorySize;
+    public int InventorySize => _party.InventorySize;
+
+    public Party Party => _party;
 
     #endregion
 
@@ -37,7 +39,7 @@ public class PartyManager : Singleton<PartyManager>
 
     public void UpdateGroup(List<PlayableCharacter> playable_character)
     {
-        party.CharacterParty = playable_character;
+        _party.CharacterParty = playable_character;
     }
 
     public void Load( string filename )
@@ -64,7 +66,7 @@ public class PartyManager : Singleton<PartyManager>
     }
 #else
 
-        party = JsonUtility.FromJson<Party>(File.ReadAllText(persistantDatapath));
+        _party = JsonUtility.FromJson<Party>(File.ReadAllText(persistantDatapath));
 #endif
     }
 
@@ -74,9 +76,16 @@ public class PartyManager : Singleton<PartyManager>
 #if UNITY_ANDROID
           WWW www = new WWW (persistantDatapath);
 #else
-       File.WriteAllText(persistantDatapath, JsonUtility.ToJson(party));
+       File.WriteAllText(persistantDatapath, JsonUtility.ToJson(_party));
 #endif
     }
 
+    public Character GetMainCharacter()
+    {
+
+        return _party.CharacterParty.Find((X) => X.MainCharacter == true);
+    }
+
     #endregion
+
 }

@@ -96,7 +96,6 @@ public class SelectEffect : NestedEffect
     {
         CombatVar var =  CombatManager.Instance.Var;
         List<PlayableCharacter> characters = var.Party;
-
         List<ITargetable> itargetable = new List<ITargetable>();
         if (characters.Count <= _value)
         {
@@ -104,7 +103,6 @@ public class SelectEffect : NestedEffect
             {
                 itargetable.Add(character);
             }
-
         }
         else
         { 

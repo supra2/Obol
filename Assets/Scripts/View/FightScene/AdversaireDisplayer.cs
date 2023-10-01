@@ -65,8 +65,6 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         }
     }
 
-
-
     #endregion
 
     #region Init
@@ -147,7 +145,6 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
      
     }
 
-
     private void DetachListener()
     {
         Adversaire.LifeChangeEvent.RemoveListener(LifeChanged);
@@ -158,6 +155,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         Adversaire._dodged.RemoveListener(DodgeAnimation);
         Adversaire._died.RemoveListener(DiedAnimation);
     }
+
     #endregion
 
 }

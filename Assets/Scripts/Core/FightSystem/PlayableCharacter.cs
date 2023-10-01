@@ -41,30 +41,43 @@ namespace Core.FightSystem
         #region Members
         #region Visible
         [SerializeField]
+        protected Sprite _portrait;
+        [SerializeField]
         protected List<PlayerCard> _cardList;
         /// <summary>
         /// Mental health Maximum Value
         [SerializeField]
         protected int _maxSan;
+        [SerializeField]
+        /// <summary>
+        /// flag for Main Character 
+        /// </summary>
+        protected bool _mainCharacter;
         protected List<Tuple<int, int>> _exchangeMemory;
         #endregion
         #region Hidden
         /// <summary>
-        /// current mental health value
+        /// Current Mental Health Value
         /// </summary>
         protected int _san;
-
         #endregion
         #endregion
 
         #region Getter
+
         public List<PlayerCard> CardList => _cardList;
 
         public int San => _san;
+
+        public bool MainCharacter => _mainCharacter;
+
+        public Sprite Portrait => _portrait;
         #endregion
 
         #region Event
-        public ExchangeEvent CardExchanged;
+
+        public ExchangeEvent _cardExchanged;
+
         #endregion
 
         #region Initialisation
@@ -96,6 +109,7 @@ namespace Core.FightSystem
             {
                 _permModifiers = new List<Tuple<string, int>>();
             }
+
             foreach (PlayerCard card in _cardList)
             {
                 if (card is ChoiceCard)
@@ -135,8 +149,6 @@ namespace Core.FightSystem
         {
             switch (characName.ToUpper())
             {
-
-
                 default:
                     return base.GetCharacteristicsByName(characName);
             }
@@ -163,7 +175,7 @@ namespace Core.FightSystem
                 _exchangeMemory.Add(new Tuple<int, int>(card1, card2));
                 _cardList.Remove(pc);
                 _cardList.Add(CardManager.Instance.Instantiate(card2) as PlayerCard);
-                CardExchanged?.Invoke(card1, card2);
+                _cardExchanged?.Invoke(card1, card2);
             }
             else
             {

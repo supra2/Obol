@@ -46,7 +46,6 @@ namespace UI.ItemSystem
         #endregion
         #endregion
 
-
         #region Getter 
 
         #endregion

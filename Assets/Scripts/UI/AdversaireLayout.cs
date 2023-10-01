@@ -44,7 +44,6 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
     #endregion
     #endregion
 
-
     #region Initialisation
 
     public void Awake()
@@ -157,22 +156,27 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
     #endregion
 
     #region Protected method 
+    //-------------------------------------------------------
 
 
+    /// <summary>
+    /// Event Handling destroyed display when an Adversaire is beaten
+    /// </summary>
+    /// <param name="c"> Character C </param>
     protected void DisplayerDestroyed(Character c )
     {
         if( !(c is Adversaire ))
         {
             throw new Exception("Character not an adversaire");
         }
-
+   
         Adversaire adv = c as Adversaire;
         AdversaireDisplayer display = _displayers.Find((x) => x.Adversaire == adv);
         _displayers.Remove(display);
 
         GameObject.Destroy(display.gameObject);
 
-        if(_displayers.Count ==0)
+        if(_displayers.Count == 0)
         {
             CombatManager.Instance.WinFight();
         }
@@ -189,8 +193,6 @@ public class AdversaireLayoutEnum : IEnumerator<Core.FightSystem.Adversaire>
     int i = -1;
     public Core.FightSystem.Adversaire Current =>  _adversaireDisplayers[i].Adversaire;
     #endregion
-
-
 
     object IEnumerator.Current => _adversaireDisplayers[i].Adversaire;
 

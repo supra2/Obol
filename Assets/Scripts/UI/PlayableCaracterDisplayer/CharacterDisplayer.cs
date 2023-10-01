@@ -31,6 +31,8 @@ public class CharacterDisplayer : MonoBehaviour
     protected TextMeshProUGUI _lifeDisplayer;
     [SerializeField]
     protected TextMeshProUGUI _sanDisplayer;
+    [SerializeField]
+    protected Image _portraitDisplayer;
     #endregion
 
     #region Event
@@ -111,12 +113,15 @@ public class CharacterDisplayer : MonoBehaviour
 
     protected void OnLifeChanged( int damages )
     {
+        Debug.Log("Life Changed");
         _lifeDisplayer.text = GetComponent<FightingCharacter>().Character.Life.ToString();
     }
+
     protected void OnSanChanged(int damages)
     {
         _sanDisplayer.text = GetComponent<FightingCharacter>().Character.San.ToString();
     }
+
     protected void OnStaminaChanged( int stamina )
     {
         IntVariable intvariable = new IntVariable();
@@ -128,6 +133,7 @@ public class CharacterDisplayer : MonoBehaviour
     protected void CharacterSetup(Character character)
     {
         character.LifeChangeEvent.AddListener(OnLifeChanged);
+        _portraitDisplayer.sprite =((PlayableCharacter)character).Portrait;
         character.StaminaChangeEvent.AddListener(OnStaminaChanged);
     }
 

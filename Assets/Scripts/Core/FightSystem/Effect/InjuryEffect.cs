@@ -22,6 +22,10 @@ public class InjuryEffect : IEffect
     /// Id of the injury card
     /// </summary>
     protected int injury_card_id;
+    /// <summary>
+    /// Targetable 
+    /// </summary>
+    protected ITargetable _target;
     #endregion
     #endregion
 
@@ -30,13 +34,21 @@ public class InjuryEffect : IEffect
     {
         if(itargetable is PlayableCharacter)
         {
+
             PlayableCharacter pc = (PlayableCharacter)itargetable;
-            List<PlayerCard> listcards = pc.CardList.FindAll( (x) =>
-             x.CardNature == PlayerCard.Nature.Physique &&
-             x.CardType == PlayerCard.Type.Action);
-            int index = SeedManager.NextInt(0, listcards.Count-1);
-            pc.Exchange(index, injury_card_id);
+            _target = itargetable;
+            CoinFlipManager.Instance.Flip(injury_value, pc.GetCharacteristicsByName("Constitution"), ResolveFlip,false);
         }
+    }
+
+    public void ResolveFlip(bool success)
+    {
+        PlayableCharacter pc = (PlayableCharacter)_target;
+        List<PlayerCard> listcards = pc.CardList.FindAll((x) =>
+           x.CardNature == PlayerCard.Nature.Physique &&
+           x.CardType == PlayerCard.Type.Action);
+        int index = SeedManager.NextInt(0, listcards.Count - 1);
+        pc.Exchange(index, injury_card_id);
     }
 
     public void CreateFromLine(string[] words)
