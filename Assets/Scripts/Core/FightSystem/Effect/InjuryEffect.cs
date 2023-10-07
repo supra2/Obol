@@ -11,7 +11,7 @@ using UnityEngine;
 /// </summary>
 public class InjuryEffect : IEffect
 {
-
+  
     #region Members
     #region private Mambers
     /// <summary>
@@ -70,3 +70,4 @@ public class InjuryEffect : IEffect
     #endregion
 
 }
+

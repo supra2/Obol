@@ -8,7 +8,7 @@ namespace Core.FightSystem.AttackSystem
 {
     public interface IEffect
     {
-        public  void CreateFromLine(string[] words);
+        public void CreateFromLine(string[] words);
 
         public void Apply(ITargetable itargetable);
 
@@ -16,81 +16,99 @@ namespace Core.FightSystem.AttackSystem
 
     }
 
+    public interface IWordBuilder
+    {
+        public IEffect BuildEffect(string[] words);
+
+        public string GetKeyWord();
+
+        public bool NestedKeyword();
+
+    }
+
     public class EffectFactory
     {
+
+        public static Dictionary<string, IWordBuilder> _effectsBuilders;
+
         public static List<IEffect> ParseEffect(string effectText)
         {
             List<IEffect> effectlist = new List<IEffect>();
             string[] lines = effectText.Split("\n");
             string nestedlines = "";
             bool nestedEffect = false;
+
             foreach (string line in lines)
             {
+
                 string[] words = line.Split();
                 if ( nestedEffect && words[0].CompareTo("}") != 0 && words[0].CompareTo( "{") != 0 )
                 {
+
                     nestedlines += line +" \n";
+
                 }
                 else
                 {
                     IEffect effect = null;
                     if (words.Length >= 0)
                     {
-                        switch (words[0])
+
+                        if(_effectsBuilders.ContainsKey(words[0]))
                         {
-                            case "Inflict":
-                                effect = new InflictEffect(0, DamageType.Health);
-                                effect.CreateFromLine(words);
-                                break;
-                            case "Gain":
-                                effect = new GainEffect("error", 0);
-                                effect.CreateFromLine(words);
-                                break;
-                            case "Bleed":
-                                effect = new BleedEffect();
-                                effect.CreateFromLine(words);
-                                break;
-                            case "Select":
-                                effect = new SelectEffect();
-                                effect.CreateFromLine(words);
-                                nestedEffect = true;
-                                break;
-                            case "Injury":
-                                effect = new InjuryEffect();
-                                effect.CreateFromLine(words);
-                                break;
-                            case "Loss":
-                                effect = new LossEffect();
-                                effect.CreateFromLine(words);
-                                break;
-                            case "{":
-                                string[] newwords = new string[words.Length - 1];
-                                Array.Copy(words, 1, newwords, 0, words.Length - 1);
-                                string newLine = "";
-                                int k = 0;
-                                foreach( string strg in newwords )
-                                {
-                                    if(k ==0)
+                            effect = _effectsBuilders[words[0]].BuildEffect(words);
+                            nestedEffect = _effectsBuilders[words[0]].NestedKeyword();
+                        }
+                        else
+                        {
+                            switch (words[0])
+                            {
+                                case "Bleed":
+                                    effect = new BleedEffect();
+                                    effect.CreateFromLine(words);
+                                    break;
+                                case "Select":
+                                    effect = new SelectEffect();
+                                    effect.CreateFromLine(words);
+                                    nestedEffect = true;
+                                    break;
+                                case "Injury":
+                                    effect = new InjuryEffect();
+                                    effect.CreateFromLine(words);
+                                    break;
+                                case "Loss":
+                                    effect = new LossEffect();
+                                    effect.CreateFromLine(words);
+                                    break;
+                                case "{":
+                                    string[] newwords = new string[words.Length - 1];
+                                    Array.Copy(words, 1, newwords, 0, words.Length - 1);
+                                    string newLine = "";
+                                    int k = 0;
+                                    foreach( string strg in newwords )
                                     {
-                                        newLine = strg;
+                                        if(k ==0)
+                                        {
+                                            newLine = strg;
+                                        }
+                                        else 
+                                        {
+                                            newLine += string.Format("{0} {1}", newLine, strg);
+                                        }
+                                        k++;
                                     }
-                                    else 
+                                    nestedlines= newLine+"\n";
+                                    nestedEffect = true;
+                                    break;
+                                case "}":
+                                    IEffect nested =  effectlist[effectlist.Count -1];
+                                    if( nested is NestedEffect )
                                     {
-                                        newLine += string.Format("{0} {1}", newLine, strg);
+                                        ((NestedEffect)nested).SetNestedEffect(EffectFactory.ParseEffect(nestedlines));
                                     }
-                                    k++;
-                                }
-                                nestedlines= newLine+"\n";
-                                nestedEffect = true;
-                                break;
-                            case "}":
-                                IEffect nested =  effectlist[effectlist.Count -1];
-                                if( nested is NestedEffect )
-                                {
-                                    ((NestedEffect)nested).SetNestedEffect(EffectFactory.ParseEffect(nestedlines));
-                                }
-                                nestedEffect = false;
-                                break;
+                                    nestedEffect = false;
+                                    break;
+                            }
                         }
                         if (effect != null)
                             effectlist.Add(effect);
@@ -98,6 +116,18 @@ namespace Core.FightSystem.AttackSystem
                 }
             }
             return effectlist;
+    }
+
+    public static void Register(IWordBuilder builder)
+        {
+
+            if(_effectsBuilders == null)
+            {
+                _effectsBuilders = new Dictionary<string, IWordBuilder>();
+            }
+
+            _effectsBuilders.Add(builder.GetKeyWord(), builder);
+
         }
 
     }

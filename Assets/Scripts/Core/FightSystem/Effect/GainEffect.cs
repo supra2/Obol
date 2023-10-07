@@ -8,6 +8,29 @@ namespace Core.FightSystem.AttackSystem
     public class GainEffect : IEffect
     {
 
+        #region Inner Class
+        public class InflictBuilderEffect : IWordBuilder
+        {
+            public IEffect BuildEffect(string[] words)
+            {
+                IEffect effect = new GainEffect("error", 0);
+                effect.CreateFromLine(words);
+                return effect;
+            }
+
+            public string GetKeyWord()
+            {
+                return "Inflict";
+            }
+
+            public bool NestedKeyword()
+            {
+                return false;
+            }
+        }
+
+        #endregion
+                                
         #region Members
         protected string _competence;
         protected int _modifier;

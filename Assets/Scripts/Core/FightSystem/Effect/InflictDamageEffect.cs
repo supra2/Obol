@@ -20,7 +20,28 @@ namespace Core.FightSystem.AttackSystem
 
     public class InflictEffect : IEffect
     {
+        #region Inner Class
+        public class InflictBuilderEffect : IWordBuilder
+        {
+            public IEffect BuildEffect(string[] words)
+            {
+                IEffect effect = new InflictEffect(0, DamageType.Health);
+                effect.CreateFromLine(words);
+                return effect;
+            }
 
+            public string GetKeyWord()
+            {
+                return "Inflict";
+            }
+
+            public bool NestedKeyword()
+            {
+                return false;
+            }
+        }
+
+        #endregion
         #region members
         int _damageValue;
         string _competence;
