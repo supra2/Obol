@@ -159,6 +159,11 @@ public class CombatManager : Singleton<CombatManager>
 
     //---------------------------------------------------
 
+    /// <summary>
+    ///  character : 
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
     public FightingCharacter GetFightingCharacter(Character character)
     {
         return _fightingCharacter.Find(x => x.Character == character);

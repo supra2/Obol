@@ -8,8 +8,10 @@ public class PartyPion : MonoBehaviour
 
     #region Members
     #region Visible
+
     [SerializeField]
     protected SpriteRenderer _image;
+
     #endregion
     #endregion
 
@@ -27,4 +29,5 @@ public class PartyPion : MonoBehaviour
 
    
     #endregion
+
 }

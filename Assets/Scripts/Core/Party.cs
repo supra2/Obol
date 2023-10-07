@@ -20,6 +20,8 @@ public class Party
     protected List<Core.Items.Item> _inventory;
     [SerializeField]
     protected int _inventorySize = 5;
+    [SerializeField]
+    protected int _foodlevel = 100;
     #endregion
     #endregion
 
@@ -33,11 +35,21 @@ public class Party
 
     public int ObolNumber => _obolNumber;
 
-    public  List<Core.Items.Item> Inventory  => _inventory;
+    public List<Core.Items.Item> Inventory => _inventory;
 
     public int InventorySize => _inventorySize;
 
+    public int FoodLevel => _foodlevel;
+
     #endregion
 
+    #region Members
+
+    public  void ChangeFoodLevel( )
+    {
+        _foodlevel = (int) Mathf.Clamp(_foodlevel - _characterParty.Count , 0f , 100f );
+    }
+
+    #endregion
 }
 

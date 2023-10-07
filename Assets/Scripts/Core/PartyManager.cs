@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 [Serializable]
 public class PartyManager : Singleton<PartyManager>
@@ -42,7 +42,7 @@ public class PartyManager : Singleton<PartyManager>
         _party.CharacterParty = playable_character;
     }
 
-    public void Load( string filename )
+    public void Load(string filename)
     {
         string persistantDatapath = System.IO.Path.Combine(Application.persistentDataPath, "Save", "save.json");
 #if UNITY_ANDROID && !UNityEditor
@@ -65,7 +65,6 @@ public class PartyManager : Singleton<PartyManager>
             Debug.Log ("No such file");
     }
 #else
-
         _party = JsonUtility.FromJson<Party>(File.ReadAllText(persistantDatapath));
 #endif
     }
@@ -74,9 +73,9 @@ public class PartyManager : Singleton<PartyManager>
     {
         string persistantDatapath = System.IO.Path.Combine(Application.persistentDataPath, "Save", "save.json");
 #if UNITY_ANDROID
-          WWW www = new WWW (persistantDatapath);
+        WWW www = new WWW (persistantDatapath);
 #else
-       File.WriteAllText(persistantDatapath, JsonUtility.ToJson(_party));
+        File.WriteAllText(persistantDatapath, JsonUtility.ToJson(_party));
 #endif
     }
 
@@ -85,6 +84,13 @@ public class PartyManager : Singleton<PartyManager>
 
         return _party.CharacterParty.Find((X) => X.MainCharacter == true);
     }
+
+    #endregion
+
+    #region Event
+
+    public UnityIntEvent FoodChanged;
+
 
     #endregion
 

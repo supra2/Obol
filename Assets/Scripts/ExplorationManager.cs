@@ -1,11 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using static Core.Exploration.Tile;
 
 namespace Core.Exploration
 {
+
+    [Serializable]
+    public class UnityEventPosition: UnityEvent<Vector2>
+    {
+
+    }
+
     public class ExplorationManager : MonoBehaviour
     {
 
@@ -28,38 +35,53 @@ namespace Core.Exploration
         /// </summary>
         [SerializeField]
         protected PartyPion _pion;
-        
         #endregion
         #region Hidden
-        protected Vector2 PlayerPosition
-        {
-            get => _playerPosition;
-            set
-            {
-                _gridview.Place(_pion.transform, _playerPosition);
-                _playerPosition = value;
-            }
-        }
         protected Level _currentLevel;
         protected Deck<ExplorationEvent> _explorationEvents;
         protected Vector2 _playerPosition;
         #endregion
         #endregion
 
-        #region Event
+        #region Getters
+        //--------------------------------------------------------
 
+        protected Vector2 PlayerPosition
+        {
+            get => _playerPosition;
+            set
+            {
+                _gridview.Place(_pion.transform, value);
+                _playerPosition = value;
+                OnPlayerMoved?.Invoke( _playerPosition );
+            }
+        }
+
+        //--------------------------------------------------------
+        #endregion
+
+        #region Event
+        //--------------------------------------------------------
+
+        public UnityEventPosition OnPlayerMoved;
+
+        //--------------------------------------------------------
         #endregion
 
         #region Members
+        //--------------------------------------------------------
 
+        /// <summary>
+        ///  Initialise Exploration Manager
+        /// </summary>
+        /// <param name="levelToExplore"></param>
         public void Init(Level levelToExplore)  
         {
             _currentLevel = levelToExplore;
             if (_currentLevel.EventList != null)
             {
-
                 _explorationEvents = new Deck<ExplorationEvent>();
-                foreach (ExplorationEvent Event in _currentLevel.EventList)
+                foreach ( ExplorationEvent Event in _currentLevel.EventList )
                 {
                     int rarity_Multiplier = 0;
                         switch (Event.EventRarity)
@@ -84,23 +106,40 @@ namespace Core.Exploration
                     _explorationEvents.Shuffle();
                 }
             levelToExplore.Init();
-            Explore( Vector2.zero , levelToExplore.StartingTile );
-           
-          
+            Place( PlayerPosition , levelToExplore.StartingTile );
+            Explore( Vector2.zero  );
             PlayerPosition = Vector2.zero;
         }
+
+        //--------------------------------------------------------
 
         public void Move(Vector2 Position, Tile tile)
         {
             _gridview.PlaceTile(_tileDisplayer, Vector2.zero);
         }
 
-        public void Explore(Vector2 position, Tile tile)
+        //--------------------------------------------------------
+
+        protected void Place( Vector2 position , Tile tile)
         {
-            TileDisplayer tiledisplayer = GameObject.Instantiate(_tileDisplayer) as TileDisplayer;
+
+            TileDisplayer tiledisplayer =
+              GameObject.Instantiate(_tileDisplayer) as TileDisplayer;
             tiledisplayer.Tile = tile;
             tiledisplayer.gameObject.SetActive(true);
             _gridview.PlaceTile(tiledisplayer, position);
+
+        }
+
+        //--------------------------------------------------------
+
+        /// <summary>
+        /// Exploration
+        /// </summary>
+        /// <param name="position"></param>
+        public void Explore(Vector2 position)
+        {
+           TileDisplayer tiledisplayer =  _gridview.GetTileDisplayer(position);
             foreach (Tile.Direction direction in System.Enum.GetValues(typeof(Tile.Direction)))
             {
                 if (tiledisplayer.Tile.DirectionAvailable(direction))
@@ -123,28 +162,66 @@ namespace Core.Exploration
                     }
                     Vector2 newposition = position + deplacement;
                     ExplorationEvent events = _explorationEvents.Draw();
-                    PlaceConnectedTiles(deplacement);
+                    PlaceConnectedTiles(newposition);
                 }
             }
         }
+
+        //--------------------------------------------------------
+
+        /// <summary>
+        ///  Move Player
+        /// </summary>
+        /// <param name="direction"></param>
+        public void MovePlayer(int direction)
+        {
+
+            Tile.Direction g = (Tile.Direction)( 1 << direction );
+
+            Vector2 displacement = Vector3.zero;
+
+            switch( g)
+            {
+                case Tile.Direction.Bottom:
+                    displacement = new Vector2(0, 1);
+                    break;
+                case Tile.Direction.Left:
+                    displacement = new Vector2(-1, 0);
+                    break;
+                case Tile.Direction.Right:
+                    displacement = new Vector2(1, 0);
+                    break;
+                case Tile.Direction.Up:
+                    displacement = new Vector2(0, -1);
+                    break;
+            }
+
+            PartyManager.Instance.Party.ChangeFoodLevel();
+
+            PlayerPosition += displacement;
+
+            Explore(PlayerPosition);
+        }
+
+        //--------------------------------------------------------
 
         /// <summary>
         /// Place connected tiles connectied to new
         /// </summary>
         /// <param name="newposition"></param>
         /// <param name=""></param>
-        protected void PlaceConnectedTiles(Vector2 newposition )
+        protected void PlaceConnectedTiles( Vector2 newposition )
         {
-            List<Vector2> list = new List<Vector2>() { new Vector2(0,-1), new Vector2(0, 1) ,
+            List<Vector2> list = new List<Vector2>() {
+                new Vector2(0,-1) , new Vector2(0, 1) ,
                         new Vector2(-1, 0) , new Vector2(1,0) };
+
             List<Tuple<Direction, bool>> tuples = new List<Tuple<Direction, bool>>();
 
             for ( int i = 0 ; i < 4 ; i ++ )
             {
-
                TileDisplayer tileDisplayer = _gridview.Tiles.Find((X) =>
                (newposition + list[i]) == X.Position);
-
                 if (tileDisplayer != null)
                 {
                     bool walkable;
@@ -167,22 +244,25 @@ namespace Core.Exploration
                             tuples.Add(new Tuple<Direction, bool>( Tile.Direction.Right, walkable ));
                             break;
                     }
+
+                    List<Tile> tiles = _tileManager.GetListOfTiles(tuples);
+                    int randomId = SeedManager.NextInt(0, tiles.Count);
+                    Tile PickedTile = tiles[randomId];
+
+                    TileDisplayer tiledisplayer =
+                    GameObject.Instantiate(_tileDisplayer) as TileDisplayer;
+                    tiledisplayer.Tile = PickedTile;
+                    tiledisplayer.gameObject.SetActive(true);
+
+                    _gridview.PlaceTile(tiledisplayer, newposition);
                 }
             }
 
-            List<Tile> tiles =  _tileManager.GetListOfTiles(tuples);
-            int randomId = SeedManager.NextInt(0, tiles.Count);
-            Tile PickedTile = tiles[randomId];
-            //tiledisplayer.Tile = ;
-            TileDisplayer tiledisplayer = 
-                GameObject.Instantiate(_tileDisplayer) as TileDisplayer;
-            tiledisplayer.Tile = PickedTile;
-            tiledisplayer.gameObject.SetActive(true);
-            _gridview.PlaceTile(tiledisplayer, newposition);
-         
 
         }
 
+        //--------------------------------------------------------
         #endregion
+
     }
 }
