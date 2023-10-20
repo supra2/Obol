@@ -26,6 +26,7 @@ namespace Core.FightSystem.AttackSystem
         #endregion
 
         #region Getters
+
         /// <summary>
         /// Cards 
         /// </summary>
@@ -35,6 +36,7 @@ namespace Core.FightSystem.AttackSystem
             get => _cards;
             set => _cards = value;
         }
+
         #endregion
 
         #region Init
@@ -52,6 +54,7 @@ namespace Core.FightSystem.AttackSystem
                 _cards.Add(pc);
             }
         }
+
         //-------------------------------------------------------------
         #endregion
 
@@ -109,6 +112,10 @@ namespace Core.FightSystem.AttackSystem
       
         //-------------------------------------------------------------
 
+       /// <summary>
+       /// Choice Played
+       /// </summary>
+       /// <param name="card"></param>
         protected void OnChoicePlayed(ICard card)
         {
             CardPlayed?.Invoke(this);
@@ -130,6 +137,7 @@ namespace Core.FightSystem.AttackSystem
             choiceCardClone.OnEnable();
             return choiceCardClone;
         }
+
         //-------------------------------------------------------------
         #endregion
 

@@ -9,7 +9,7 @@ namespace Core.FightSystem.AttackSystem
     {
 
         #region Inner Class
-        public class InflictBuilderEffect : IWordBuilder
+        public class GainBuilder : IWordBuilder
         {
             public IEffect BuildEffect(string[] words)
             {
@@ -20,7 +20,7 @@ namespace Core.FightSystem.AttackSystem
 
             public string GetKeyWord()
             {
-                return "Inflict";
+                return "Gain";
             }
 
             public bool NestedKeyword()
@@ -35,7 +35,6 @@ namespace Core.FightSystem.AttackSystem
         protected string _competence;
         protected int _modifier;
         #endregion
-
 
         #region public methods
         public GainEffect(string comp,int modifier)

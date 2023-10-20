@@ -12,7 +12,13 @@ public class TileManager : MonoBehaviour
     #region Visible
     [SerializeField]
     protected List<Tile> _tileDisplayer;
+    [SerializeField]
+    protected TileDisplayer _prefabInstanciation;
     #endregion
+    #endregion
+
+    #region Getter
+    public TileDisplayer Prefab =>_prefabInstanciation;
     #endregion
 
     #region  TileList
@@ -38,10 +44,10 @@ public class TileManager : MonoBehaviour
         return _tileDisplayer.FindAll((X) =>
         {
             bool match = true;
-           foreach ( Tuple<Direction, bool> tuple in directionPassableList )
-           {
+            foreach ( Tuple<Direction, bool> tuple in directionPassableList )
+            {
                 match = match & X.DirectionAvailable( tuple.Item1 ) == tuple.Item2;
-           }
+            }
             return match;
        });
 

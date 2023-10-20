@@ -1,4 +1,5 @@
 using Core.Exploration;
+using Core.FightSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,11 @@ public class TestExploration : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected TileManager _tileManager;
+    /// <summary>
+    /// list 
+    /// </summary>
+    [SerializeField]
+    protected List<PlayableCharacter> _character;
     #endregion
 
     #region Members
@@ -34,6 +40,7 @@ public class TestExploration : MonoBehaviour
     {
         SeedManager.GenerateRandomSeed();
         _tileManager.Init();
+        PartyManager.Instance.Debug_Init(_character); 
         _manager.Init(_level);
     }
 

@@ -16,28 +16,45 @@ public class GridView : MonoBehaviour
     protected LayerMask _layerMask;
     [SerializeField]
     protected List<TileDisplayer> _tiles;
+    [SerializeField]
+    protected TileManager _tileManager;
     #endregion
     #region Hidden
+
     public bool _dragged;
     public Vector3 _dragPosition;
     public Vector3 _initialdragPosition;
+
     #endregion
     #endregion
 
     #region Getters
     public List<TileDisplayer> Tiles => _tiles;
+
+    public TileManager TileManager => _tileManager;
     #endregion
 
     #region Initialisation
 
     public void Awake()
     {
-        _tiles = new List<TileDisplayer>( );
+        _tiles = new List<TileDisplayer>();
     }
 
     #endregion
 
     #region Public Methods
+    //-----------------------------------------------------------
+
+    public TileDisplayer CreateTile(Tile tile)
+    {
+        TileDisplayer tiledisplayer =
+          GameObject.Instantiate(_tileManager.Prefab) as TileDisplayer;
+        tiledisplayer.Tile = tile;
+            tiledisplayer.gameObject.SetActive(true);
+        return tiledisplayer;
+     }
+
     //-----------------------------------------------------------
 
     /// <summary>

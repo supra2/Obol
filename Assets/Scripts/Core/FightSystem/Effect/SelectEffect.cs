@@ -1,3 +1,4 @@
+using Core;
 using Core.FightSystem;
 using Core.FightSystem.AttackSystem;
 using System.Collections;
@@ -7,32 +8,51 @@ using UnityEngine;
 public class SelectEffect : NestedEffect
 {
 
-    #region Enum
+    #region Inner Class
+
+    public class SelectBuilder : IWordBuilder
+    {
+
+        public IEffect BuildEffect(string[] words)
+        {
+            IEffect effect = new SelectEffect();
+            effect.CreateFromLine(words);
+            return effect;
+        }
+
+        public string GetKeyWord()
+        {
+            return "Select";
+        }
+
+        public bool NestedKeyword()
+        {
+            return true;
+        }
+
+    }
+
+    #endregion
+    
+    #region Members
+
+    protected List<IEffect> _nestedEffect;
+    protected Method _methodSelection;
+    protected Test test;
+    protected int _value;
+    #endregion
+
+    #region Enum 
     protected enum Method
     {
         Random,
         StatsCriteria
     }
-    protected enum TestType
-    {
-        LessThan,
-        Equal,
-        MoreThan
-    }
     #endregion
 
-    #region Members
-    protected List<IEffect> _nestedEffect;
-    protected Method _methodSelection;
-
-    protected string _comparisonStat;
-    protected TestType _testType;
-    protected bool _staticValue;
-    protected int _value;
-    #endregion
-
-    public void Apply(ITargetable itargetable)
+    public void Apply(ITargetable attacker)
     {
+
         List<ITargetable> listTargetable = new List<ITargetable>();
 
         switch(_methodSelection)
@@ -41,7 +61,7 @@ public class SelectEffect : NestedEffect
                 listTargetable = SelectRandom( );
                     break;
             case Method.StatsCriteria:
-                listTargetable = SelectByStatsCriteria( );
+                listTargetable = SelectByStatsCriteria(attacker);
                 break;
         }
 
@@ -57,34 +77,47 @@ public class SelectEffect : NestedEffect
 
     public void CreateFromLine(string[] words)
     {
-        switch(words[2])
-        {
+        string _comparisonStat;
+        Test.TestType testType = Test.TestType.None;
+        switch (words[2]){
             case "Random":
                 System.Int32.TryParse(words[1], out _value);
                 break;
             case "<":
-                _comparisonStat = words[1].Substring( 1 , words.Length - 2 );
-                _testType = TestType.LessThan;
+                testType = Test.TestType.LessThan;
                 _methodSelection = Method.StatsCriteria;
                 break;
             case ">":
-                _comparisonStat = words[1].Substring( 1 , words.Length - 2 );
-                _testType = TestType.MoreThan;
+                testType = Test.TestType.MoreThan;
                 _methodSelection = Method.StatsCriteria;
                 break;
             case "=":
-                _comparisonStat = words[1].Substring( 1 , words.Length - 2 );
-                _testType = TestType.Equal;
+                testType = Test.TestType.Equal;
                 _methodSelection = Method.StatsCriteria;
                 break;
-
         }
-        _staticValue = int.TryParse(words[2], out _value);
+
+        if (_methodSelection == Method.StatsCriteria)
+        {
+            _comparisonStat = words[1].Substring(1, words.Length - 2);
+            if( words[3] == "this"  )
+            {
+                test = new Test(_comparisonStat, testType, false);
+            }else
+            {
+                int value = 0;
+                 int.TryParse(words[2], out value);
+                new Test(_comparisonStat, testType, true, value);
+            }
+           
+        }
+     
+        
     }
 
     public bool SelfTarget()
     {
-        return false;
+        return true;
     }
 
     public void SetNestedEffect(List<IEffect> listeffect)
@@ -119,35 +152,21 @@ public class SelectEffect : NestedEffect
         return itargetable;
     }
 
-    public List<ITargetable> SelectByStatsCriteria()
+    public List<ITargetable> SelectByStatsCriteria(ITargetable attacker)
     {
         CombatVar var = CombatManager.Instance.Var;
         List<PlayableCharacter> characters = var.Party;
         List<PlayableCharacter> targetList = null;
 
         List<ITargetable> itargetable = new List<ITargetable>();
-
-        int comparisonValue = _staticValue ? _value: CombatManager.Instance.GetCurrentCharacter().GetCharacteristicsByName(_comparisonStat);
-        switch (_testType)
-        {
-            case TestType.Equal:
-                targetList = characters.FindAll(
-                    x => x.GetCharacteristicsByName(_comparisonStat) == comparisonValue);
-                    break;
-            case TestType.LessThan:
-                targetList = characters.FindAll(
-                    x => x.GetCharacteristicsByName(_comparisonStat) < comparisonValue);
-                break;
-            case TestType.MoreThan:
-                targetList = characters.FindAll(
-                    x => x.GetCharacteristicsByName(_comparisonStat) >  comparisonValue);
-                break;
-        }
+        targetList = characters.FindAll( (X) => test.RunTest( X, test.StaticValue ? _value: 
+            ((Character) attacker).GetCharacteristicsByName(test.Ability)));
         foreach (PlayableCharacter character in targetList)
         {
             itargetable.Add(character);
         }
         return itargetable;
     }
-    
 }
+
+

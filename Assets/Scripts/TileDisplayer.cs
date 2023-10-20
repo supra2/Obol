@@ -14,12 +14,14 @@ public class TileDisplayer : MonoBehaviour
     [Header("Display Element")]
     [SerializeField]
     protected SpriteRenderer _illustrationRenderer;
-    #endregion
-    #region Hidden
     /// <summary>
     /// position
     /// </summary>
+    [SerializeField]
     protected Vector2 _position;
+    #endregion
+    #region Hidden
+
     /// <summary>
     /// Illustration
     /// </summary>

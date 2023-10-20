@@ -21,7 +21,7 @@ namespace Core.FightSystem.AttackSystem
     public class InflictEffect : IEffect
     {
         #region Inner Class
-        public class InflictBuilderEffect : IWordBuilder
+        public class InflictBuilder : IWordBuilder
         {
             public IEffect BuildEffect(string[] words)
             {

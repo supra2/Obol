@@ -16,4 +16,6 @@ public interface ICard:IEquatable<ICard>
     public void Resolve();
 
     public int GetCardId();
+
+    public string[] GetTags();
 }

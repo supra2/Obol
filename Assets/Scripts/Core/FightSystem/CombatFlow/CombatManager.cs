@@ -80,6 +80,7 @@ public class CombatManager : Singleton<CombatManager>
 
     public CombatVar Var => _vars;
 
+
     #endregion
 
     #region Public Method
@@ -188,6 +189,13 @@ public class CombatManager : Singleton<CombatManager>
     {
         _vars.NbRound++;
         UpdateOrder();
+    }
+
+    //---------------------------------------------------
+
+    public void SetOpponentDeck(List<Adversaire> deckContent)
+    {
+
     }
 
     //---------------------------------------------------

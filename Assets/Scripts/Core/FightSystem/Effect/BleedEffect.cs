@@ -8,6 +8,30 @@ using UnityEngine;
 public class BleedEffect : IEffect
 {
 
+    #region Inner Class
+
+    public class BleedBuilder : IWordBuilder
+    {
+        public IEffect BuildEffect(string[] words)
+        {
+            IEffect effect = new BleedEffect();
+            effect.CreateFromLine(words);
+            return effect;
+        }
+
+        public string GetKeyWord()
+        {
+            return "Bleed";
+        }
+
+        public bool NestedKeyword()
+        {
+            return false;
+        }
+
+    }
+    #endregion
+
     #region Members
     protected int _bleedValue;
     #endregion

@@ -93,6 +93,16 @@ public class Deck<T> where T : ICard, ICloneable
         return _cards.FindAll(filterDelegate);
     }
 
+    public T GetFirstCard(Predicate<T> filterDelegate)
+    {
+        int index = _cards.FindIndex(filterDelegate);
+        T card = _cards[index];
+        Remove(card);
+        return card;
+    }
+
+
+    
     public bool Contains(T Card)
     {
         return _cards.Contains(Card);

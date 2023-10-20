@@ -47,23 +47,28 @@ public class PartyManager : Singleton<PartyManager>
         string persistantDatapath = System.IO.Path.Combine(Application.persistentDataPath, "Save", "save.json");
 #if UNITY_ANDROID && !UNityEditor
         WWW www = new WWW (persistantDatapath);
-            while (!www.isDone) {}
-            if (string.IsNullOrEmpty(www.error))
-            {
-                dataAsJson = www.text;
-                party = JsonUtility.FromJson<Party> (dataAsJson);
-            }
-            else
-                Debug.Log ("No such file");
+        while (!www.isDone) {}
+        if (string.IsNullOrEmpty(www.error))
+        {
+            dataAsJson = www.text;
+            party = JsonUtility.FromJson<Party> (dataAsJson);
+        }
+        else
+        {
+            Debug.Log ("No such file");
         }
         else 
         {
-        if (File.Exists (filePath)) {
-            dataAsJson = File.ReadAllText (filePath);
-            data = JsonUtility.FromJson<TestData> (dataAsJson);
-        } else
-            Debug.Log ("No such file");
-    }
+            if (File.Exists (filePath)) 
+            {
+                dataAsJson = File.ReadAllText (filePath);
+                data = JsonUtility.FromJson<TestData> (dataAsJson);
+            }
+            else
+            {
+                Debug.Log ("No such file");
+            }
+        }
 #else
         _party = JsonUtility.FromJson<Party>(File.ReadAllText(persistantDatapath));
 #endif
@@ -79,9 +84,14 @@ public class PartyManager : Singleton<PartyManager>
 #endif
     }
 
+    public void Debug_Init( List<PlayableCharacter> _character )
+    {
+        _party = new Party();
+        _party.CharacterParty = _character;
+    }
+
     public Character GetMainCharacter()
     {
-
         return _party.CharacterParty.Find((X) => X.MainCharacter == true);
     }
 

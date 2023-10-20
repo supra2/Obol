@@ -12,7 +12,7 @@ using UnityEngine.Rendering;
 namespace Core.FightSystem
 {
     [CreateAssetMenu(fileName = "Adversaire", menuName = "Obol/Characters/Enemy", order = 1)]
-    public class Adversaire : Character, ICharacteristic
+    public class Adversaire : Character, ICharacteristic,ICard , ICloneable
     {
 
         #region Enum
@@ -42,11 +42,20 @@ namespace Core.FightSystem
         protected List<int> _lootProba;
         [SerializeField]
         protected List<Item> _lootItem;
+        [SerializeField]
+        protected string _descriptionKey;
+        [SerializeField]
+        protected Exploration.ExplorationEvent.Rarity _rarity;
+        [SerializeField]
+        protected int _cardID;
+        [SerializeField]
+        protected string[] _tags;
         #region Hidden
         /// <summary>
         /// Individual instance for Attacks
         /// </summary>
         protected List<Attack> _instanciatedAttacks;
+       
         #endregion
         #endregion
         #endregion
@@ -87,7 +96,7 @@ namespace Core.FightSystem
                 return dico;
             }
         }
-
+        public Exploration.ExplorationEvent.Rarity Rarity => _rarity;
         #endregion
 
         //--------------------------------------------------------------
@@ -143,6 +152,91 @@ namespace Core.FightSystem
         public void OnAttackLaunched( Attack attack )
         {
             Attacked?.Invoke(attack);
+        }
+
+        //--------------------------------------------------------------
+
+        public Sprite GetIllustration()
+        {
+            return _illustrations;
+        }
+
+        //--------------------------------------------------------------
+
+        public string DescriptionKey()
+        {
+            return _descriptionKey;
+        }
+
+        //--------------------------------------------------------------
+
+        public string TitleKey()
+        {
+            return _characterNameKey;
+        }
+
+        //--------------------------------------------------------------
+
+        public void Play()
+        {
+            throw new NotImplementedException();
+        }
+        //--------------------------------------------------------------
+
+        public void Resolve()
+        {
+            throw new NotImplementedException();
+        }
+
+        //--------------------------------------------------------------
+
+        public int GetCardId()
+        {
+            return _cardID;
+        }
+
+        //--------------------------------------------------------------
+
+        public bool Equals(ICard other)
+        {
+            if (!(other is Adversaire))
+                return false;
+
+            Adversaire otherAdversaire = (Adversaire)other;
+            return ((Adversaire)other)._cardID != _cardID;
+        }
+        //--------------------------------------------------------------
+        public object Clone()
+        {
+            Adversaire adversaire = ScriptableObject.CreateInstance<Adversaire>();
+            adversaire._characterNameKey = this._characterNameKey;
+            adversaire._attacks = new List<Attack>();
+            for ( int i = 0 ; i < _attacks.Count ; i++ )
+            {
+                adversaire._attacks.Add(
+                    ScriptableObject.Instantiate(_attacks[i]));
+            }
+            adversaire._illustrations = this._illustrations;
+            adversaire._lootProba = this._lootProba;
+            adversaire._lootItem = new List<Item>(); 
+            for (int i = 0; i < this._lootItem.Count; i++)
+            {
+                adversaire._lootItem.Add(
+                    ScriptableObject.Instantiate(this._lootItem[i]));
+            }
+            adversaire._descriptionKey = this._descriptionKey;
+
+            adversaire._rarity = this._rarity;
+            adversaire._cardID = this._cardID;
+            adversaire.Init();
+            return adversaire;
+        }
+
+        //--------------------------------------------------------------
+
+        public string[] GetTags()
+        {
+            return _tags;
         }
 
         //--------------------------------------------------------------

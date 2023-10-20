@@ -72,6 +72,8 @@ namespace Core.Exploration
         [SerializeField]
         [TextArea(5, 10)]
         protected string _revealEffectsDescription;
+        [SerializeField]
+        protected string[] _tags;
         #endregion
         #region Hidden
         protected int _instanceID;
@@ -190,6 +192,11 @@ namespace Core.Exploration
                 }
             }
 
+        }
+
+        public string[] GetTags()
+        {
+            return _tags;
         }
 
         #endregion

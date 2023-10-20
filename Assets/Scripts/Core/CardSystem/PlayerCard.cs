@@ -89,6 +89,11 @@ namespace Core.CardSystem
         /// </summary>
         [SerializeField]
         protected bool _playable = true;
+        /// <summary>
+        /// Tags 
+        /// </summary>
+        [SerializeField]
+        protected string[] _tags;
         #region Hidden 
         public UnityCardEvent _playCardEvent;
         protected int _instanceID;
@@ -277,6 +282,11 @@ namespace Core.CardSystem
         public bool Equals(ICard other)
         {
             return Equals(other);
+        }
+
+        public string[] GetTags()
+        {
+            return _tags;
         }
 
         #endregion

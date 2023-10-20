@@ -39,6 +39,10 @@ public class FightStack : MonoBehaviour
 
     //__________________________________________________________________
 
+    /// <summary>
+    /// Pile On top
+    /// </summary>
+    /// <param name="action"></param>
     public void PileOnTop(Action action)
     {
         ActionCommand cmd = new ActionCommand(action);
@@ -47,6 +51,10 @@ public class FightStack : MonoBehaviour
 
     //__________________________________________________________________
 
+    /// <summary>
+    /// Pile a command on Bottom
+    /// </summary>
+    /// <param name="command"></param>
     public void PileBottom( ICommand command )
     {
         if(_commandStack.Count>0)

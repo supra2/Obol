@@ -44,16 +44,13 @@ namespace Core.FightSystem.AttackSystem
                 string[] words = line.Split();
                 if ( nestedEffect && words[0].CompareTo("}") != 0 && words[0].CompareTo( "{") != 0 )
                 {
-
                     nestedlines += line +" \n";
-
                 }
                 else
                 {
                     IEffect effect = null;
                     if (words.Length >= 0)
                     {
-
                         if(_effectsBuilders.ContainsKey(words[0]))
                         {
                             effect = _effectsBuilders[words[0]].BuildEffect(words);
@@ -63,15 +60,7 @@ namespace Core.FightSystem.AttackSystem
                         {
                             switch (words[0])
                             {
-                                case "Bleed":
-                                    effect = new BleedEffect();
-                                    effect.CreateFromLine(words);
-                                    break;
-                                case "Select":
-                                    effect = new SelectEffect();
-                                    effect.CreateFromLine(words);
-                                    nestedEffect = true;
-                                    break;
+                              
                                 case "Injury":
                                     effect = new InjuryEffect();
                                     effect.CreateFromLine(words);
