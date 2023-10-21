@@ -21,7 +21,7 @@ public class TileDisplayer : MonoBehaviour
     protected Vector2 _position;
     #endregion
     #region Hidden
-
+    protected ExplorationEvent _event;
     /// <summary>
     /// Illustration
     /// </summary>
@@ -53,6 +53,16 @@ public class TileDisplayer : MonoBehaviour
 
     public Sprite illustration => _illustration;
 
+    public ExplorationEvent Event { get => _event; set => _event = value; }
+
     #endregion
 
+    #region Initialisation
+
+    protected void Awake()
+    {
+        _illustrationRenderer.sprite = _tile.Sprite;
+    }
+
+    #endregion
 }

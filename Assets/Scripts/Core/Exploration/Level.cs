@@ -62,7 +62,7 @@ namespace Core.Exploration
 
         #region Methods
 
-        public void  Init( )
+        public virtual void  Init( )
         {
             _startingTile.Init( _startingEvent );
             _adversaireDeck = new Deck<Adversaire>();
@@ -107,7 +107,7 @@ namespace Core.Exploration
             TileDisplayer tiledisplayer = gridview.GetTileDisplayer(position);
             foreach (Tile.Direction direction in System.Enum.GetValues(typeof(Tile.Direction)))
             {
-                if ( tiledisplayer.Tile.DirectionAvailable( direction ) && )
+                if ( tiledisplayer.Tile.DirectionAvailable( direction )  )
                 {
                     Vector2 deplacement = Vector2.zero;
                     switch (direction)
@@ -126,7 +126,7 @@ namespace Core.Exploration
                             break;
                     }
                     Vector2 newposition = position + deplacement;
-                   if( gridview.Tiles.Find((X) =>
+                   if(! gridview.Tiles.Find((X) =>
                     newposition == X.Position))
                     { 
                         ExplorationEvent events = explorationDeck.Draw();

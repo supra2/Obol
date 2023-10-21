@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="CardUI" src="project://database/Assets/UI%20Toolkit/CardUI.uxml?fileID=9197481963319205126&amp;guid=4da4022c71fa13b429452f1b7688d560&amp;type=3#CardUI" />
     <ui:VisualElement name="UpperMenu" style="flex-grow: 1; background-color: rgba(136, 139, 146, 0.87); height: 0; min-height: 5%; min-width: auto; max-height: 5%; flex-direction: row-reverse; padding-left: 10px; padding-top: 15px;">
         <ui:Button text="Button" display-tooltip-when-elided="true" style="flex-direction: row-reverse; max-width: 10px; max-height: 10px; min-width: 3px; justify-content: flex-start; background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;); background-color: rgba(0, 0, 0, 0); font-size: 1px; color: rgba(27, 27, 27, 0);">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;);" />
@@ -8,9 +9,10 @@
     </ui:VisualElement>
     <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
         <ui:Button text="Button" display-tooltip-when-elided="true" name="UpArrow" style="width: 100px; height: 100px;" />
-        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; width: auto; align-items: center;">
+        <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; width: auto; align-items: center; padding-top: 80px; padding-bottom: 80px;">
             <ui:Button text="Button" display-tooltip-when-elided="true" name="LeftArrow" style="flex-grow: 0; height: 100px; width: 100px;" />
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+            <ui:Instance template="CardUI" name="CardUI" style="flex-grow: 0.2;" />
             <ui:Button text="Button" display-tooltip-when-elided="true" name="RightArrow" style="height: 100px; flex-grow: 0; width: 100px;" />
         </ui:VisualElement>
         <ui:Button text="Button" display-tooltip-when-elided="true" name="DownArrow" style="width: 100px; height: 100px; align-items: center;" />

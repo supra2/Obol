@@ -39,15 +39,31 @@ public class Party
 
     public int InventorySize => _inventorySize;
 
-    public int FoodLevel => _foodlevel;
+    public int FoodLevel
+    {
+        get => _foodlevel;
+        set
+        {
+            _foodlevel = value;
 
+        }
+
+    }
+
+    #endregion
+
+    #region Event
+
+    public delegate void FoodChanged(int newlevel);
+    public FoodChanged OnFoodChanged;
     #endregion
 
     #region Members
 
-    public  void ChangeFoodLevel( )
+    public void ChangeFoodLevel( )
     {
         _foodlevel = (int) Mathf.Clamp(_foodlevel - _characterParty.Count , 0f , 100f );
+        OnFoodChanged?.Invoke(_foodlevel);
     }
 
     #endregion

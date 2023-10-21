@@ -88,6 +88,7 @@ public class PartyManager : Singleton<PartyManager>
     {
         _party = new Party();
         _party.CharacterParty = _character;
+        _party.OnFoodChanged+= (X) => FoodChanged?.Invoke(X);
     }
 
     public Character GetMainCharacter()
@@ -99,7 +100,7 @@ public class PartyManager : Singleton<PartyManager>
 
     #region Event
 
-    public UnityIntEvent FoodChanged;
+    public UnityIntEvent FoodChanged = new UnityIntEvent();
 
 
     #endregion

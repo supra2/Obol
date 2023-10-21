@@ -1,8 +1,16 @@
 using Core.Exploration;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
+[Serializable]
+public class TileDisplayerEvent: UnityEvent<TileDisplayer>
+{
+}
+
+ 
 public class GridView : MonoBehaviour
 {
 
@@ -22,16 +30,23 @@ public class GridView : MonoBehaviour
     #region Hidden
 
     public bool _dragged;
-    public Vector3 _dragPosition;
-    public Vector3 _initialdragPosition;
 
+    public Vector3 _dragPosition;
+
+    public Vector3 _initialdragPosition;
     #endregion
     #endregion
 
     #region Getters
+
     public List<TileDisplayer> Tiles => _tiles;
 
     public TileManager TileManager => _tileManager;
+
+    #endregion
+
+    #region Event
+    public TileDisplayerEvent OnTileDisplayerPicked;
     #endregion
 
     #region Initialisation
@@ -106,7 +121,7 @@ public class GridView : MonoBehaviour
 
     //-----------------------------------------------------------
 
-    public Tile GetTileAtWorldPosition(  Vector2  worldPosition  )
+    public TileDisplayer GetTileAtWorldPosition(  Vector2  worldPosition  )
     {
        Vector3 pos =  ProjectedPosition( worldPosition );
            Vector2 tileposition =  _grid.CellToWorld(
@@ -115,7 +130,7 @@ public class GridView : MonoBehaviour
         {
             Debug.Log( " Tile not found " + pos );
         }
-         return GetTileDisplayer( pos ).Tile;
+         return GetTileDisplayer( pos );
     }
 
     //-----------------------------------------------------------
@@ -134,7 +149,7 @@ public class GridView : MonoBehaviour
         Vector3 mousePosition = Input.mousePosition;
 
         Vector3 hitPosition = ProjectedPosition(mousePosition);
-      
+
         if (Input.GetMouseButtonDown(0))
         {
             _initialdragPosition = hitPosition;
@@ -143,13 +158,21 @@ public class GridView : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-            if( Vector3.kEpsilon < ( _initialdragPosition - hitPosition).magnitude )
+            if (Vector3.kEpsilon < (_initialdragPosition - hitPosition).magnitude)
             {
                 Clicked(hitPosition);
             }
             _dragged = false;
-            
+
         }
+        if (Input.GetMouseButtonUp(1))
+        {
+            TileDisplayer picked = GetTileAtWorldPosition( hitPosition );
+            if( picked == null )
+            {
+                OnTileDisplayerPicked?.Invoke(picked);
+            }
+        } 
 #elif UNITY_IOS || UnityANDROID
         if ( Input.touchCount > 0 )
         {
@@ -157,7 +180,7 @@ public class GridView : MonoBehaviour
             DetectSelectedMapPosition( touch );
         }
 #endif
-        if ( _dragged )
+            if ( _dragged )
         {
             GetDragValue();
         }

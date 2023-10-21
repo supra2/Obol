@@ -6,7 +6,8 @@ using UnityEngine.UIElements;
 
 public class CharacterListController
 {
-    #region MEMBERS
+
+    #region Members
     // UXML template for list entries
     // UI element references
     ListView m_CharacterList;

@@ -37,11 +37,17 @@ namespace Core.Exploration
         #region Hidden
         protected Level _currentLevel;
         protected Deck<ExplorationEvent> _explorationEvents;
+        /// <summary>
+        /// Current Player Position
+        /// </summary>
         protected Vector2 _playerPosition;
         #endregion
         #endregion
 
         #region Getters
+        //--------------------------------------------------------
+
+        public GridView GridView => _gridview;
         //--------------------------------------------------------
 
         public Vector2 PlayerPosition
@@ -86,32 +92,33 @@ namespace Core.Exploration
         public void Init(Level levelToExplore)  
         {
             _currentLevel = levelToExplore;
-            if (_currentLevel.EventList != null)
+            if ( _currentLevel.EventList != null )
             {
                 _explorationEvents = new Deck<ExplorationEvent>();
                 foreach ( ExplorationEvent Event in _currentLevel.EventList )
                 {
                     int rarity_Multiplier = 0;
-                        switch (Event.EventRarity)
-                        {
-                            case ExplorationEvent.Rarity.Common:
-                                rarity_Multiplier = 5;
-                                break;
-                            case ExplorationEvent.Rarity.Uncommon:
-                                rarity_Multiplier = 3;
-                                break;
-                            case ExplorationEvent.Rarity.Rare:
-                            case ExplorationEvent.Rarity.Unique:
-                                rarity_Multiplier = 1;
-                                break;
-                        }
-                        for (int i = 0; i < rarity_Multiplier; i++)
-                        {
-                            _explorationEvents.AddTop(
-                                ScriptableObject.Instantiate(Event) as ExplorationEvent );
-                        }
+                    switch (Event.EventRarity)
+                    {
+                        case ExplorationEvent.Rarity.Common:
+                            rarity_Multiplier = 5;
+                            break;
+                        case ExplorationEvent.Rarity.Uncommon:
+                            rarity_Multiplier = 3;
+                            break;
+                        case ExplorationEvent.Rarity.Rare:
+                        case ExplorationEvent.Rarity.Unique:
+                            rarity_Multiplier = 1;
+                            break;
                     }
-                    _explorationEvents.Shuffle();
+                    for (int i = 0; i < rarity_Multiplier; i++)
+                    {
+                        _explorationEvents.AddTop(
+                            ScriptableObject.Instantiate(Event) 
+                            as ExplorationEvent );
+                    }
+                }
+                _explorationEvents.Shuffle();
             }
             levelToExplore.Init();
             Place( PlayerPosition , levelToExplore.StartingTile );

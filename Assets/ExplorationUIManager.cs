@@ -21,6 +21,7 @@ public class ExplorationUIManager : MonoBehaviour
     protected Button _leftArrow;
     protected Label _foodLabel;
     protected Label _hour;
+    protected UICardDisplayer _cardDisplayer;
     #endregion
     #endregion
 
@@ -45,8 +46,6 @@ public class ExplorationUIManager : MonoBehaviour
 
     }
 
-    #endregion
-
     public void Initialize(VisualElement root)
     {
         _upArrow = root.Q<Button>("UpArrow");
@@ -54,14 +53,22 @@ public class ExplorationUIManager : MonoBehaviour
         _rightArrow = root.Q<Button>("RightArrow");
         _leftArrow = root.Q<Button>("LeftArrow");
         _foodLabel = root.Q<Label>("foodlabel");
+        _cardDisplayer = new UICardDisplayer( root.Q<VisualElement>("CardUI"));
          _hour = root.Q<Label>("hour");
         _upArrow.clicked +=() => _directionButtonClicked?.Invoke(0);
          _downArrow.clicked += () => _directionButtonClicked?.Invoke(1);
         _leftArrow.clicked += () => _directionButtonClicked?.Invoke(2);
         _rightArrow.clicked += () => _directionButtonClicked?.Invoke(3);
         _explorationManager.OnPlayerMoved.AddListener( OnPlayerMoved );
+        _explorationManager.GridView.OnTileDisplayerPicked.AddListener(TileDisplayerPicked);
+        PartyManager.Instance.FoodChanged.AddListener(FoodChanged);
+        _cardDisplayer.Hide();
     }
 
+    #endregion
+
+    #region UI Callback
+    
     protected void OnPlayerMoved( Vector2 newPosition )
     {
         Tile tile = _gridview.GetTileDisplayer( newPosition ).Tile;
@@ -99,9 +106,17 @@ public class ExplorationUIManager : MonoBehaviour
         _hour.text = string.Format("{0:hhmm}",newhour);
     }
 
-    protected void FoodChanged(float foodchanged)
+    protected void FoodChanged(int foodchanged)
     {
-        _foodLabel.text = string.Format("Food : ", foodchanged);
+        Debug.Log("food changed");
+        _foodLabel.text = string.Format("Food : {0} ", foodchanged);
     }
+
+    protected void TileDisplayerPicked(TileDisplayer tiledisplayer)
+    {
+        _cardDisplayer.SetCard( tiledisplayer.Event );
+        _cardDisplayer.Show();
+    }
+    #endregion
 
 }

@@ -18,10 +18,21 @@ namespace Core.Exploration
         #region Visible 
         [SerializeField]
         protected List<TileDisplayer> _tileDisplayer;
-        #endregion
-        #endregion
 
-        public virtual void Explore(Vector2 position, GridView gridview, 
+        [SerializeField]
+        protected List<ExplorationEvent> _explorationEvent;
+        #endregion
+        #endregion
+        public override void Init()
+        {
+            foreach(TileDisplayer tiledisplayer in _tileDisplayer )
+            {
+                ExplorationManager.Instance.GridView.PlaceTile(GameObject.Instantiate(tiledisplayer),
+                    tiledisplayer.Position);
+            }
+        }
+
+        public override void Explore(Vector2 position, GridView gridview, 
             Deck<ExplorationEvent> explorationDeck )
         {
 
