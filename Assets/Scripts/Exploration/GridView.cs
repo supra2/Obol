@@ -54,6 +54,7 @@ public class GridView : MonoBehaviour
     public void Awake()
     {
         _tiles = new List<TileDisplayer>();
+        OnTileDisplayerPicked = new TileDisplayerEvent();
     }
 
     #endregion
@@ -124,13 +125,14 @@ public class GridView : MonoBehaviour
     public TileDisplayer GetTileAtWorldPosition(  Vector2  worldPosition  )
     {
        Vector3 pos =  ProjectedPosition( worldPosition );
-           Vector2 tileposition =  _grid.CellToWorld(
-           new Vector3Int( (int)pos.x , (int)pos.y , 0) );
-        if ( GetTileDisplayer(pos)  == null)
+           Vector3Int tileposition =  _grid.WorldToCell(
+           new Vector3( pos.x , pos.y , 0) );
+        if ( GetTileDisplayer(new Vector2( tileposition.x , tileposition.y)) 
+            == null)
         {
             Debug.Log( " Tile not found " + pos );
         }
-         return GetTileDisplayer( pos );
+         return GetTileDisplayer(new Vector2(tileposition.x, tileposition.y));
     }
 
     //-----------------------------------------------------------
@@ -147,9 +149,7 @@ public class GridView : MonoBehaviour
 #if UNITY_STANDALONE
 
         Vector3 mousePosition = Input.mousePosition;
-
         Vector3 hitPosition = ProjectedPosition(mousePosition);
-
         if (Input.GetMouseButtonDown(0))
         {
             _initialdragPosition = hitPosition;
@@ -158,17 +158,19 @@ public class GridView : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-            if (Vector3.kEpsilon < (_initialdragPosition - hitPosition).magnitude)
+            if (Vector3.kEpsilon < ( _initialdragPosition -
+                                    hitPosition ).magnitude)
             {
-                Clicked(hitPosition);
+                Clicked( hitPosition );
             }
             _dragged = false;
 
         }
         if (Input.GetMouseButtonUp(1))
         {
-            TileDisplayer picked = GetTileAtWorldPosition( hitPosition );
-            if( picked == null )
+            TileDisplayer picked = 
+                GetTileAtWorldPosition( mousePosition );
+            if( picked != null )
             {
                 OnTileDisplayerPicked?.Invoke(picked);
             }

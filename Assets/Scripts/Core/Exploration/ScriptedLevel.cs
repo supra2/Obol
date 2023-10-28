@@ -18,17 +18,21 @@ namespace Core.Exploration
         #region Visible 
         [SerializeField]
         protected List<TileDisplayer> _tileDisplayer;
-
         [SerializeField]
         protected List<ExplorationEvent> _explorationEvent;
         #endregion
         #endregion
         public override void Init()
         {
+            int i = 0;
             foreach(TileDisplayer tiledisplayer in _tileDisplayer )
             {
-                ExplorationManager.Instance.GridView.PlaceTile(GameObject.Instantiate(tiledisplayer),
+
+                TileDisplayer td = GameObject.Instantiate(tiledisplayer);
+                td.Event = _explorationEvent[i];
+                ExplorationManager.Instance.GridView.PlaceTile(td,
                     tiledisplayer.Position);
+                i++;
             }
         }
 

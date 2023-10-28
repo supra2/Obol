@@ -60,7 +60,8 @@ public class ExplorationUIManager : MonoBehaviour
         _leftArrow.clicked += () => _directionButtonClicked?.Invoke(2);
         _rightArrow.clicked += () => _directionButtonClicked?.Invoke(3);
         _explorationManager.OnPlayerMoved.AddListener( OnPlayerMoved );
-        _explorationManager.GridView.OnTileDisplayerPicked.AddListener(TileDisplayerPicked);
+        _explorationManager.GridView.
+            OnTileDisplayerPicked.AddListener( TileDisplayerPicked );
         PartyManager.Instance.FoodChanged.AddListener(FoodChanged);
         _cardDisplayer.Hide();
     }
@@ -98,7 +99,8 @@ public class ExplorationUIManager : MonoBehaviour
 
     protected void ShowEvent(ExplorationEvent EEvent)
     {
-
+        _cardDisplayer.SetCard(EEvent);
+        _cardDisplayer.Show();
     }
 
     protected void HourChanged( float newhour)
@@ -108,15 +110,15 @@ public class ExplorationUIManager : MonoBehaviour
 
     protected void FoodChanged(int foodchanged)
     {
-        Debug.Log("food changed");
         _foodLabel.text = string.Format("Food : {0} ", foodchanged);
     }
 
-    protected void TileDisplayerPicked(TileDisplayer tiledisplayer)
+    protected void TileDisplayerPicked( TileDisplayer tiledisplayer )
     {
         _cardDisplayer.SetCard( tiledisplayer.Event );
         _cardDisplayer.Show();
     }
+
     #endregion
 
 }

@@ -8,13 +8,13 @@
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="hour" />
     </ui:VisualElement>
     <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
-        <ui:Button text="Button" display-tooltip-when-elided="true" name="UpArrow" style="width: 100px; height: 100px;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="UpArrow" class="ArrowButton" style="width: 100px; height: 100px; background-image: url(&apos;project://database/Assets/Textures/UI/Arrow.png?fileID=2800000&amp;guid=b1382c4317bde4848b4855b3292a0aac&amp;type=3#Arrow&apos;); -unity-background-scale-mode: scale-to-fit; background-color: rgba(255, 255, 255, 0); color: rgba(27, 27, 27, 0);" />
         <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; width: auto; align-items: center; padding-top: 80px; padding-bottom: 80px;">
-            <ui:Button text="Button" display-tooltip-when-elided="true" name="LeftArrow" style="flex-grow: 0; height: 100px; width: 100px;" />
+            <ui:Button text="Button" display-tooltip-when-elided="true" name="LeftArrow" style="flex-grow: 0; height: 100px; width: 100px; rotate: 270deg; background-color: rgba(188, 188, 188, 0); background-image: url(&apos;project://database/Assets/Textures/UI/Arrow.png?fileID=2800000&amp;guid=b1382c4317bde4848b4855b3292a0aac&amp;type=3#Arrow&apos;); color: rgba(27, 27, 27, 0);" />
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
             <ui:Instance template="CardUI" name="CardUI" style="flex-grow: 0.2;" />
-            <ui:Button text="Button" display-tooltip-when-elided="true" name="RightArrow" style="height: 100px; flex-grow: 0; width: 100px;" />
+            <ui:Button text="Button" display-tooltip-when-elided="true" name="RightArrow" class="ArrowButton" style="height: 100px; flex-grow: 0; width: 100px; background-color: rgba(188, 188, 188, 0); -unity-text-outline-color: rgba(0, 0, 0, 0); color: rgba(27, 27, 27, 0); background-image: url(&apos;project://database/Assets/Textures/UI/Arrow.png?fileID=2800000&amp;guid=b1382c4317bde4848b4855b3292a0aac&amp;type=3#Arrow&apos;); -unity-background-scale-mode: scale-to-fit; rotate: 90deg;" />
         </ui:VisualElement>
-        <ui:Button text="Button" display-tooltip-when-elided="true" name="DownArrow" style="width: 100px; height: 100px; align-items: center;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="DownArrow" style="width: 100px; height: 100px; align-items: center; rotate: 180deg; background-color: rgba(188, 188, 188, 0); background-image: url(&apos;project://database/Assets/Textures/UI/Arrow.png?fileID=2800000&amp;guid=b1382c4317bde4848b4855b3292a0aac&amp;type=3#Arrow&apos;); color: rgba(27, 27, 27, 0);" />
     </ui:VisualElement>
 </ui:UXML>

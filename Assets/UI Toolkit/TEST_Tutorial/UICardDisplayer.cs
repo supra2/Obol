@@ -16,7 +16,7 @@ public class UICardDisplayer
 
     protected Sprite sprite;
 
-    protected VisualElement Illustration;
+    protected VisualElement _illustration;
     /// <summary>
     /// Text Name
     /// </summary>
@@ -32,23 +32,39 @@ public class UICardDisplayer
     public UICardDisplayer(VisualElement root)
     {
         _visualElement = root;
-        VisualElement Illustration = _visualElement.Q<VisualElement>("Illustration");
+         _illustration = _visualElement.Q<VisualElement>("Illustration");
         _visualElement.Q<VisualElement>("Illustration");
         textName = _visualElement.Q<Label>("TitleText");
         textDescription = _visualElement.Q<Label>("TitleText");
+        nametext = new LocalizeStringEvent();
+        nametext.OnUpdateString.AddListener((X) => UpdateName(X));
+        descriptionText = new LocalizeStringEvent();
+        descriptionText.SetTable("GameValues");
+       
     }
 
     public void SetCard(ICard card)
     {
-        Illustration.style.backgroundImage = new StyleBackground(card.GetIllustration());
-        nametext = new LocalizeStringEvent();
+        _illustration.style.backgroundImage = new StyleBackground(card.GetIllustration());
+        
         nametext.SetTable("GameValues");
         nametext.SetEntry(card.TitleKey());
+        
         descriptionText = new LocalizeStringEvent();
         descriptionText.SetTable("GameValues");
         descriptionText.SetEntry(card.DescriptionKey());
     }
+    public void UpdateName(string name)
+    {
+        textName.text
+            = name;
+    }
 
+    public void UpdateDescription(string description)
+    {
+        textDescription.text
+           = description;
+    }
     public void Show (  )
     {
         _visualElement.visible = true;
