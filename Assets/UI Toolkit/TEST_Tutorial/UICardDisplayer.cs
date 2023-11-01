@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UIElements;
 
@@ -9,10 +10,10 @@ public class UICardDisplayer
 
     #region Hidden
     protected VisualElement _visualElement;
+   
+    protected LocalizedString nametext;
 
-    protected LocalizeStringEvent nametext;
-
-    protected LocalizeStringEvent descriptionText;
+    protected LocalizedString descriptionText;
 
     protected Sprite sprite;
 
@@ -35,25 +36,28 @@ public class UICardDisplayer
          _illustration = _visualElement.Q<VisualElement>("Illustration");
         _visualElement.Q<VisualElement>("Illustration");
         textName = _visualElement.Q<Label>("TitleText");
-        textDescription = _visualElement.Q<Label>("TitleText");
-        nametext = new LocalizeStringEvent();
-        nametext.OnUpdateString.AddListener((X) => UpdateName(X));
-        descriptionText = new LocalizeStringEvent();
-        descriptionText.SetTable("GameValues");
-       
+        textDescription = _visualElement.Q<Label>("Description");
+        nametext = new LocalizedString();
+        nametext.StringChanged += UpdateName;
+        descriptionText = new LocalizedString();
+        descriptionText.TableReference="GameValues";
+        nametext.StringChanged += UpdateDescription;
     }
 
     public void SetCard(ICard card)
     {
         _illustration.style.backgroundImage = new StyleBackground(card.GetIllustration());
         
-        nametext.SetTable("GameValues");
-        nametext.SetEntry(card.TitleKey());
+        nametext.TableReference ="GameValues";
+        nametext.TableEntryReference = card.TitleKey();
         
-        descriptionText = new LocalizeStringEvent();
-        descriptionText.SetTable("GameValues");
-        descriptionText.SetEntry(card.DescriptionKey());
+        descriptionText.TableReference ="GameValues";
+        descriptionText.TableEntryReference = card.DescriptionKey();
+        UpdateName(nametext.GetLocalizedString());
+        UpdateDescription(descriptionText.GetLocalizedString());
+
     }
+
     public void UpdateName(string name)
     {
         textName.text

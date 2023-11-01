@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Core.Exploration.Tile;
 
 namespace Core.Exploration
 {
@@ -160,22 +161,33 @@ namespace Core.Exploration
         {
        
         }
+        public void Leave(Direction leavingfrom)
+        {
+            ApplyEffect( EffectTrigger.OnLeave );
+        }
 
-        public void Enter()
+        public void Enter(Direction Entering)
         {
             if (!_entered)
             {
-               
+                ApplyEffect(EffectTrigger.OnFirstEnter);
+                _entered = true;
             }
+            ApplyEffect(EffectTrigger.OnEnter);
+        }
+
+        public void Reveal()
+        {
+            ApplyEffect(EffectTrigger.OnReveal);
         }
 
         #endregion
 
         #region InnerMethod
 
-        protected void ApplyEffect( EffectTrigger effecTrigger )
+        protected void ApplyEffect( EffectTrigger effectTrigger )
         {
-            List<IEffect> effectlist = _effectDictionary[effecTrigger];
+            List<IEffect> effectlist = _effectDictionary[effectTrigger];
             PlayableCharacter charac = null;
 
             foreach (PlayableCharacter character in PartyManager.Instance.Party.CharacterParty )

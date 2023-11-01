@@ -78,12 +78,16 @@ namespace Core.Exploration
                 _availableDirections = (Direction)(((int)_availableDirections) | 1 << 3);
             
         }
+
+        //-----------------------------------------------------------
+
         public void Init(ExplorationEvent associatedEvent)
         {
             Init();
             _associatedEvent = associatedEvent;
 
         }
+
         //-----------------------------------------------------------
         #endregion
 
@@ -111,7 +115,7 @@ namespace Core.Exploration
         /// </summary>
         public void Reveal()
         {
-           // _associatedEvent?.
+            _associatedEvent?.Reveal();
         }
 
         //-----------------------------------------------------------

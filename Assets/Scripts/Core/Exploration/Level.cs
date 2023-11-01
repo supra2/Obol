@@ -39,12 +39,21 @@ namespace Core.Exploration
         /// </summary>
         [SerializeReference]
         List<Adversaire> _adversairesList;
+       
         #endregion
         #region Hidden
         /// <summary>
         /// Deck of adversaire associated to the level
         /// </summary>
         Deck<Adversaire> _adversaireDeck;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected TileDisplayer  _currentTileDisplayer;
+        /// <summary>
+        ///time Manager reference
+        /// </summary>
+        protected TimeManager _timeManager;
         #endregion
         #endregion
 
@@ -62,8 +71,10 @@ namespace Core.Exploration
 
         #region Methods
 
-        public virtual void  Init( )
+        public virtual void  Init(TimeManager timeManager )
         {
+
+            _timeManager = timeManager;
             _startingTile.Init( _startingEvent );
             _adversaireDeck = new Deck<Adversaire>();
             
@@ -91,20 +102,37 @@ namespace Core.Exploration
                 }
             }
             _adversaireDeck.Shuffle();
+
         }
 
         #endregion
 
         #region Public Methods
+
+        //--------------------------------------------------------
+        public virtual void  PlayerMove(Vector2 position, 
+                                        Direction movementDirection,
+                                        GridView gridview, 
+                                        Deck<ExplorationEvent> explorationDeck)
+        {
+            if( _currentTileDisplayer !=null)
+                _currentTileDisplayer.Event?.Leave(movementDirection);
+
+            _currentTileDisplayer = gridview.GetTileDisplayer(position);
+
+            _currentTileDisplayer.Event?.Enter(movementDirection);
+            Explore(_currentTileDisplayer, gridview, explorationDeck);
+        }
+
         //--------------------------------------------------------
 
         /// <summary>
         /// Exploration
         /// </summary>
         /// <param name="position"></param>
-        public virtual void Explore(Vector2 position,GridView gridview , Deck<ExplorationEvent> explorationDeck  )
+        public virtual void Explore( TileDisplayer tiledisplayer , GridView gridview , 
+            Deck<ExplorationEvent> explorationDeck  )
         {
-            TileDisplayer tiledisplayer = gridview.GetTileDisplayer(position);
             foreach (Tile.Direction direction in System.Enum.GetValues(typeof(Tile.Direction)))
             {
                 if ( tiledisplayer.Tile.DirectionAvailable( direction )  )
@@ -125,9 +153,9 @@ namespace Core.Exploration
                             deplacement = new Vector2(0, -1);
                             break;
                     }
-                    Vector2 newposition = position + deplacement;
-                   if(! gridview.Tiles.Find((X) =>
-                    newposition == X.Position))
+                    Vector2 newposition = _currentTileDisplayer.Position + deplacement;
+                    if(!gridview.Tiles.Find((X) =>
+                        newposition == X.Position) )
                     { 
                         ExplorationEvent events = explorationDeck.Draw();
                         PlaceConnectedTiles(newposition, gridview);
@@ -147,13 +175,10 @@ namespace Core.Exploration
         protected void PlaceConnectedTiles( Vector2 newposition
             ,GridView gridview)
         {
-
             List<Vector2> list = new List<Vector2>() {
                 new Vector2(0,-1) , new Vector2(0, 1) ,
                         new Vector2(-1, 0) , new Vector2(1,0) };
-
             List<Tuple<Direction, bool>> tuples = new List<Tuple<Direction, bool>>();
-
             for (int i = 0; i < 4; i++)
             {
                 TileDisplayer tileDisplayer = gridview.Tiles.Find((X) =>
@@ -186,12 +211,26 @@ namespace Core.Exploration
                     Tile PickedTile = tiles[randomId];
 
                     TileDisplayer tiledisplayer = gridview.CreateTile(PickedTile);
-                    gridview.PlaceTile(tiledisplayer, newposition);
+                    if ( TileVisible( tiledisplayer ) )
+                    {
+                        gridview.PlaceTileVisible( tiledisplayer, newposition);
+                    }
+                    else
+                    {
+                        gridview.PlaceTileHidden( tiledisplayer, newposition);
+                    }
                 }
 
             }
 
 
+        }
+
+        //--------------------------------------------------------
+
+        public bool TileVisible( TileDisplayer tile )
+        {
+            return  (tile.Event!=null  && tile.Event.Lit) || _timeManager.IsDay();
         }
 
         //--------------------------------------------------------

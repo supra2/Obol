@@ -78,14 +78,33 @@ public class GridView : MonoBehaviour
     /// </summary>
     /// <param name="tileToPlace"></param>
     /// <param name="position"></param>
-    public void PlaceTile( TileDisplayer tileToPlace ,  Vector2 position  )
+    public void PlaceTileVisible( TileDisplayer tileToPlace ,  Vector2 position  )
     {
         tileToPlace.transform.SetParent(transform);
         tileToPlace.transform.rotation = 
             Quaternion.AngleAxis(0f, new Vector3(1, 0, 0));
         tileToPlace.Position = position;
+        tileToPlace.SetMode(TileDisplayer.VisibilityMode.Visible);
         Place( tileToPlace.transform, position, tileToPlace.Tile.RotationY );
         _tiles.Add( tileToPlace );
+    }
+
+    //-----------------------------------------------------------
+
+    /// <summary>
+    /// Place a tile on the grid ( parent it , and set it inner place )
+    /// </summary>
+    /// <param name="tileToPlace"></param>
+    /// <param name="position"></param>
+    public void PlaceTileHidden(TileDisplayer tileToPlace, Vector2 position)
+    {
+        tileToPlace.transform.SetParent(transform);
+        tileToPlace.transform.rotation =
+            Quaternion.AngleAxis(0f, new Vector3(1, 0, 0));
+        tileToPlace.Position = position;
+        tileToPlace.SetMode(TileDisplayer.VisibilityMode.Hidden);
+        Place(tileToPlace.transform, position, tileToPlace.Tile.RotationY);
+        _tiles.Add(tileToPlace);
     }
 
     //-----------------------------------------------------------

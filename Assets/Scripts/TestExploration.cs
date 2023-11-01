@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TestExploration : MonoBehaviour
 {
+
     #region Members
     /// <summary>
     /// Exploration manager
@@ -45,4 +46,5 @@ public class TestExploration : MonoBehaviour
     }
 
     #endregion
+
 }

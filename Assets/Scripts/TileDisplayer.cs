@@ -26,6 +26,13 @@ public class TileDisplayer : MonoBehaviour
     /// Illustration
     /// </summary>
     protected Sprite _illustration;
+    /// <summary>
+    /// Illustration
+    /// </summary>
+    protected  static Sprite _hiddenIllustration;
+
+    protected VisibilityMode _visibilityMode;
+
     #endregion
     #endregion
 
@@ -53,7 +60,20 @@ public class TileDisplayer : MonoBehaviour
 
     public Sprite illustration => _illustration;
 
+    public Sprite hiddenIllustration => _hiddenIllustration;
+
     public ExplorationEvent Event { get => _event; set => _event = value; }
+
+    public VisibilityMode Visibility => _visibilityMode;
+    #endregion
+
+    #region Enum
+
+    public enum VisibilityMode
+    {
+        Hidden,
+        Visible,
+    }
 
     #endregion
 
@@ -61,7 +81,26 @@ public class TileDisplayer : MonoBehaviour
 
     protected void Awake()
     {
-        _illustrationRenderer.sprite = _tile.Sprite;
+        if(_hiddenIllustration == null)
+        {
+            _hiddenIllustration = Sprite.Instantiate(Resources.Load<Sprite>("Textures/Illustration/FoggedTile"));
+        }
+        ShowSprite();
+    }
+
+    protected void ShowSprite()
+    {
+        _illustrationRenderer.sprite = _visibilityMode == VisibilityMode.Visible ? 
+            _tile.Sprite : _hiddenIllustration;
+    }
+
+    #endregion
+
+    #region Public Method
+
+    public void SetMode(VisibilityMode mode)
+    {
+        _visibilityMode = mode;
     }
 
     #endregion

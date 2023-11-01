@@ -29,6 +29,11 @@ namespace Core.Exploration
         [SerializeField]
         protected TileManager _tileManager;
         /// <summary>
+        ///  Manage the passing of time
+        /// </summary>
+        [SerializeField]
+        protected TimeManager _timeManager;
+        /// <summary>
         /// Pion
         /// </summary>
         [SerializeField]
@@ -41,6 +46,14 @@ namespace Core.Exploration
         /// Current Player Position
         /// </summary>
         protected Vector2 _playerPosition;
+        /// <summary>
+        /// last Direction walked by the player
+        /// </summary>
+        protected Direction _lastDirectionWalked = Direction.None;
+        /// <summary>
+        /// last Direction walked by the player
+        /// </summary>
+        protected TileDisplayer _currentTile;
         #endregion
         #endregion
 
@@ -91,6 +104,8 @@ namespace Core.Exploration
         /// <param name="levelToExplore"></param>
         public void Init(Level levelToExplore)  
         {
+
+            _lastDirectionWalked = Direction.None;
             _currentLevel = levelToExplore;
             if ( _currentLevel.EventList != null )
             {
@@ -120,18 +135,13 @@ namespace Core.Exploration
                 }
                 _explorationEvents.Shuffle();
             }
-            levelToExplore.Init();
+
+            levelToExplore.Init(_timeManager);
             Place( PlayerPosition , levelToExplore.StartingTile );
-            _currentLevel.Explore( Vector2.zero , _gridview , _explorationEvents );
+
+            _currentLevel.PlayerMove( Vector2.zero , Direction.None,
+                _gridview , _explorationEvents );
             PlayerPosition = Vector2.zero;
-        }
-
-        //--------------------------------------------------------
-
-        public void Move(Vector2 Position, Tile tile)
-        {
-            TileDisplayer instance = _gridview.CreateTile(tile);
-            _gridview.PlaceTile(instance, Vector2.zero );
         }
 
         //--------------------------------------------------------
@@ -139,21 +149,22 @@ namespace Core.Exploration
         protected void Place( Vector2 position , Tile tile)
         {
            TileDisplayer instance = _gridview.CreateTile(tile);
-            _gridview.PlaceTile(instance, position);
+            _gridview.PlaceTileVisible(instance, position);
 
         }
 
         //--------------------------------------------------------
 
         /// <summary>
-        ///  Move Player
+        ///  Move Player 
         /// </summary>
-        /// <param name="direction"></param>
+        /// <param name="direction"> direction player move</param>
         public void MovePlayer(int direction)
         {
-            Tile.Direction g = (Tile.Direction)( 1 << direction );
+            _lastDirectionWalked = 
+                (Tile.Direction)( 1 << direction );
             Vector2 displacement = Vector3.zero;
-            switch( g)
+            switch(_lastDirectionWalked)
             {
                 case Tile.Direction.Bottom:
                     displacement = new Vector2(0, 1);
@@ -168,9 +179,17 @@ namespace Core.Exploration
                     displacement = new Vector2(0, -1);
                     break;
             }
+
             PartyManager.Instance.Party.ChangeFoodLevel();
             PlayerPosition += displacement;
-            _currentLevel.Explore(PlayerPosition,_gridview,_explorationEvents);
+
+            if (_currentTile != null)
+                _currentTile.Event.Leave(_lastDirectionWalked);
+
+            _currentLevel.PlayerMove(PlayerPosition,
+                                    _lastDirectionWalked,
+                                    _gridview,
+                                    _explorationEvents);
         }
 
         //--------------------------------------------------------

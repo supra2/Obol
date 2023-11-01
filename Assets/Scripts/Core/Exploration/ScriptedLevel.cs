@@ -22,26 +22,37 @@ namespace Core.Exploration
         protected List<ExplorationEvent> _explorationEvent;
         #endregion
         #endregion
-        public override void Init()
+
+        public override void Init(TimeManager timeManager)
         {
             int i = 0;
-            foreach(TileDisplayer tiledisplayer in _tileDisplayer )
+            _timeManager = timeManager;
+            foreach (TileDisplayer tiledisplayer in _tileDisplayer )
             {
-
                 TileDisplayer td = GameObject.Instantiate(tiledisplayer);
                 td.Event = _explorationEvent[i];
-                ExplorationManager.Instance.GridView.PlaceTile(td,
-                    tiledisplayer.Position);
+                td.Event.Init();
+                 if ( i == 0 || i == 1 || TileVisible(td))
+                {
+                    ExplorationManager.Instance.GridView.PlaceTileVisible(td,
+                        tiledisplayer.Position);
+                }
+                else
+                {
+                    ExplorationManager.Instance.GridView.PlaceTileHidden(td,
+                       tiledisplayer.Position);
+                }
                 i++;
             }
         }
 
-        public override void Explore(Vector2 position, GridView gridview, 
-            Deck<ExplorationEvent> explorationDeck )
+        public override void Explore(TileDisplayer tiledisplayer, GridView gridview,
+            Deck<ExplorationEvent> explorationDeck)
         {
-
+                
 
 
         }
+
     }
 }

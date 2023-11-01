@@ -115,8 +115,11 @@ public class ExplorationUIManager : MonoBehaviour
 
     protected void TileDisplayerPicked( TileDisplayer tiledisplayer )
     {
-        _cardDisplayer.SetCard( tiledisplayer.Event );
-        _cardDisplayer.Show();
+        if (tiledisplayer.Event != null)
+        {
+            _cardDisplayer.SetCard(tiledisplayer.Event);
+            _cardDisplayer.Show();
+        }
     }
 
     #endregion
