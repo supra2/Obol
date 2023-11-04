@@ -60,6 +60,7 @@ namespace Core.Exploration
 
         public float RotationY => _rotationY;
 
+        public Direction DirectionFlags => _availableDirections;
         #endregion
 
         #region Initialisation

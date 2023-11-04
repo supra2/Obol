@@ -253,7 +253,7 @@ MonoBehaviour:
   _heroesLayout: {fileID: 822279911}
   _fightStack: {fileID: 1035579291}
   _uiCombatController: {fileID: 634285063}
-  _uiDebugCombatController: {fileID: 1259376998}
+  _uiDebugCombatController: {fileID: 0}
   X: 0
 --- !u!1 &214520827
 GameObject:
@@ -628,50 +628,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347982533}
   m_CullTransparentMesh: 1
---- !u!1 &355654203
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 355654205}
-  - component: {fileID: 355654204}
-  m_Layer: 0
-  m_Name: PartyManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &355654204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 355654203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcc57acfaf1471149b1453be28694ad8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &355654205
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 355654203}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1232.518, y: 550.2555, z: -73.68267}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &479722018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3953,69 +3909,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1222128965}
   m_CullTransparentMesh: 1
---- !u!1 &1259376996
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1259376997}
-  - component: {fileID: 1259376998}
-  - component: {fileID: 1259376999}
-  m_Layer: 0
-  m_Name: Debug
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1259376997
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259376996}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 44.3061, y: 240.1729, z: -0.16896893}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1259376998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259376996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db15eda5edada134587126456bab08ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1259376999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259376996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7856665b18a85c34ba04003d06232fda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _combatManager: {fileID: 149256979}
-  _heroParty:
-  - {fileID: 11400000, guid: 1efca121e927ba84cb4888a04a63c737, type: 2}
-  _adversaires:
-  - {fileID: 11400000, guid: 67c0308b44443194fae4ee31831387cd, type: 2}
-  _initState: 0
 --- !u!1 &1283875113
 GameObject:
   m_ObjectHideFlags: 0
@@ -6607,8 +6500,6 @@ SceneRoots:
   - {fileID: 1995385691}
   - {fileID: 1707613079}
   - {fileID: 1054177537}
-  - {fileID: 1259376997}
-  - {fileID: 355654205}
   - {fileID: 1001948222}
   - {fileID: 1422269683}
   - {fileID: 484908208}

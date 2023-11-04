@@ -906,7 +906,7 @@ GameObject:
   - component: {fileID: 309285350810007173}
   - component: {fileID: 3166921616765075107}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Portrait
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1700,6 +1700,7 @@ MonoBehaviour:
   _staminaDisplay: {fileID: 2897084553495600639}
   _lifeDisplayer: {fileID: 4294279446181622555}
   _sanDisplayer: {fileID: 2983344576208327815}
+  _portraitDisplayer: {fileID: 309285350810007173}
   OnCardDiscarded:
     m_PersistentCalls:
       m_Calls: []

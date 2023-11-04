@@ -84,7 +84,7 @@ public class GridView : MonoBehaviour
         tileToPlace.transform.rotation = 
             Quaternion.AngleAxis(0f, new Vector3(1, 0, 0));
         tileToPlace.Position = position;
-        tileToPlace.SetMode(TileDisplayer.VisibilityMode.Visible);
+        tileToPlace.Visibility = TileDisplayer.VisibilityMode.ShownLit;
         Place( tileToPlace.transform, position, tileToPlace.Tile.RotationY );
         _tiles.Add( tileToPlace );
     }
@@ -102,7 +102,7 @@ public class GridView : MonoBehaviour
         tileToPlace.transform.rotation =
             Quaternion.AngleAxis(0f, new Vector3(1, 0, 0));
         tileToPlace.Position = position;
-        tileToPlace.SetMode(TileDisplayer.VisibilityMode.Hidden);
+        tileToPlace.Visibility =TileDisplayer.VisibilityMode.Hidden;
         Place(tileToPlace.transform, position, tileToPlace.Tile.RotationY);
         _tiles.Add(tileToPlace);
     }

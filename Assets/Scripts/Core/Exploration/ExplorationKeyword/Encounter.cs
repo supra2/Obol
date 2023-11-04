@@ -15,7 +15,9 @@ namespace Core.Exploration.ExplorationKeyword
         {
             public IEffect BuildEffect(string[] words)
             {
-                return new Encounter();
+                Encounter encounter = new Encounter();
+                encounter.CreateFromLine(words);
+                return encounter;
             }
 
             public string GetKeyWord()
@@ -41,7 +43,6 @@ namespace Core.Exploration.ExplorationKeyword
         #region hidden
         protected int _nbOpponent;
         protected bool setOpponent;
-        protected string _tutor;
         /// <summary>
         /// List rules 
         /// </summary>
@@ -101,6 +102,7 @@ namespace Core.Exploration.ExplorationKeyword
         {
             System.Int32.TryParse( words[1] , out _nbOpponent);
             int i = 2;
+            _rules = new List<Rule>();
             while ( i < words.Length )
             {
                 Rule rule = new Rule();
@@ -108,12 +110,16 @@ namespace Core.Exploration.ExplorationKeyword
                 {
                     if ( i+2 < words.Length )
                     {
-                        i++;
-                        rule.nbOpponent = System.Int32.Parse(words[i]);
                         rule.ruleType = Rule.RuleType.Tutor;
                         i++;
+                        if( !System.Int32.TryParse( words[i] ,
+                            out rule.nbOpponent ) )
+                        {
+                             throw new ArgumentException("nb opponent value not parsable as an INT"); ;
+                        }
                         rule.Value = words[i];
                         _rules.Add(rule);
+                        i++;
                     }
                     else
                     {
@@ -122,14 +128,20 @@ namespace Core.Exploration.ExplorationKeyword
                 }
                 else if (words[i] == "Fixed")
                 {
-                    if (i + 2 < words.Length)
+                    if ( i + 2 < words.Length )
                     {
-                        i++;
-                        rule.nbOpponent = System.Int32.Parse(words[i]);
                         rule.ruleType = Rule.RuleType.Id;
+                        i++;
+                        if (!System.Int32.TryParse(words[i],
+                           out rule.nbOpponent))
+                        {
+                            throw new ArgumentException("nb opponents " +
+                                "value not parsable as an INT"); ;
+                        }
                         i++;
                         rule.Value = words[i];
                         _rules.Add(rule);
+                        i++;
                     }
                     else
                     {
@@ -161,39 +173,48 @@ namespace Core.Exploration.ExplorationKeyword
             List<Adversaire> adversaires = new List<Adversaire>();
             int i = 0;
             int j = 0;
-            while (  i < _nbOpponent )
+            int k = 0;
+            while (k < _nbOpponent )
             {
                 Adversaire adversaireDrawn = null;
+
                 Predicate<Adversaire> predicate = null;
+
+                string tutor = _rules[j].Value;
+
                 switch ( _rules[j].ruleType )
                 {
                     case Rule.RuleType.Tutor:
                         predicate = (X) =>
-                           {
-                               string[] listTags = X.GetTags();
-                               bool match = false;
-                               for (int i = 0; i < listTags.Length; i++)
-                               {
-
-                                   match = match || listTags[i] == _tutor;
-                               }
-                               return match;
-                           };
+                        {
+                            string[] listTags = X.GetTags();
+                            bool match = false;
+                            for ( int i = 0 ; i < listTags.Length ; i++ )
+                            {
+                                match = match || listTags[i] == tutor;
+                            }
+                            return match;
+                        };
                         break;
                     case Rule.RuleType.Id:
                         predicate = (X) =>
                         {
-                            System.Int32.TryParse(_tutor,out int id);
-                            return X.GetCardId() == id;
+                           if( !System.Int32.TryParse(tutor, out int id))
+                           {
+                                throw new ArgumentException("_tutor value" +
+                                    " not parsable as an INT");
+                           }
+                           return X.GetCardId() == id;
                         };
-                       
                         break;
                 }
+
                 adversaireDrawn = ExplorationManager.Instance.CurrentLevel.
                           EncounterDeck.GetFirstCard(predicate);
                 adversaires.Add(adversaireDrawn);
                 i++;
-                if( i>= _rules[j].nbOpponent)
+                k++;
+                if ( i >= _rules[j].nbOpponent)
                 {
                      i=0;
                      j++;

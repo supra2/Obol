@@ -23,22 +23,22 @@ namespace Core.Exploration
         /// List of event composing a Level
         /// </summary>
         [SerializeField]
-        List<ExplorationEvent> _eventList;
+        protected List<ExplorationEvent> _eventList;
         /// <summary>
         /// Tile displayed when entering the level
         /// </summary>
         [SerializeField]
-        Tile _startingTile;
+        protected Tile _startingTile;
         /// <summary>
         /// Event Played on first 
         /// </summary>
         [SerializeField]
-        ExplorationEvent _startingEvent;
+        protected ExplorationEvent _startingEvent;
         /// <summary>
         /// List of adversaire associated to the level
         /// </summary>
         [SerializeReference]
-        List<Adversaire> _adversairesList;
+        protected List<Adversaire> _adversairesList;
        
         #endregion
         #region Hidden
@@ -75,10 +75,16 @@ namespace Core.Exploration
         {
 
             _timeManager = timeManager;
-            _startingTile.Init( _startingEvent );
+            _startingTile.Init(_startingEvent);
+            InitEncounterDeck();
+
+        }
+
+        protected void InitEncounterDeck()
+        {
             _adversaireDeck = new Deck<Adversaire>();
-            
-            foreach( Adversaire adversaire in _adversairesList )
+
+            foreach (Adversaire adversaire in _adversairesList)
             {
                 int rarity_Multiplier = 0;
                 switch (adversaire.Rarity)
@@ -94,7 +100,7 @@ namespace Core.Exploration
                         rarity_Multiplier = 1;
                         break;
                 }
-                for(int i =0; i< rarity_Multiplier;i++)
+                for (int i = 0; i < rarity_Multiplier; i++)
                 {
                     Adversaire adv = ScriptableObject.Instantiate<Adversaire>(adversaire);
                     adv.Init();
@@ -102,7 +108,6 @@ namespace Core.Exploration
                 }
             }
             _adversaireDeck.Shuffle();
-
         }
 
         #endregion
@@ -115,11 +120,16 @@ namespace Core.Exploration
                                         GridView gridview, 
                                         Deck<ExplorationEvent> explorationDeck)
         {
+
             if( _currentTileDisplayer !=null)
                 _currentTileDisplayer.Event?.Leave(movementDirection);
 
             _currentTileDisplayer = gridview.GetTileDisplayer(position);
-
+            if (_currentTileDisplayer.Visibility == TileDisplayer.VisibilityMode.Hidden)
+            {
+                _currentTileDisplayer.Visibility = TileDisplayer.VisibilityMode.ShownLit;
+                _currentTileDisplayer.Event.Reveal();
+            }
             _currentTileDisplayer.Event?.Enter(movementDirection);
             Explore(_currentTileDisplayer, gridview, explorationDeck);
         }
@@ -133,6 +143,7 @@ namespace Core.Exploration
         public virtual void Explore( TileDisplayer tiledisplayer , GridView gridview , 
             Deck<ExplorationEvent> explorationDeck  )
         {
+            
             foreach (Tile.Direction direction in System.Enum.GetValues(typeof(Tile.Direction)))
             {
                 if ( tiledisplayer.Tile.DirectionAvailable( direction )  )
@@ -220,17 +231,17 @@ namespace Core.Exploration
                         gridview.PlaceTileHidden( tiledisplayer, newposition);
                     }
                 }
-
             }
-
-
         }
 
         //--------------------------------------------------------
 
         public bool TileVisible( TileDisplayer tile )
         {
-            return  (tile.Event!=null  && tile.Event.Lit) || _timeManager.IsDay();
+            return  (tile.Event!=null  && tile.Event.Lit) || 
+                ( _timeManager.IsDay() && 
+                ( _currentTileDisplayer.Position - tile.Position).magnitude 
+                <= PartyManager.Instance.VisionRange );
         }
 
         //--------------------------------------------------------

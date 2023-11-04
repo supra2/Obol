@@ -27,11 +27,13 @@ namespace Core.Exploration
         {
             int i = 0;
             _timeManager = timeManager;
+            _startingTile = _tileDisplayer[0].Tile;
             foreach (TileDisplayer tiledisplayer in _tileDisplayer )
             {
                 TileDisplayer td = GameObject.Instantiate(tiledisplayer);
                 td.Event = _explorationEvent[i];
-                td.Event.Init();
+                td.Event?.Init();
+
                  if ( i == 0 || i == 1 || TileVisible(td))
                 {
                     ExplorationManager.Instance.GridView.PlaceTileVisible(td,
@@ -41,9 +43,16 @@ namespace Core.Exploration
                 {
                     ExplorationManager.Instance.GridView.PlaceTileHidden(td,
                        tiledisplayer.Position);
+                  
+                }
+                if ((i > 1))
+                {
+                    tiledisplayer.Visibility = 
+                        TileDisplayer.VisibilityMode.Hidden;
                 }
                 i++;
             }
+            InitEncounterDeck();
         }
 
         public override void Explore(TileDisplayer tiledisplayer, GridView gridview,

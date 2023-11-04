@@ -90,11 +90,30 @@ public class CombatManager : Singleton<CombatManager>
     /// Start Combat
     /// </summary>
     /// <param name="vars"></param>
-    public void StartCombat( CombatVar vars)
+    public void StartCombat(CombatVar vars)
     {
         _vars = vars;
+        AsyncOperation handler = SceneManager.LoadSceneAsync("CombatScene");
+        handler.completed += DelayedStart;
+
+    }
+
+    //---------------------------------------------------
+
+    public void DelayedStart( AsyncOperation handler )
+    {
 
         _vars.NbRound = 0;
+        _fightingCharacter = new List<FightingCharacter>();
+        _fightingAdversaires = new List<FightingAdversaire>();
+         _uiCombatController = 
+            GameObject.FindGameObjectWithTag("RootUI").
+            GetComponent<UICombatController>();
+        _fightStack = GameObject.FindObjectOfType<FightStack>();
+        _adversaireLayout = GameObject.
+            FindObjectOfType<AdversaireLayout>();
+        _heroesLayout = GameObject.
+            FindObjectOfType<HeroesLayout>();
 
         CurrentCombatPhase = CombatPhase.Initialisation;
 
@@ -167,7 +186,7 @@ public class CombatManager : Singleton<CombatManager>
     /// <returns></returns>
     public FightingCharacter GetFightingCharacter(Character character)
     {
-        return _fightingCharacter.Find(x => x.Character == character);
+        return _fightingCharacter.Find( x => x.Character == character );
 
     }
 
@@ -204,15 +223,15 @@ public class CombatManager : Singleton<CombatManager>
     #region Private Method
 
     protected void InitiativePhase()
-{
-    InitializeHero(_vars);
+    {
+        InitializeHero(_vars);
 
-    InitializeAdversairesUI(_vars);
+        InitializeAdversairesUI(_vars);
 
-    InitializeUI(_vars);
+        InitializeUI(_vars);
 
-    InitiativePhase(0);
-}
+        InitiativePhase(0);
+    }
 
     private void InitializeAdversairesUI(CombatVar vars)
     {
@@ -235,10 +254,11 @@ public class CombatManager : Singleton<CombatManager>
         for ( int j = 0 ; j < vars.Party.Count ; j++ )
         {
             vars.Party[j].Init();
-            _heroesLayout.Add( vars.Party[j],
-             (X)=> CharacterStartTurn(X) );
+            _heroesLayout.Add( vars.Party[j] ,
+             ( X )=> CharacterStartTurn( X ) );
             _fightingCharacter.Add(
-                _heroesLayout[j].GetComponent<FightingCharacter>() );
+                _heroesLayout[j].
+                GetComponent<FightingCharacter>() );
             _fightingCharacter[j].Active = true;
         }
     }
@@ -249,7 +269,7 @@ public class CombatManager : Singleton<CombatManager>
     /// <param name="vars"></param>
     protected void InitializeUI(CombatVar vars)
     {
-        _uiDebugCombatController.Init(vars);
+        //_uiDebugCombatController.Init(vars);
         _uiCombatController.Init(vars);
     }
 
@@ -273,7 +293,7 @@ public class CombatManager : Singleton<CombatManager>
             }
             foreach (FightingCharacter character in _fightingCharacter)
             { 
-                if (_fightingCharacter[i].Active == true && 
+                if ( _fightingCharacter[i].Active == true && 
                     character.Character.GetCharacteristicsByName("Speed") == k )
                 {
                     Core.FightSystem.CombatFlow.CharacterTurn characterTurn =

@@ -378,8 +378,8 @@ MonoBehaviour:
   _keyword:
   - InflictBuilder
   - GainBuilder
-  - MayEffect
-  - Encounter
+  - MayBuilder
+  - EncounterBuilder
 --- !u!4 &223316408
 Transform:
   m_ObjectHideFlags: 0
