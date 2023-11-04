@@ -22,20 +22,14 @@ public class KeywordManager : MonoBehaviour
 
     public void Awake()
     {
-        _keyword = new List<string>();
-
         _declaredBuilders = new List<IWordBuilder>();
-       
         foreach (string typename in  _keyword )
         {
-
             IWordBuilder wb = (IWordBuilder)Activator.CreateInstance(
-                Type.GetType( "typename" ));
+              EffectFactory.GetEffectTypeByName(typename));
             _declaredBuilders.Add(wb);
             EffectFactory.Register(wb);
-
         }
-
     }
 
     #endregion
