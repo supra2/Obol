@@ -29,10 +29,11 @@ public class TileDisplayer : MonoBehaviour
     /// <summary>
     /// Illustration
     /// </summary>
-    protected  static Sprite _hiddenIllustration;
-
+    protected static Sprite _hiddenIllustration;
+    /// <summary>
+    /// Visiblity Mode
+    /// </summary>
     protected VisibilityMode _visibilityMode;
-
     #endregion
     #endregion
 
@@ -64,7 +65,16 @@ public class TileDisplayer : MonoBehaviour
 
     public ExplorationEvent Event { get => _event; set => _event = value; }
 
-    public VisibilityMode Visibility => _visibilityMode;
+    public VisibilityMode Visibility
+    {
+        get => _visibilityMode;
+        set
+        {
+            _visibilityMode = value;
+            ShowSprite();
+        }
+    }
+
     #endregion
 
     #region Enum
@@ -72,7 +82,8 @@ public class TileDisplayer : MonoBehaviour
     public enum VisibilityMode
     {
         Hidden,
-        Visible,
+        ShownUnlit,
+        ShownLit,
     }
 
     #endregion
@@ -81,17 +92,33 @@ public class TileDisplayer : MonoBehaviour
 
     protected void Awake()
     {
-        if(_hiddenIllustration == null)
+        if (_hiddenIllustration == null)
         {
             _hiddenIllustration = Sprite.Instantiate(Resources.Load<Sprite>("Textures/Illustration/FoggedTile"));
         }
         ShowSprite();
     }
 
+    #endregion
+
+    #region Protected Method
+
     protected void ShowSprite()
     {
-        _illustrationRenderer.sprite = _visibilityMode == VisibilityMode.Visible ? 
+        _illustrationRenderer.sprite = _visibilityMode == VisibilityMode.ShownLit ?
             _tile.Sprite : _hiddenIllustration;
+        _illustrationRenderer.gameObject.SetActive(_visibilityMode != VisibilityMode.Hidden);
+    }
+
+    protected bool Connected(TileDisplayer t)
+    {
+        bool common_direction = (t.Tile.DirectionFlags | Tile.DirectionFlags) !=0;
+        return CloseEnough(t, 1) && common_direction;
+    }
+
+    protected bool CloseEnough(TileDisplayer t, int distance)
+    {
+        return ((int)(_position - t.Position).magnitude) <= distance;
     }
 
     #endregion
@@ -103,5 +130,11 @@ public class TileDisplayer : MonoBehaviour
         _visibilityMode = mode;
     }
 
+    public bool VisibleFrom(TileDisplayer t, int lightingdistance)
+    {
+        return Connected(t) && CloseEnough(t , lightingdistance);
+    }
+
     #endregion
+
 }
