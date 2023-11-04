@@ -136,12 +136,15 @@ namespace Core.Exploration
                 _explorationEvents.Shuffle();
             }
 
-            levelToExplore.Init(_timeManager);
+            levelToExplore.Init( _timeManager );
+
             Place( PlayerPosition , levelToExplore.StartingTile );
 
             _currentLevel.PlayerMove( Vector2.zero , Direction.None,
                 _gridview , _explorationEvents );
+
             PlayerPosition = Vector2.zero;
+
         }
 
         //--------------------------------------------------------

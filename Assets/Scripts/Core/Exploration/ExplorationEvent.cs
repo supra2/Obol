@@ -91,12 +91,15 @@ namespace Core.Exploration
 
         public void Init()
         {
-            _instanceID = _lastID++;
-            _effectDictionary = new Dictionary<EffectTrigger, List<IEffect>>();
+            _instanceID = _lastID++; 
+            _entered = false;
+
+             _effectDictionary = new Dictionary<EffectTrigger, List<IEffect>>();
             _effectDictionary.Add( EffectTrigger.OnEnter , EffectFactory.ParseEffect(_enterEffectsDescription) );
             _effectDictionary.Add(EffectTrigger.OnReveal, EffectFactory.ParseEffect(_revealEffectsDescription));
             _effectDictionary.Add(EffectTrigger.OnLeave, EffectFactory.ParseEffect(_leaveEffectsDescription));
             _effectDictionary.Add(EffectTrigger.OnFirstEnter, EffectFactory.ParseEffect(_firstEnterEffectsDescription));
+        
         }
 
         #endregion
@@ -161,6 +164,7 @@ namespace Core.Exploration
         {
        
         }
+
         public void Leave(Direction leavingfrom)
         {
             ApplyEffect( EffectTrigger.OnLeave );

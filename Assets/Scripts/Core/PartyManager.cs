@@ -12,7 +12,10 @@ public class PartyManager : Singleton<PartyManager>
 
     #region Members
     #region Hidden
+    [SerializeField]
     protected Party _party;
+    [SerializeField]
+    protected int _visionRange ;
     #endregion
     #endregion
 
@@ -23,12 +26,11 @@ public class PartyManager : Singleton<PartyManager>
     public int InventorySize => _party.InventorySize;
 
     public Party Party => _party;
-
+    public int VisionRange => _visionRange;
     #endregion
 
     #region Initialisation
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
     }
@@ -89,6 +91,7 @@ public class PartyManager : Singleton<PartyManager>
         _party = new Party();
         _party.CharacterParty = _character;
         _party.OnFoodChanged+= (X) => FoodChanged?.Invoke(X);
+        _visionRange = 1;
     }
 
     public Character GetMainCharacter()
