@@ -40,7 +40,7 @@ namespace Core.Exploration
         [SerializeReference]
         protected List<Adversaire> _adversairesList;
         [SerializeField]
-        protected List<TileDisplayer> _tileDisplayer;
+        protected UndirectedGenericGraph<TileDisplayer> _tileDisplayer;
         #endregion
         #region Hidden
         /// <summary>
@@ -69,7 +69,7 @@ namespace Core.Exploration
 
         public Tile StartingTile => _startingTile;
 
-        public List<TileDisplayer> PlacedTiles => _tileDisplayer;
+        //public List<TileDisplayer> PlacedTiles => _tileDisplayer;
         #endregion
 
         #region Methods
@@ -90,7 +90,8 @@ namespace Core.Exploration
 
             TileDisplayer instance = gridview.CreateTile(tile);
             instance.Position = position;
-            _tileDisplayer.Add(instance);
+            //_tileDisplayer.Add(instance);
+            _tileDisplayer.AddVertex(new Vertex<TileDisplayer>(instance));
             gridview.PlaceTileVisible(instance);
 
         }
@@ -200,17 +201,20 @@ namespace Core.Exploration
         /// </summary>
         /// <param name="newposition"></param>
         /// <param name=""></param>
-        protected void PlaceConnectedTiles( Vector2 newposition
-            ,GridView gridview)
+        protected void PlaceConnectedTiles(Vector2 newposition
+            , GridView gridview)
         {
             List<Vector2> list = new List<Vector2>() {
                 new Vector2(0,-1) , new Vector2(0, 1) ,
                         new Vector2(-1, 0) , new Vector2(1,0) };
             List<Tuple<Direction, bool>> tuples = new List<Tuple<Direction, bool>>();
+            List<TileDisplayer> neighbours = new List<TileDisplayer>();
+
             for (int i = 0; i < 4; i++)
             {
                 TileDisplayer tileDisplayer = gridview.Tiles.Find((X) =>
                 (newposition + list[i]) == X.Position);
+                neighbours.Add(tileDisplayer);
                 if (tileDisplayer != null)
                 {
                     bool walkable;
@@ -233,9 +237,10 @@ namespace Core.Exploration
                             tuples.Add(new Tuple<Direction, bool>(Tile.Direction.Right, walkable));
                             break;
                     }
-                    PlaceRandomTileAtPosition(gridview, tuples, newposition);
                 }
             }
+
+            PlaceRandomTileAtPosition(gridview, tuples, newposition, neighbours);
         }
 
         //--------------------------------------------------------
@@ -247,14 +252,20 @@ namespace Core.Exploration
         /// <param name="gridview"></param>
         /// <param name="constraints">Direction _ bool tuple </param>
         private void PlaceRandomTileAtPosition(GridView gridview,
-            List<Tuple<Direction, bool>> constraints,Vector2 posi)
+            List<Tuple<Direction, bool>> constraints,Vector2 posi,List<TileDisplayer> displayer)
         {
             List<Tile> tiles = gridview.TileManager.GetListOfTiles(constraints);
             int randomId = SeedManager.NextInt(0, tiles.Count);
             Tile PickedTile = tiles[randomId];
             TileDisplayer tiledisplayer = gridview.CreateTile(PickedTile);
             tiledisplayer.Position = posi;
-            _tileDisplayer.Add(tiledisplayer);
+            foreach (TileDisplayer td in displayer)
+            {
+                Vertex<TileDisplayer> vertex = new Vertex<TileDisplayer>(tiledisplayer);
+                vertex.AddEdge(_tileDisplayer.Vertices.Find((X) => X.Value == td));
+                _tileDisplayer.AddVertex(vertex);
+            }
+           
             if (TileVisible(tiledisplayer))
             {
                 gridview.PlaceTileVisible(tiledisplayer);
