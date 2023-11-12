@@ -103,7 +103,7 @@ namespace Core.FightSystem
 
         public void Attack(int degat)
         {
-            _life = Mathf.Clamp(degat, 0, _maxlife);
+            Life = Mathf.Clamp(degat, 0, _maxLife);
         }
 
         //--------------------------------------------------------------
@@ -121,7 +121,7 @@ namespace Core.FightSystem
             {
                 _tempModifiers.Clear();
             }
-            Life = _maxlife;
+            Life = _maxLife;
             Stamina = 1;
             _instanciatedAttacks = new List<Attack>();
             foreach (Attack attack in _attacks)
@@ -143,7 +143,7 @@ namespace Core.FightSystem
         public override string ToString()
         {
             return string.Format(" [ {0} PV: {1}/{2} ]",
-                _characterNameKey, _life, _maxlife);
+                _characterNameKey, _life, _maxLife);
         }
 
 

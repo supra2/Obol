@@ -81,15 +81,19 @@ public class FightingCharacter : MonoBehaviour
     {
         _character = character;
         _deck = new PlayerCardDeck<PlayerCard>();
+
         foreach (PlayerCard card in _character.CardList)
         { 
-           _deck.AddTop((PlayerCard)card.Clone());   
+           _deck.AddTop((PlayerCard)card.Clone());
         }
+
         _discard = new PlayerCardDeck<PlayerCard>();
         _deck.Shuffle();
         _deck.OnDeckIsEmpty += RefillDrawpile;
+
         if ( _character._cardExchanged == null )
             _character._cardExchanged = new ExchangeEvent();
+
         _character._cardExchanged.AddListener( OnCardExchanged );
 
         if (_hand == null)

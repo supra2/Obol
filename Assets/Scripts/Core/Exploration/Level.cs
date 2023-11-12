@@ -39,15 +39,17 @@ namespace Core.Exploration
         /// </summary>
         [SerializeReference]
         protected List<Adversaire> _adversairesList;
-       
+        [SerializeField]
+        protected List<TileDisplayer> _tileDisplayer;
         #endregion
         #region Hidden
         /// <summary>
         /// Deck of adversaire associated to the level
         /// </summary>
         Deck<Adversaire> _adversaireDeck;
+        [SerializeReference]
         /// <summary>
-        /// 
+        /// CurrentTile
         /// </summary>
         protected TileDisplayer  _currentTileDisplayer;
         /// <summary>
@@ -67,6 +69,7 @@ namespace Core.Exploration
 
         public Tile StartingTile => _startingTile;
 
+        public List<TileDisplayer> PlacedTiles => _tileDisplayer;
         #endregion
 
         #region Methods
@@ -79,6 +82,20 @@ namespace Core.Exploration
             InitEncounterDeck();
 
         }
+
+        //--------------------------------------------------------
+
+        public void PlaceStartingTile(Vector2 position, Tile tile,GridView gridview)
+        {
+
+            TileDisplayer instance = gridview.CreateTile(tile);
+            instance.Position = position;
+            _tileDisplayer.Add(instance);
+            gridview.PlaceTileVisible(instance);
+
+        }
+
+        //--------------------------------------------------------
 
         protected void InitEncounterDeck()
         {
@@ -216,21 +233,35 @@ namespace Core.Exploration
                             tuples.Add(new Tuple<Direction, bool>(Tile.Direction.Right, walkable));
                             break;
                     }
-
-                    List<Tile> tiles = gridview.TileManager.GetListOfTiles(tuples);
-                    int randomId = SeedManager.NextInt(0, tiles.Count);
-                    Tile PickedTile = tiles[randomId];
-
-                    TileDisplayer tiledisplayer = gridview.CreateTile(PickedTile);
-                    if ( TileVisible( tiledisplayer ) )
-                    {
-                        gridview.PlaceTileVisible( tiledisplayer, newposition);
-                    }
-                    else
-                    {
-                        gridview.PlaceTileHidden( tiledisplayer, newposition);
-                    }
+                    PlaceRandomTileAtPosition(gridview, tuples, newposition);
                 }
+            }
+        }
+
+        //--------------------------------------------------------
+
+        /// <summary>
+        /// Place random tiles at ppsition respecting a set of contraints
+        /// defined by a tuble of direction ant boolean indicating a connection or a block constraints
+        /// </summary>
+        /// <param name="gridview"></param>
+        /// <param name="constraints">Direction _ bool tuple </param>
+        private void PlaceRandomTileAtPosition(GridView gridview,
+            List<Tuple<Direction, bool>> constraints,Vector2 posi)
+        {
+            List<Tile> tiles = gridview.TileManager.GetListOfTiles(constraints);
+            int randomId = SeedManager.NextInt(0, tiles.Count);
+            Tile PickedTile = tiles[randomId];
+            TileDisplayer tiledisplayer = gridview.CreateTile(PickedTile);
+            tiledisplayer.Position = posi;
+            _tileDisplayer.Add(tiledisplayer);
+            if (TileVisible(tiledisplayer))
+            {
+                gridview.PlaceTileVisible(tiledisplayer);
+            }
+            else
+            {
+                gridview.PlaceTileHidden(tiledisplayer);
             }
         }
 
@@ -241,7 +272,7 @@ namespace Core.Exploration
             return  (tile.Event!=null  && tile.Event.Lit) || 
                 ( _timeManager.IsDay() && 
                 ( _currentTileDisplayer.Position - tile.Position).magnitude 
-                <= PartyManager.Instance.VisionRange );
+                <= GameManager.Instance.PartyManager.VisionRange );
         }
 
         //--------------------------------------------------------

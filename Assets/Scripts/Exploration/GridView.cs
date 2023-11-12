@@ -78,14 +78,13 @@ public class GridView : MonoBehaviour
     /// </summary>
     /// <param name="tileToPlace"></param>
     /// <param name="position"></param>
-    public void PlaceTileVisible( TileDisplayer tileToPlace ,  Vector2 position  )
+    public void PlaceTileVisible( TileDisplayer tileToPlace  )
     {
         tileToPlace.transform.SetParent(transform);
         tileToPlace.transform.rotation = 
             Quaternion.AngleAxis(0f, new Vector3(1, 0, 0));
-        tileToPlace.Position = position;
         tileToPlace.Visibility = TileDisplayer.VisibilityMode.ShownLit;
-        Place( tileToPlace.transform, position, tileToPlace.Tile.RotationY );
+        Place( tileToPlace.transform, tileToPlace.Position, tileToPlace.Tile.RotationY );
         _tiles.Add( tileToPlace );
     }
 
@@ -96,14 +95,13 @@ public class GridView : MonoBehaviour
     /// </summary>
     /// <param name="tileToPlace"></param>
     /// <param name="position"></param>
-    public void PlaceTileHidden(TileDisplayer tileToPlace, Vector2 position)
+    public void PlaceTileHidden(TileDisplayer tileToPlace)
     {
         tileToPlace.transform.SetParent(transform);
         tileToPlace.transform.rotation =
             Quaternion.AngleAxis(0f, new Vector3(1, 0, 0));
-        tileToPlace.Position = position;
         tileToPlace.Visibility =TileDisplayer.VisibilityMode.Hidden;
-        Place(tileToPlace.transform, position, tileToPlace.Tile.RotationY);
+        Place(tileToPlace.transform, tileToPlace.Position, tileToPlace.Tile.RotationY);
         _tiles.Add(tileToPlace);
     }
 

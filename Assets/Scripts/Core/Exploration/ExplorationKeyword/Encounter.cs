@@ -86,10 +86,10 @@ namespace Core.Exploration.ExplorationKeyword
         public void Apply(ITargetable itargetable)
         {
             CombatVar vars = new CombatVar();
-            vars.Party = PartyManager.Instance.Party.CharacterParty;
+            vars.Party = GameManager.Instance.PartyManager.Party.CharacterParty;
             vars.Adversaires = GetAdversaires();
             vars.FightInitiative = CombatVar.Initiative.Normal;
-            CombatManager.Instance.StartCombat( vars );
+            GameManager.Instance.StartCombat( vars );
         }
 
         //--------------------------------------------------------------
@@ -202,7 +202,7 @@ namespace Core.Exploration.ExplorationKeyword
                            if( !System.Int32.TryParse(tutor, out int id))
                            {
                                 throw new ArgumentException("_tutor value" +
-                                    " not parsable as an INT");
+                                    " not parsable as an int");
                            }
                            return X.GetCardId() == id;
                         };

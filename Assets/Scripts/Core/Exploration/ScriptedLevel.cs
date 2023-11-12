@@ -17,8 +17,6 @@ namespace Core.Exploration
         #region Members
         #region Visible 
         [SerializeField]
-        protected List<TileDisplayer> _tileDisplayer;
-        [SerializeField]
         protected List<ExplorationEvent> _explorationEvent;
         #endregion
         #endregion
@@ -28,6 +26,7 @@ namespace Core.Exploration
             int i = 0;
             _timeManager = timeManager;
             _startingTile = _tileDisplayer[0].Tile;
+            _currentTileDisplayer = _tileDisplayer[0];
             foreach (TileDisplayer tiledisplayer in _tileDisplayer )
             {
                 TileDisplayer td = GameObject.Instantiate(tiledisplayer);
@@ -36,13 +35,13 @@ namespace Core.Exploration
 
                  if ( i == 0 || i == 1 || TileVisible(td))
                 {
-                    ExplorationManager.Instance.GridView.PlaceTileVisible(td,
-                        tiledisplayer.Position);
+                    ExplorationManager.Instance.GridView.PlaceTileVisible(td);
                 }
                 else
                 {
-                    ExplorationManager.Instance.GridView.PlaceTileHidden(td,
-                       tiledisplayer.Position);
+
+
+                    ExplorationManager.Instance.GridView.PlaceTileHidden(td);
                   
                 }
                 if ((i > 1))

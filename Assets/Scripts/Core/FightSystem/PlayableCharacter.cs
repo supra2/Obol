@@ -47,19 +47,11 @@ namespace Core.FightSystem
         /// <summary>
         /// Mental health Maximum Value
         [SerializeField]
-        protected int _maxSan;
-        [SerializeField]
         /// <summary>
         /// flag for Main Character 
         /// </summary>
         protected bool _mainCharacter;
         protected List<Tuple<int, int>> _exchangeMemory;
-        #endregion
-        #region Hidden
-        /// <summary>
-        /// Current Mental Health Value
-        /// </summary>
-        protected int _san;
         #endregion
         #endregion
 
@@ -67,11 +59,10 @@ namespace Core.FightSystem
 
         public List<PlayerCard> CardList => _cardList;
 
-        public int San => _san;
-
         public bool MainCharacter => _mainCharacter;
 
         public Sprite Portrait => _portrait;
+
         #endregion
 
         #region Event
@@ -86,8 +77,6 @@ namespace Core.FightSystem
         {
             _tempModifiers = new List<Tuple<string, int>>();
             _permModifiers = new List<Tuple<string, int>>();
-            _life = _maxlife;
-            _san = _maxSan;
             _exchangeMemory = new List<Tuple<int, int>>();
         }
 
@@ -123,7 +112,7 @@ namespace Core.FightSystem
             }
             Stamina = 1;
         }
-
+      
         #endregion
 
         #region Public Methods
@@ -186,6 +175,5 @@ namespace Core.FightSystem
         #endregion
 
     }
-
 }
 

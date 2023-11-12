@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using static Core.Exploration.Tile;
 
 namespace Core.Exploration
@@ -95,7 +96,7 @@ namespace Core.Exploration
         //--------------------------------------------------------
         #endregion
 
-        #region Members
+        #region Methods
         //--------------------------------------------------------
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace Core.Exploration
         /// <param name="levelToExplore"></param>
         public void Init(Level levelToExplore)  
         {
-
+            _tileManager.Init();
             _lastDirectionWalked = Direction.None;
             _currentLevel = levelToExplore;
             if ( _currentLevel.EventList != null )
@@ -138,7 +139,7 @@ namespace Core.Exploration
 
             levelToExplore.Init( _timeManager );
 
-            Place( PlayerPosition , levelToExplore.StartingTile );
+            levelToExplore.PlaceStartingTile( PlayerPosition , levelToExplore.StartingTile,_gridview );
 
             _currentLevel.PlayerMove( Vector2.zero , Direction.None,
                 _gridview , _explorationEvents );
@@ -148,13 +149,19 @@ namespace Core.Exploration
         }
 
         //--------------------------------------------------------
-
-        protected void Place( Vector2 position , Tile tile)
+        public void Load( Level levelToExplore , Vector2 saved_PlayerPosition )
         {
-           TileDisplayer instance = _gridview.CreateTile(tile);
-            _gridview.PlaceTileVisible(instance, position);
+
+            _lastDirectionWalked = Direction.None;
+            _currentLevel = levelToExplore;
+            levelToExplore.Init(_timeManager);
+          
+            _currentLevel.PlayerMove(Vector2.zero, Direction.None,
+                _gridview, _explorationEvents);
+            PlayerPosition = saved_PlayerPosition;
 
         }
+
 
         //--------------------------------------------------------
 
@@ -166,7 +173,9 @@ namespace Core.Exploration
         {
             _lastDirectionWalked = 
                 (Tile.Direction)( 1 << direction );
+
             Vector2 displacement = Vector3.zero;
+
             switch(_lastDirectionWalked)
             {
                 case Tile.Direction.Bottom:
@@ -183,7 +192,7 @@ namespace Core.Exploration
                     break;
             }
 
-            PartyManager.Instance.Party.ChangeFoodLevel();
+            GameManager.Instance.PartyManager.Party.ChangeFoodLevel();
             PlayerPosition += displacement;
 
             if (_currentTile != null)

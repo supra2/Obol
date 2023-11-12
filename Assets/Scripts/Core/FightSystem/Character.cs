@@ -35,12 +35,16 @@ namespace Core.FightSystem
         [SerializeField]
         protected int _speed;
         [SerializeField]
-        protected int _maxlife;
+        protected int _maxLife;
+        [SerializeField]
+        protected int _maxSan;
         /// </summary>
         [SerializeField]
         protected string _characterNameKey;
         [Header("Event")]
         public UnityIntEvent LifeChangeEvent;
+
+        public UnityIntEvent SanChangeEvent;
 
         public UnityIntEvent StaminaChangeEvent;
 
@@ -59,6 +63,10 @@ namespace Core.FightSystem
         /// Current Life 
         /// </summary>
         protected int _life;
+        /// <summary>
+        /// San
+        /// </summary>
+        protected int _san;
         protected Dictionary<AlterationType, IAlteration> _alterations;
         protected int _stamina;
         #endregion
@@ -75,9 +83,8 @@ namespace Core.FightSystem
         {
             set
             {
-                int damages = _life - value;
-                _life = value;
-                LifeChangeEvent?.Invoke(damages);
+                _life = Mathf.Clamp( value, 0, _maxLife);
+                LifeChangeEvent?.Invoke(_life);
             }
             get => _life;
         }
@@ -86,17 +93,27 @@ namespace Core.FightSystem
         {
             set
             {
-                _maxlife = value;
-                if (Life > _maxlife)
+                _maxLife = value;
+                if (Life > _maxLife)
                 {
-                    int damages = Life - _maxlife;
-                    Life = _maxlife;
+                    int damages = Life - _maxLife;
+                    Life = _maxLife;
                     LifeChangeEvent?.Invoke(damages);
                 }
             }
-            get => _maxlife;
+            get => _maxLife;
         }
-        
+
+        public int San
+        {
+            set
+            {
+                _san = Mathf.Clamp( value,0,_maxSan);
+                SanChangeEvent?.Invoke(_san);
+            }
+            get => _san;
+        }
+
         public int Stamina
         {
             get => _stamina;
@@ -107,16 +124,22 @@ namespace Core.FightSystem
             }
         }
 
-
         public string CharacterNameKey => _characterNameKey;
         #endregion
 
         #region  Initialisation
+
         protected Character()
         {
             _permModifiers = new List<Tuple<string, int>>();
             _alterations = new Dictionary<AlterationType, IAlteration>();
-           
+            
+        }
+
+        public void Create()
+        {
+            _san = _maxSan;
+            _life = _maxLife;
         }
 
         #endregion
@@ -155,7 +178,7 @@ namespace Core.FightSystem
             {
                 case DamageType.Health:
                    int damages = ComputeValue( value, _constitution, "Resistance" ); 
-                    Life = Mathf.Clamp( Life - damages , 0 , _maxlife );
+                    Life = Mathf.Clamp( Life - damages , 0 , _maxLife );
                     if( Life == 0)
                     {
                         _died?.Invoke();

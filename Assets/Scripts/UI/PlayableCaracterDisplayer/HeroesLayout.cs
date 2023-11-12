@@ -45,25 +45,26 @@ public class HeroesLayout : MonoBehaviour
     public void Add(PlayableCharacter character, UnityAction<Character> StartTurnCallBack=null,
         UnityAction<Character> EndTurnCallBack = null)
     {
-        if(_characterDisplayerList == null )
-        {
-            _characterDisplayerList = new List<CharacterDisplayer>();
-        }
-            
-       CharacterDisplayer characterDisplayer = 
-            GameObject.Instantiate(_characterDisplayerPrefab, transform);
 
-       
+        if(_characterDisplayerList == null )
+            _characterDisplayerList = new List<CharacterDisplayer>();
+
+        CharacterDisplayer characterDisplayer = 
+            GameObject.Instantiate(_characterDisplayerPrefab, transform);
+        characterDisplayer.name = String.Format("Displayer_{0}", character.name);
         _characterDisplayerList.Add(characterDisplayer);
         FightingCharacter fightingCharacter = characterDisplayer.GetComponent<FightingCharacter>();
-      
         fightingCharacter.Setup(character);
         characterDisplayer.Init(fightingCharacter.Deck, fightingCharacter.DiscardPile, fightingCharacter.Hand);
 
         if (StartTurnCallBack != null)
+        {
             fightingCharacter.OnTurnStarted.AddListener(StartTurnCallBack);
+        }
         if (EndTurnCallBack != null)
+        {
             fightingCharacter.OnTurnEnded.AddListener(EndTurnCallBack);
+        }
     }
 
 

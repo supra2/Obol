@@ -1,13 +1,10 @@
 using Core.FightSystem;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-using UnityEngine.Events;
 
 [Serializable]
-public class PartyManager : Singleton<PartyManager>
+public class PartyManager 
 {
 
     #region Members
@@ -26,13 +23,16 @@ public class PartyManager : Singleton<PartyManager>
     public int InventorySize => _party.InventorySize;
 
     public Party Party => _party;
+
     public int VisionRange => _visionRange;
     #endregion
 
     #region Initialisation
-    void Awake()
+
+    public PartyManager()
     {
-        DontDestroyOnLoad(this.gameObject);
+        _party = new Party();
+        _visionRange = 1;
     }
 
     #endregion
@@ -42,48 +42,6 @@ public class PartyManager : Singleton<PartyManager>
     public void UpdateGroup(List<PlayableCharacter> playable_character)
     {
         _party.CharacterParty = playable_character;
-    }
-
-    public void Load(string filename)
-    {
-        string persistantDatapath = System.IO.Path.Combine(Application.persistentDataPath, "Save", "save.json");
-#if UNITY_ANDROID && !UNityEditor
-        WWW www = new WWW (persistantDatapath);
-        while (!www.isDone) {}
-        if (string.IsNullOrEmpty(www.error))
-        {
-            dataAsJson = www.text;
-            party = JsonUtility.FromJson<Party> (dataAsJson);
-        }
-        else
-        {
-            Debug.Log ("No such file");
-        }
-        else 
-        {
-            if (File.Exists (filePath)) 
-            {
-                dataAsJson = File.ReadAllText (filePath);
-                data = JsonUtility.FromJson<TestData> (dataAsJson);
-            }
-            else
-            {
-                Debug.Log ("No such file");
-            }
-        }
-#else
-        _party = JsonUtility.FromJson<Party>(File.ReadAllText(persistantDatapath));
-#endif
-    }
-
-    public void Save(string filename)
-    {
-        string persistantDatapath = System.IO.Path.Combine(Application.persistentDataPath, "Save", "save.json");
-#if UNITY_ANDROID
-        WWW www = new WWW (persistantDatapath);
-#else
-        File.WriteAllText(persistantDatapath, JsonUtility.ToJson(_party));
-#endif
     }
 
     public void Debug_Init( List<PlayableCharacter> _character )
@@ -96,7 +54,12 @@ public class PartyManager : Singleton<PartyManager>
 
     public Character GetMainCharacter()
     {
-        return _party.CharacterParty.Find((X) => X.MainCharacter == true);
+        return _party.CharacterParty.Find( (X) => X.MainCharacter == true );
+    }
+
+    public void SetParty(Party party)
+    {
+        _party = party;
     }
 
     #endregion

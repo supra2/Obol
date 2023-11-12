@@ -56,7 +56,7 @@ namespace UI.ItemSystem
         public void Init(Mode mode)
         {
             _dropzones = new List<RectTransform>();
-            int inventorySize = PartyManager.Instance.InventorySize;
+            int inventorySize = GameManager.Instance.PartyManager.InventorySize;
             for( int j =0 ; j < inventorySize ; j++ )
             {
                 RectTransform instance= GameObject.Instantiate(_dropZone, _contentReference) as RectTransform;
@@ -64,7 +64,7 @@ namespace UI.ItemSystem
                 _dropzones.Add(instance );
             }
             int i = 0;
-            foreach ( Item item in PartyManager.Instance.Inventory )
+            foreach ( Item item in GameManager.Instance.PartyManager.Inventory )
             {
                 ItemDisplayer itemDisplayer= Instantiate( _itemDisplayer );
                 itemDisplayer.item = item;

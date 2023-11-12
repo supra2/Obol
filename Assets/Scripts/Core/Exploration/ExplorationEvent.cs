@@ -193,8 +193,8 @@ namespace Core.Exploration
         {
             List<IEffect> effectlist = _effectDictionary[effectTrigger];
             PlayableCharacter charac = null;
-
-            foreach (PlayableCharacter character in PartyManager.Instance.Party.CharacterParty )
+            
+            foreach (PlayableCharacter character in GameManager.Instance.PartyManager.Party.CharacterParty )
             {
                 if (character.MainCharacter)
                     charac = character;

@@ -62,7 +62,7 @@ public class ExplorationUIManager : MonoBehaviour
         _explorationManager.OnPlayerMoved.AddListener( OnPlayerMoved );
         _explorationManager.GridView.
             OnTileDisplayerPicked.AddListener( TileDisplayerPicked );
-        PartyManager.Instance.FoodChanged.AddListener(FoodChanged);
+        GameManager.Instance.PartyManager.FoodChanged.AddListener(FoodChanged);
         _cardDisplayer.Hide();
     }
 

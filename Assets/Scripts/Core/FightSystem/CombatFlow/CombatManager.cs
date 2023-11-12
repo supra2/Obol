@@ -78,7 +78,7 @@ public class CombatManager : Singleton<CombatManager>
         }
     }
 
-    public CombatVar Var => _vars;
+    public CombatVar Var { get => _vars; set => _vars = value; }
 
 
     #endregion
@@ -86,25 +86,24 @@ public class CombatManager : Singleton<CombatManager>
     #region Public Method
     //---------------------------------------------------
 
-    /// <summary>
-    /// Start Combat
-    /// </summary>
-    /// <param name="vars"></param>
-    public void StartCombat(CombatVar vars)
+  
+    //---------------------------------------------------
+    protected void OnEnable()
     {
-        _vars = vars;
-        AsyncOperation handler = SceneManager.LoadSceneAsync("CombatScene");
-        handler.completed += DelayedStart;
-
+        SceneManager.sceneLoaded += DelayedStart;
     }
-
+    //---------------------------------------------------
+    protected void OnDisable()
+    {
+        SceneManager.sceneLoaded -= DelayedStart;
+    }
     //---------------------------------------------------
 
-    public void DelayedStart( AsyncOperation handler )
+    public void DelayedStart( Scene scene, LoadSceneMode mode)
     {
 
         _vars.NbRound = 0;
-        _fightingCharacter = new List<FightingCharacter>();
+       /* _fightingCharacter = new List<FightingCharacter>();
         _fightingAdversaires = new List<FightingAdversaire>();
          _uiCombatController = 
             GameObject.FindGameObjectWithTag("RootUI").
@@ -113,7 +112,7 @@ public class CombatManager : Singleton<CombatManager>
         _adversaireLayout = GameObject.
             FindObjectOfType<AdversaireLayout>();
         _heroesLayout = GameObject.
-            FindObjectOfType<HeroesLayout>();
+            FindObjectOfType<HeroesLayout>();*/
 
         CurrentCombatPhase = CombatPhase.Initialisation;
 
@@ -145,7 +144,7 @@ public class CombatManager : Singleton<CombatManager>
     /// </summary>
     public void EndFight()
     {
-        PartyManager.Instance.UpdateGroup(_vars.Party );
+        GameManager.Instance.PartyManager.UpdateGroup(_vars.Party );
     }
 
     //---------------------------------------------------
@@ -153,7 +152,7 @@ public class CombatManager : Singleton<CombatManager>
     public void WinFight()
     {
 
-        PartyManager.Instance.UpdateGroup(_vars.Party);
+        GameManager.Instance.PartyManager.UpdateGroup(_vars.Party);
         LootWindow._adversaireFought = _vars.Adversaires;
         SceneManager.LoadScene("LootScene");
     }
@@ -198,7 +197,8 @@ public class CombatManager : Singleton<CombatManager>
     public void EndTurn()
     {
        FightingCharacter character = 
-            _fightingCharacter.Find((x) => x.Character == _currentCharacter);
+            _fightingCharacter.Find(
+                (x) => x.Character == _currentCharacter);
        character.EndTurn();
     }
 
@@ -255,7 +255,7 @@ public class CombatManager : Singleton<CombatManager>
         {
             vars.Party[j].Init();
             _heroesLayout.Add( vars.Party[j] ,
-             ( X )=> CharacterStartTurn( X ) );
+              CharacterStartTurn );
             _fightingCharacter.Add(
                 _heroesLayout[j].
                 GetComponent<FightingCharacter>() );
@@ -341,6 +341,7 @@ public class CombatManager : Singleton<CombatManager>
     protected void CharacterStartTurn(Character character)
     {
         _currentCharacter = character;
+
     }
 
     protected void MainPhase()

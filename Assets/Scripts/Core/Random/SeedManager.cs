@@ -25,7 +25,7 @@ public  class SeedManager
         return _rngGenerator.Next(min, max);
     }
 
-    public static void GenerateRandomSeed()
+    public static string GenerateRandomSeed()
     {
         string alphanumerics = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         seed = "";
@@ -36,6 +36,7 @@ public  class SeedManager
                 r.Next(0, alphanumerics.Length));
         }
         SetSeed(seed);
+        return seed;
     }
   
 }

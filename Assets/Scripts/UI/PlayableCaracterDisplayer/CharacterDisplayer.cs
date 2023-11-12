@@ -111,15 +111,15 @@ public class CharacterDisplayer : MonoBehaviour
         _discardDisplayer.Deck.AddTop( (PlayerCard) card );
     }
 
-    protected void OnLifeChanged( int damages )
+    protected void OnLifeChanged( int newValue)
     {
-        Debug.Log("Life Changed");
-        _lifeDisplayer.text = GetComponent<FightingCharacter>().Character.Life.ToString();
+        _lifeDisplayer.text =
+           newValue.ToString();
     }
 
-    protected void OnSanChanged(int damages)
+    protected void OnSanChanged(int newValue)
     {
-        _sanDisplayer.text = GetComponent<FightingCharacter>().Character.San.ToString();
+        _sanDisplayer.text = newValue.ToString();
     }
 
     protected void OnStaminaChanged( int stamina )
@@ -133,8 +133,11 @@ public class CharacterDisplayer : MonoBehaviour
     protected void CharacterSetup(Character character)
     {
         character.LifeChangeEvent.AddListener(OnLifeChanged);
+        character.SanChangeEvent.AddListener(OnSanChanged);
         _portraitDisplayer.sprite =((PlayableCharacter)character).Portrait;
         character.StaminaChangeEvent.AddListener(OnStaminaChanged);
+        OnLifeChanged(character.Life);
+        OnSanChanged(character.San);
     }
 
     #endregion
@@ -146,7 +149,6 @@ public class CharacterDisplayer : MonoBehaviour
         GetComponent<FightingCharacter>().Discarded(discardedCards);
         _discardDisplayer.Deck.AddTop(discardedCards);
     }
-
 
     #endregion
 
