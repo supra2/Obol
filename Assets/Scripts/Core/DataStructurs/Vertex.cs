@@ -10,8 +10,9 @@ using UnityEngine;
 [Serializable]
 public class Vertex<T>
 {
-
+    [NonSerialized]
     List<Vertex<T>> neighbors;
+
     T value;
     bool isVisited;
 
@@ -39,20 +40,6 @@ public class Vertex<T>
         isVisited = true;
     }
 
-    public void AddEdge(Vertex<T> vertex)
-    {
-        neighbors.Add(vertex);
-    }
-
-    public void AddEdges(List<Vertex<T>> newNeighbors)
-    {
-        neighbors.AddRange(newNeighbors);
-    }
-
-    public void RemoveEdge(Vertex<T> vertex)
-    {
-        neighbors.Remove(vertex);
-    }
 
     public override string ToString()
     {

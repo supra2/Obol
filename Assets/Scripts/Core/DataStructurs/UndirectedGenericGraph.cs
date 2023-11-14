@@ -7,48 +7,45 @@ using UnityEngine;
 /// Implementation of a generic, unweighted, undirected graph
 /// </summary>
 [Serializable]
-public class UndirectedGenericGraph<T>
+public class UndirectedGenericGraph<T>: ISerializationCallbackReceiver
 {
 
-    // The list of vertices in the graph
-    private List< Vertex<T> > vertices;
+    #region member
+    private SerializableDictionary<Vertex<T>, List<Vertex<T>>> AdjacencyMatrices;
+    #endregion
 
-    // The number of vertices
-    [SerializeField]
-    int size;
+    public List<Vertex<T>> Vertices { get { return (List<Vertex<T>>)AdjacencyMatrices.Values; } }
+    public int Size { get { return AdjacencyMatrices.Count; } }
 
-    public List<Vertex<T>> Vertices { get { return vertices; } }
-    public int Size { get { return vertices.Count; } }
-
-    public UndirectedGenericGraph(int initialSize)
+    public UndirectedGenericGraph( )
     {
-        if (size < 0)
-        {
-            throw new ArgumentException("Number of vertices cannot be negative");
-        }
-        size = initialSize;
-        vertices = new List<Vertex<T>>(initialSize);
+        AdjacencyMatrices = new  SerializableDictionary<Vertex<T>, List<Vertex<T>>>();
     }
 
     public UndirectedGenericGraph(List<Vertex<T>> initialNodes)
     {
-        vertices = initialNodes;
-        size = vertices.Count;
+        if (initialNodes != null)
+        {
+          foreach( Vertex<T> v in initialNodes )
+          {
+                AdjacencyMatrices.Add(v, new List<Vertex<T>>());
+          }
+        }
     }
 
     public void AddVertex(Vertex<T> vertex)
     {
-        vertices.Add(vertex);
+        AdjacencyMatrices.Add(vertex,new List<Vertex<T>>());
     }
 
     public void RemoveVertex(Vertex<T> vertex)
     {
-        vertices.Remove(vertex);
+        AdjacencyMatrices.Remove(vertex);
     }
 
     public bool HasVertex(Vertex<T> vertex)
     {
-        return vertices.Contains(vertex);
+        return AdjacencyMatrices.ContainsKey(vertex);
     }
 
     public void DepthFirstSearch(Vertex<T> root)
@@ -65,7 +62,6 @@ public class UndirectedGenericGraph<T>
 
         }
     }
-
 
     public void BreadthFirstSearch(Vertex<T> root)
     {
@@ -100,5 +96,37 @@ public class UndirectedGenericGraph<T>
         }
     }
 
-}
+    public void OnBeforeSerialize()
+    {
 
+       
+    }
+    
+    public void OnAfterDeserialize()
+    {
+        foreach (KeyValuePair<Vertex<T>, List<Vertex<T>>> adjacentMatrice in
+            AdjacencyMatrices)
+        {
+           AddEdges(adjacentMatrice.Key, adjacentMatrice.Value);
+        }
+    }
+
+
+    public void AddEdge(Vertex<T> from, Vertex<T> to)
+    {
+        if(!from.Neighbors.Contains(to))
+            from.Neighbors.Add(to);
+    }
+
+    public void AddEdges(Vertex<T> from , List<Vertex<T>> newNeighbors)
+    {
+        foreach (Vertex<T> to in newNeighbors)
+            AddEdge(from, to);
+    }
+    
+    public void RemoveEdge(Vertex<T> from, Vertex<T> vertex)
+    {
+        from.Neighbors.Remove(vertex);
+    }
+
+}

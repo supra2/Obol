@@ -106,8 +106,11 @@ namespace Core.Exploration
         public void Init(Level levelToExplore)  
         {
             _tileManager.Init();
+
             _lastDirectionWalked = Direction.None;
+
             _currentLevel = levelToExplore;
+
             if ( _currentLevel.EventList != null )
             {
                 _explorationEvents = new Deck<ExplorationEvent>();
@@ -149,6 +152,7 @@ namespace Core.Exploration
         }
 
         //--------------------------------------------------------
+
         public void Load( Level levelToExplore , Vector2 saved_PlayerPosition )
         {
 

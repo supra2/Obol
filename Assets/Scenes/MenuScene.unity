@@ -155,7 +155,9 @@ MonoBehaviour:
   _manager: {fileID: 0}
   _levels:
   - zone: 0
-    level: {fileID: 0}
+    level: {fileID: 11400000, guid: 360c9e7be7a92404dabad0aaf8b1fecb, type: 2}
+  - zone: 2
+    level: {fileID: 11400000, guid: 9c72dc9e75bff84429a0a417474f1e49, type: 2}
   _tileManager: {fileID: 0}
   _character:
   - {fileID: 11400000, guid: 1efca121e927ba84cb4888a04a63c737, type: 2}

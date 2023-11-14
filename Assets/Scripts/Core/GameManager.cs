@@ -113,7 +113,9 @@ public class GameManager
     /// reference to the Party manager
     /// </summary>
     public PartyManager PartyManager => _partyManager;
-    //Exploration manager
+    /// <summary>
+    /// Exploration Manager
+    /// </summary>
     public ExplorationManager ExplorationManager => _explorationManager;
     #endregion
 
@@ -220,8 +222,11 @@ public class GameManager
         {
             _explorationManager = GameObject.
                 FindFirstObjectByType<ExplorationManager>();
-            _explorationManager.Init(_levels[0].level);
+          
         }
+
+        _explorationManager.Init(_levels[0].level);
+        SceneManager.sceneLoaded -= LaunchTutorielLevel;
     }
 
     //--------------------------------------------------------
@@ -237,14 +242,17 @@ public class GameManager
         {
             _explorationManager = GameObject.
                 FindFirstObjectByType<ExplorationManager>();
-            _explorationManager.Load(_gameData.CurrentLevel, _gameData.PlayerPosition);
+            
+
         }
+        _explorationManager.Load(_gameData.CurrentLevel, _gameData.PlayerPosition);
+        SceneManager.sceneLoaded -= LaunchLoadedLevel;
     }
 
     //--------------------------------------------------------
     #endregion
 
-    #region CombatManagemenet 
+    #region CombatManagement 
     //--------------------------------------------------------
 
     public void StartCombat(CombatVar vars)
@@ -267,8 +275,10 @@ public class GameManager
                 g.GetComponent<CombatManager>().Var = _vars;
             }
        }
+        SceneManager.sceneLoaded -= DelayedCombatInit;
     }
 
     //--------------------------------------------------------
     #endregion
+
 }

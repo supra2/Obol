@@ -68,11 +68,10 @@ namespace Core.Exploration
         public ExplorationEvent StartingEvent => _startingEvent;
 
         public Tile StartingTile => _startingTile;
-
-        //public List<TileDisplayer> PlacedTiles => _tileDisplayer;
         #endregion
 
         #region Methods
+        //--------------------------------------------------------
 
         public virtual void  Init(TimeManager timeManager )
         {
@@ -85,13 +84,15 @@ namespace Core.Exploration
 
         //--------------------------------------------------------
 
-        public void PlaceStartingTile(Vector2 position, Tile tile,GridView gridview)
+        public void PlaceStartingTile(Vector2 position, Tile tile,
+                                        GridView gridview)
         {
 
             TileDisplayer instance = gridview.CreateTile(tile);
             instance.Position = position;
             //_tileDisplayer.Add(instance);
-            _tileDisplayer.AddVertex(new Vertex<TileDisplayer>(instance));
+            _tileDisplayer.AddVertex(
+                new Vertex<TileDisplayer>(instance) );
             gridview.PlaceTileVisible(instance);
 
         }
@@ -133,6 +134,14 @@ namespace Core.Exploration
         #region Public Methods
 
         //--------------------------------------------------------
+
+        /// <summary>
+        /// Player Move
+        /// </summary>
+        /// <param name="position"> position </param>
+        /// <param name="movementDirection"> Move Direction</param>
+        /// <param name="gridview"> Grid view </param>
+        /// <param name="explorationDeck">Exploration Deck</param>
         public virtual void  PlayerMove(Vector2 position, 
                                         Direction movementDirection,
                                         GridView gridview, 
@@ -143,9 +152,11 @@ namespace Core.Exploration
                 _currentTileDisplayer.Event?.Leave(movementDirection);
 
             _currentTileDisplayer = gridview.GetTileDisplayer(position);
-            if (_currentTileDisplayer.Visibility == TileDisplayer.VisibilityMode.Hidden)
+            if (_currentTileDisplayer.Visibility == 
+                TileDisplayer.VisibilityMode.Hidden)
             {
-                _currentTileDisplayer.Visibility = TileDisplayer.VisibilityMode.ShownLit;
+                _currentTileDisplayer.Visibility = 
+                    TileDisplayer.VisibilityMode.ShownLit;
                 _currentTileDisplayer.Event.Reveal();
             }
             _currentTileDisplayer.Event?.Enter(movementDirection);
@@ -158,11 +169,13 @@ namespace Core.Exploration
         /// Exploration
         /// </summary>
         /// <param name="position"></param>
-        public virtual void Explore( TileDisplayer tiledisplayer , GridView gridview , 
+        public virtual void Explore( TileDisplayer tiledisplayer , 
+            GridView gridview , 
             Deck<ExplorationEvent> explorationDeck  )
         {
             
-            foreach (Tile.Direction direction in System.Enum.GetValues(typeof(Tile.Direction)))
+            foreach (Tile.Direction direction in 
+                System.Enum.GetValues(typeof(Tile.Direction)))
             {
                 if ( tiledisplayer.Tile.DirectionAvailable( direction )  )
                 {
@@ -182,7 +195,10 @@ namespace Core.Exploration
                             deplacement = new Vector2(0, -1);
                             break;
                     }
-                    Vector2 newposition = _currentTileDisplayer.Position + deplacement;
+
+                    Vector2 newposition = _currentTileDisplayer.
+                        Position + deplacement;
+
                     if(!gridview.Tiles.Find((X) =>
                         newposition == X.Position) )
                     { 
@@ -254,16 +270,18 @@ namespace Core.Exploration
         private void PlaceRandomTileAtPosition(GridView gridview,
             List<Tuple<Direction, bool>> constraints,Vector2 posi,List<TileDisplayer> displayer)
         {
+
             List<Tile> tiles = gridview.TileManager.GetListOfTiles(constraints);
             int randomId = SeedManager.NextInt(0, tiles.Count);
             Tile PickedTile = tiles[randomId];
             TileDisplayer tiledisplayer = gridview.CreateTile(PickedTile);
             tiledisplayer.Position = posi;
+
             foreach (TileDisplayer td in displayer)
             {
                 Vertex<TileDisplayer> vertex = new Vertex<TileDisplayer>(tiledisplayer);
-                vertex.AddEdge(_tileDisplayer.Vertices.Find((X) => X.Value == td));
                 _tileDisplayer.AddVertex(vertex);
+                _tileDisplayer.AddEdge(vertex, _tileDisplayer.Vertices.Find((X) => X.Value == td));
             }
            
             if (TileVisible(tiledisplayer))
@@ -274,15 +292,21 @@ namespace Core.Exploration
             {
                 gridview.PlaceTileHidden(tiledisplayer);
             }
+
         }
 
         //--------------------------------------------------------
 
+        /// <summary>
+        /// tile visible
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns></returns>
         public bool TileVisible( TileDisplayer tile )
         {
             return  (tile.Event!=null  && tile.Event.Lit) || 
                 ( _timeManager.IsDay() && 
-                ( _currentTileDisplayer.Position - tile.Position).magnitude 
+            ( _currentTileDisplayer.Position - tile.Position).magnitude 
                 <= GameManager.Instance.PartyManager.VisionRange );
         }
 
