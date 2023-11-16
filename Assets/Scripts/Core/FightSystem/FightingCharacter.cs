@@ -52,6 +52,7 @@ public class FightingCharacter : MonoBehaviour
     #endregion
 
     #region Getter
+    //--------------------------------------------------------
 
     public PlayableCharacter Character => _character;
 
@@ -73,29 +74,31 @@ public class FightingCharacter : MonoBehaviour
 
     public Hand<PlayerCard> Hand => _hand;
 
+    //--------------------------------------------------------
     #endregion
 
     #region Initialisation
+    //--------------------------------------------------------
 
+    /// <summary>
+    /// Setup 
+    /// </summary>
+    /// <param name="character"> Character </param>
     public void Setup( PlayableCharacter character )
     {
         _character = character;
         _deck = new PlayerCardDeck<PlayerCard>();
-
         foreach (PlayerCard card in _character.CardList)
         { 
            _deck.AddTop((PlayerCard)card.Clone());
         }
-
         _discard = new PlayerCardDeck<PlayerCard>();
         _deck.Shuffle();
         _deck.OnDeckIsEmpty += RefillDrawpile;
-
         if ( _character._cardExchanged == null )
             _character._cardExchanged = new ExchangeEvent();
 
         _character._cardExchanged.AddListener( OnCardExchanged );
-
         if (_hand == null)
         {
             _hand = new Hand<PlayerCard>();
@@ -108,42 +111,63 @@ public class FightingCharacter : MonoBehaviour
         Initialized?.Invoke(_character);
     }
 
+    //--------------------------------------------------------
     #endregion
 
     #region Turn Management
+    //--------------------------------------------------------
 
-    public void OnCardExchanged(int cardIdRemoved,int cardIdAdded)
+    /// <summary>
+    /// Event handling a card exchange during fight
+    /// </summary>
+    /// <param name="cardIdRemoved"> </param>
+    /// <param name="cardIdAdded"> </param>
+    public void OnCardExchanged( int cardIdRemoved ,
+        int cardIdAdded )
     {
         // Gather all card matching id in hand/deck and discard
         List<PlayerCard> matchingCard = 
-            Deck.Filter((x) => x.GetCardId() == cardIdRemoved);
-        matchingCard.AddRange(DiscardPile.Filter((x) => x.GetCardId() == cardIdRemoved));
-        matchingCard.AddRange(Hand.Filter( (x) => x.GetCardId() == cardIdRemoved) );
-        PlayerCard toExchange = matchingCard[SeedManager.NextInt(0, matchingCard.Count - 1)];
-        if( Hand.Contains(toExchange))
+            Deck.Filter((x) => x.GetCardId() ==
+            cardIdRemoved);
+        matchingCard.AddRange(
+            DiscardPile.Filter((x) => x.GetCardId() == cardIdRemoved));
+        matchingCard.AddRange(
+            Hand.Filter( (x) => x.GetCardId() == cardIdRemoved) );
+        PlayerCard toExchange =
+            matchingCard[SeedManager.NextInt(0, matchingCard.Count - 1)];
+        if( Hand.Contains( toExchange ))
         {
-            Hand.Remove(toExchange);
-            Hand.Add(CardManager.Instance.Instantiate(cardIdAdded) as PlayerCard);
+            Hand.Remove( toExchange );
+            Hand.Add(
+                CardManager.Instance.Instantiate(cardIdAdded)
+                as PlayerCard );
         }
-        else if ( Deck.Contains(toExchange))
+        else if ( Deck.Contains( toExchange ))
         {
            int index =  Deck.FindIndex(toExchange);
             Deck.Remove(toExchange);
-            Deck.InsertAt(index, CardManager.Instance.Instantiate(cardIdAdded) as PlayerCard);
+            Deck.InsertAt(index,
+                CardManager.Instance.Instantiate(cardIdAdded)
+                as PlayerCard);
         }
         else if (DiscardPile.Contains(toExchange))
         {
             int index = DiscardPile.FindIndex(toExchange);
             DiscardPile.Remove(toExchange);
-            DiscardPile.InsertAt(index, CardManager.Instance.Instantiate(cardIdAdded) as PlayerCard);
+            DiscardPile.InsertAt(index,
+                CardManager.Instance.Instantiate(cardIdAdded) 
+                as PlayerCard);
         }
     }
 
+    //--------------------------------------------------------
     public void StartTurn()
     {
         OnTurnStarted?.Invoke(Character);
         Character.ApplyAlteration(true);
     }
+
+    //--------------------------------------------------------
 
     public void EndTurn()
     {
@@ -151,10 +175,11 @@ public class FightingCharacter : MonoBehaviour
         Character.ApplyAlteration(false);
     }
 
+    //--------------------------------------------------------
     #endregion
 
     #region Action Implementation
-
+    //--------------------------------------------------------
     public void Draw(int nbcard, Action callBack)
     {
         List<PlayerCard> drawnCard = new List<PlayerCard>();
@@ -167,6 +192,8 @@ public class FightingCharacter : MonoBehaviour
         StartCoroutine(WaitForStartDrawing(callBack));
     }
 
+    //--------------------------------------------------------
+
     public IEnumerator WaitForStartDrawing(Action callBack)
     {
         HandDisplayer handDisplayer = GetComponentInChildren<HandDisplayer>();
@@ -177,6 +204,8 @@ public class FightingCharacter : MonoBehaviour
         callBack?.Invoke();
     }
 
+    //--------------------------------------------------------
+
     public void Discard(int nbcard, UnityAction callback)
     {
         OnCardDiscard?.Invoke(nbcard);
@@ -185,10 +214,14 @@ public class FightingCharacter : MonoBehaviour
         OnCardDiscarded.AddListener(_discardCallback);
     }
 
+    //--------------------------------------------------------
+
     public void Discarded(List<PlayerCard> discardedCards)
     {
         OnCardDiscarded?.Invoke();
     }
+
+    //--------------------------------------------------------
 
     public void RefillDrawpile(Deck<PlayerCard> deck)
     {
@@ -201,10 +234,14 @@ public class FightingCharacter : MonoBehaviour
         _deck.Shuffle();
     }
 
+    //--------------------------------------------------------
+
     public void CardPlayed( ICard card )
     {
         OnTurnEnded?.Invoke(Character);
     }
+
+    //--------------------------------------------------------
 
     public void Skip()
     {
@@ -212,6 +249,7 @@ public class FightingCharacter : MonoBehaviour
         CombatManager.Instance.EndTurn();
     }
 
+    //--------------------------------------------------------
     #endregion
 
 }

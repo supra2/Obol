@@ -138,8 +138,8 @@ namespace Core.FightSystem
 
         public void Create()
         {
-            _san = _maxSan;
-            _life = _maxLife;
+            San = _maxSan;
+            Life = _maxLife;
         }
 
         #endregion

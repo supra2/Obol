@@ -53,6 +53,7 @@ public class BaseCardDisplayer : MonoBehaviour
     #endregion
 
 }
+
 namespace UI.ItemSystem
 
 { 
@@ -67,13 +68,13 @@ namespace UI.ItemSystem
 
         #region Getters
 
-        public Item item
+        public Item Item
         {
             get => _item;
             set
             {
                 _item = value;
-                Set(item.DescriptionKey, item.TitleKey, item.Illustration);
+                Set(_item.DescriptionKey, _item.TitleKey, _item.Illustration);
             }
         }
 

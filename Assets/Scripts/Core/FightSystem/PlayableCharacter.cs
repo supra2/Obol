@@ -110,7 +110,12 @@ namespace Core.FightSystem
                     card.Init();
                 }
             }
+
             Stamina = 1;
+            //send event to UI
+
+            Life = Life;
+            San = San;
         }
       
         #endregion

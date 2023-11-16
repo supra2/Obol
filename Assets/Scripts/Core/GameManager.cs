@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UI.ItemSystem;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -125,9 +126,6 @@ public class GameManager
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-
-        _partyManager = new PartyManager();
-        _partyManager.Party.CharacterParty = _character;
     }
 
     //--------------------------------------------------------
@@ -140,8 +138,20 @@ public class GameManager
     {
         SceneManager.LoadSceneAsync("ExplorationScene");
         SceneManager.sceneLoaded += LaunchTutorielLevel;
+
+        _partyManager = new PartyManager();
+        GenerateNewGameFile();
+
         _gameData = new GameData();
-        _gameData.Seed =  SeedManager.GenerateRandomSeed();
+        _gameData.Seed = SeedManager.GenerateRandomSeed();
+    }
+
+    //--------------------------------------------------------
+
+    private void GenerateNewGameFile()
+    {
+        _partyManager.Party.Create( _character);
+   
     }
 
     //--------------------------------------------------------
@@ -209,8 +219,32 @@ public class GameManager
             JsonUtility.ToJson(gamedata));
     }
 
+
+    //--------------------------------------------------------
+    #endregion
+
     //--------------------------------------------------------
 
+    public void WinFight() 
+    {
+        _partyManager.UpdateGroup(_vars.Party);
+        SceneManager.LoadScene("LootScene");
+        SceneManager.sceneLoaded += InitLootScene;
+    }
+
+    //--------------------------------------------------------
+    #region InitScenePostLaunch
+
+    //--------------------------------------------------------
+
+    public void InitLootScene(Scene scene, LoadSceneMode mode)
+    {
+        LootWindow lootWindow = 
+            GameObject.FindObjectOfType<LootWindow>();
+        lootWindow.InitLoot( _vars.Adversaires );
+    }
+
+    //--------------------------------------------------------
     /// <summary>
     /// Launch Tutoriel Level
     /// </summary>
@@ -218,15 +252,14 @@ public class GameManager
     /// <param name="mode"></param>
     public void LaunchTutorielLevel(Scene scene, LoadSceneMode mode)
     {
+        SceneManager.sceneLoaded -= LaunchTutorielLevel;
         if (_explorationManager == null)
         {
             _explorationManager = GameObject.
                 FindFirstObjectByType<ExplorationManager>();
-          
         }
-
-        _explorationManager.Init(_levels[0].level);
-        SceneManager.sceneLoaded -= LaunchTutorielLevel;
+        _explorationManager.Init( _levels[0].level );
+      
     }
 
     //--------------------------------------------------------
@@ -238,15 +271,15 @@ public class GameManager
     /// <param name="mode"></param>
     public void LaunchLoadedLevel(Scene scene, LoadSceneMode mode)
     {
+        SceneManager.sceneLoaded -= LaunchLoadedLevel;
         if (_explorationManager == null)
         {
             _explorationManager = GameObject.
                 FindFirstObjectByType<ExplorationManager>();
             
-
         }
         _explorationManager.Load(_gameData.CurrentLevel, _gameData.PlayerPosition);
-        SceneManager.sceneLoaded -= LaunchLoadedLevel;
+       
     }
 
     //--------------------------------------------------------
@@ -275,7 +308,7 @@ public class GameManager
                 g.GetComponent<CombatManager>().Var = _vars;
             }
        }
-        SceneManager.sceneLoaded -= DelayedCombatInit;
+       SceneManager.sceneLoaded -= DelayedCombatInit;
     }
 
     //--------------------------------------------------------

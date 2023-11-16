@@ -16,18 +16,26 @@ namespace UI.ItemSystem
         #region Visible
         [SerializeField]
         protected InventoryUIManager _inventoryUIManager;
+        [SerializeField]
+        protected LootPanel _lootPanel;
         #endregion
         #region Hidden
-        public static List<Adversaire> _adversaireFought;
+        public  List<Adversaire> _adversaireFought;
         #endregion
         #endregion
+        public List<Adversaire> AdversaireFought {
+
+           get => _adversaireFought;
+            set => _adversaireFought = value;
+        }
 
         #region Inner Members
         //------------------------------------------------------------------------
+
         protected void OnEnable()
         {
             _inventoryUIManager.Init( InventoryUIManager.Mode._LootMode);
-       
+            
         }
 
         //------------------------------------------------------------------------
@@ -36,17 +44,40 @@ namespace UI.ItemSystem
         /// <summary>
         /// Determine the content of the loot from the Combat State 
         /// </summary>
-        protected void RollLoot()
+        protected List<Item> RollLoot(List<Adversaire> adversaires )
         {
+            List<Item> itemLooted = new List<Item>();
             foreach( Adversaire adv in _adversaireFought)
             {
                 Dictionary<int, Item> item = adv.LootTable;
-                foreach( int proba in item.Keys)
-                { 
+                int totalProbRange = 0;
+                foreach( int proba in item.Keys )
+                {
+                    totalProbRange += proba;
                 }
-                SeedManager.NextInt(0, 1);
+                int roll = SeedManager.NextInt(0, totalProbRange-1);
+                int totalDellProbRange = 0 ;
+                foreach ( KeyValuePair<int,Item> pair in item )
+                {
+                    totalDellProbRange += pair.Key;
+                    if( totalDellProbRange  > roll )
+                    {
+                        itemLooted.Add(pair.Value);
+                    }
+                }
             }
+            return itemLooted;
+        }
 
+        //------------------------------------------------------------------------
+
+        public void InitLoot( List<Adversaire> adversaires )
+        {
+            List <Item> items = RollLoot(adversaires);
+            foreach(Item item in items)
+            {
+                _lootPanel.AddNewObject(item);
+            }
         }
 
         //------------------------------------------------------------------------

@@ -70,11 +70,11 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
     //-------------------------------------------------------
 
     public void AddAdversaire(
-        Core.FightSystem.Adversaire _adversaire)
+        Core.FightSystem.Adversaire adversaire)
     {
         AdversaireDisplayer displayer =
             GameObject.Instantiate(_prefabDisplayers, transform);
-        displayer.Adversaire = _adversaire;
+        displayer.Adversaire = adversaire;
         displayer._onDisplayDestroyed.AddListener(DisplayerDestroyed);
         _displayers.Add(displayer);
     }
@@ -178,7 +178,7 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
 
         if(_displayers.Count == 0)
         {
-            CombatManager.Instance.WinFight();
+            GameManager.Instance.WinFight();
         }
     }
     #endregion

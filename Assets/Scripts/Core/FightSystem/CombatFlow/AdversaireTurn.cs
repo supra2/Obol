@@ -49,7 +49,6 @@ namespace Core.FightSystem.CombatFlow
             if( AvailableAttack.Count > 0 )
             {
                 int attackLaunched = SeedManager.NextInt( 0 , AvailableAttack.Count );
-                Debug.Log("AttackLaunched "+ attackLaunched);
                 // Select Target
                 int totalrange = 0;
                 foreach(  PlayableCharacter character in CombatManager.Instance.Var.Party )

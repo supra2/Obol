@@ -81,6 +81,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         Adversaire.Attacked.AddListener(AdversaireAttacked);
         Adversaire._dodged.AddListener(DodgeAnimation);
         Adversaire._died.AddListener(DiedAnimation);
+        Adversaire._died.AddListener(DestroyDisplayer);
     }
 
     #endregion
@@ -138,7 +139,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
 
     }
 
-    protected void DestroyDisplayer()
+    public void DestroyDisplayer()
     {
         DetachListener();
         _onDisplayDestroyed?.Invoke(Adversaire);
@@ -154,6 +155,7 @@ public class AdversaireDisplayer : MonoBehaviour, IPointerClickHandler
         Adversaire.Attacked.RemoveListener(AdversaireAttacked);
         Adversaire._dodged.RemoveListener(DodgeAnimation);
         Adversaire._died.RemoveListener(DiedAnimation);
+        Adversaire._died.RemoveListener(DestroyDisplayer);
     }
 
     #endregion

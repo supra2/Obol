@@ -60,6 +60,17 @@ public class Party
 
     #region Members
 
+    public void Create(List<PlayableCharacter> initialCharacters)
+    {
+        _inventory = new List<Core.Items.Item>();
+        foreach (PlayableCharacter character in
+           initialCharacters)
+        {
+            character.Create();
+        }
+        _characterParty = initialCharacters;
+    }
+
     public void ChangeFoodLevel( )
     {
         _foodlevel = (int) Mathf.Clamp(_foodlevel - _characterParty.Count , 0f , 100f );

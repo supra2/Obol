@@ -120,8 +120,13 @@ public class UndirectedGenericGraph<T>: ISerializationCallbackReceiver
 
     public void AddEdges(Vertex<T> from , List<Vertex<T>> newNeighbors)
     {
-        foreach (Vertex<T> to in newNeighbors)
-            AddEdge(from, to);
+        if (newNeighbors != null)
+        {
+            foreach (Vertex<T> to in newNeighbors)
+            { 
+                AddEdge(from, to);
+            }
+        }
     }
     
     public void RemoveEdge(Vertex<T> from, Vertex<T> vertex)

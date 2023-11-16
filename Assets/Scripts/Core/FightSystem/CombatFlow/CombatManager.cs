@@ -103,17 +103,6 @@ public class CombatManager : Singleton<CombatManager>
     {
 
         _vars.NbRound = 0;
-       /* _fightingCharacter = new List<FightingCharacter>();
-        _fightingAdversaires = new List<FightingAdversaire>();
-         _uiCombatController = 
-            GameObject.FindGameObjectWithTag("RootUI").
-            GetComponent<UICombatController>();
-        _fightStack = GameObject.FindObjectOfType<FightStack>();
-        _adversaireLayout = GameObject.
-            FindObjectOfType<AdversaireLayout>();
-        _heroesLayout = GameObject.
-            FindObjectOfType<HeroesLayout>();*/
-
         CurrentCombatPhase = CombatPhase.Initialisation;
 
     }
@@ -146,17 +135,6 @@ public class CombatManager : Singleton<CombatManager>
     {
         GameManager.Instance.PartyManager.UpdateGroup(_vars.Party );
     }
-
-    //---------------------------------------------------
-
-    public void WinFight()
-    {
-
-        GameManager.Instance.PartyManager.UpdateGroup(_vars.Party);
-        LootWindow._adversaireFought = _vars.Adversaires;
-        SceneManager.LoadScene("LootScene");
-    }
-
     //---------------------------------------------------
 
     public void LoseFight()
@@ -195,8 +173,8 @@ public class CombatManager : Singleton<CombatManager>
     /// End the turn of the Current Character
     /// </summary>
     public void EndTurn()
-    {
-       FightingCharacter character = 
+    { 
+        FightingCharacter character = 
             _fightingCharacter.Find(
                 (x) => x.Character == _currentCharacter);
        character.EndTurn();
@@ -221,6 +199,7 @@ public class CombatManager : Singleton<CombatManager>
     #endregion
 
     #region Private Method
+    //---------------------------------------------------
 
     protected void InitiativePhase()
     {
@@ -233,6 +212,8 @@ public class CombatManager : Singleton<CombatManager>
         InitiativePhase(0);
     }
 
+    //---------------------------------------------------
+
     private void InitializeAdversairesUI(CombatVar vars)
     {
         foreach ( Core.FightSystem.Adversaire adversary in vars.Adversaires )
@@ -244,6 +225,7 @@ public class CombatManager : Singleton<CombatManager>
         }
     }
 
+    //---------------------------------------------------
     /// <summary>
     /// Initialize Dynamic UI Element relative to the 
     /// Heroes party data
@@ -253,9 +235,11 @@ public class CombatManager : Singleton<CombatManager>
     {
         for ( int j = 0 ; j < vars.Party.Count ; j++ )
         {
-            vars.Party[j].Init();
+           
             _heroesLayout.Add( vars.Party[j] ,
               CharacterStartTurn );
+            vars.Party[j].Init();
+
             _fightingCharacter.Add(
                 _heroesLayout[j].
                 GetComponent<FightingCharacter>() );
@@ -263,15 +247,18 @@ public class CombatManager : Singleton<CombatManager>
         }
     }
 
+    //---------------------------------------------------
+
     /// <summary>
     ///  Initialize UI 
     /// </summary>
     /// <param name="vars"></param>
     protected void InitializeUI(CombatVar vars)
     {
-        //_uiDebugCombatController.Init(vars);
         _uiCombatController.Init(vars);
     }
+
+    //---------------------------------------------------
 
     /// <summary>
     ///  Update Orders 
@@ -340,7 +327,7 @@ public class CombatManager : Singleton<CombatManager>
 
     protected void CharacterStartTurn(Character character)
     {
-        _currentCharacter = character;
+         _currentCharacter = character;
 
     }
 
