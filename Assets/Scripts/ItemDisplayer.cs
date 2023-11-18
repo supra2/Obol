@@ -28,7 +28,7 @@ public class BaseCardDisplayer : MonoBehaviour
 
     #region Protected Members
 
-    protected void Set(string DescriptionKeyString, string TitleKeyString,Sprite Illustration)
+    protected void Set(string DescriptionKeyString , string TitleKeyString ,Sprite Illustration)
     {
         _descriptionKeyString.SetEntry(DescriptionKeyString);
         _titleKeyString.SetEntry(TitleKeyString);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -105,9 +106,12 @@ namespace Core.Exploration
         /// <param name="levelToExplore"></param>
         public void Init(Level levelToExplore)  
         {
+
             _tileManager.Init();
 
             _lastDirectionWalked = Direction.None;
+
+            _timeManager.SetTime(0);
 
             _currentLevel = levelToExplore;
 
@@ -153,20 +157,23 @@ namespace Core.Exploration
 
         //--------------------------------------------------------
 
-        public void Load( Level levelToExplore , Vector2 saved_PlayerPosition )
+        public void Load( Level levelToExplore , 
+                          Vector2 saved_PlayerPosition )
         {
 
             _lastDirectionWalked = Direction.None;
+
             _currentLevel = levelToExplore;
+
             levelToExplore.Init(_timeManager);
           
             _currentLevel.PlayerMove(Vector2.zero, Direction.None,
                 _gridview, _explorationEvents);
+
             PlayerPosition = saved_PlayerPosition;
 
         }
-
-
+        
         //--------------------------------------------------------
 
         /// <summary>
@@ -206,6 +213,28 @@ namespace Core.Exploration
                                     _lastDirectionWalked,
                                     _gridview,
                                     _explorationEvents);
+        }
+
+        //--------------------------------------------------------
+
+        public void ReloadLevel()
+        {
+              string content =  File.ReadAllText(
+              Application.persistentDataPath + "\\Save\\CurrentLevel.json");
+              _currentLevel =  JsonUtility.FromJson<Level>( content );
+              
+        }
+
+        //--------------------------------------------------------
+
+        public void Save(   
+                          Vector2 saved_PlayerPosition)
+        {
+           string jsoncontent = JsonUtility.ToJson(CurrentLevel);
+           File.WriteAllText(Application.persistentDataPath+
+               "\\Save\\CurrentLevel.json",jsoncontent);
+          
+
         }
 
         //--------------------------------------------------------

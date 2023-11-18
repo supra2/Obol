@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -346,6 +343,7 @@ SpriteMask:
   m_BackSortingOrder: 0
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
+  m_MaskSource: 0
 --- !u!1 &223316406
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,6 +454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90f3eeebdc36ed4caec7f05e3e4bd1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _midnightColor: {r: 0.31617126, g: 0.35512933, b: 0.46226418, a: 1}
+  _noonColor: {r: 0.990566, g: 0.91951007, b: 0.4438857, a: 1}
   _gridview: {fileID: 19008186}
   _explorationManager: {fileID: 1625899930}
   _directionButtonClicked:
@@ -701,9 +701,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 742ce822112009e429de53dd47c4d893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnTimePassed:
+  OnHourChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 450974782}
+        m_TargetAssemblyTypeName: ExplorationUIManager, Assembly-CSharp
+        m_MethodName: HourChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1140822535
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,11 +745,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d3fcc758adcd584f8413a0293879f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _manager: {fileID: 1625899930}
-  _level: {fileID: 11400000, guid: 360c9e7be7a92404dabad0aaf8b1fecb, type: 2}
-  _tileManager: {fileID: 19008187}
-  _character:
-  - {fileID: 11400000, guid: 1efca121e927ba84cb4888a04a63c737, type: 2}
 --- !u!4 &1140822537
 Transform:
   m_ObjectHideFlags: 0
@@ -837,6 +844,7 @@ SpriteMask:
   m_BackSortingOrder: 0
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
+  m_MaskSource: 0
 --- !u!1 &1188238439
 GameObject:
   m_ObjectHideFlags: 0

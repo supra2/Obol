@@ -47,7 +47,7 @@ namespace UI.ItemSystem
         protected List<Item> RollLoot(List<Adversaire> adversaires )
         {
             List<Item> itemLooted = new List<Item>();
-            foreach( Adversaire adv in _adversaireFought)
+            foreach( Adversaire adv in adversaires)
             {
                 Dictionary<int, Item> item = adv.LootTable;
                 int totalProbRange = 0;
@@ -82,5 +82,11 @@ namespace UI.ItemSystem
 
         //------------------------------------------------------------------------
         #endregion
+
+        public void ReturnToMap()
+        {
+
+            GameManager.Instance.ReturnToMap();
+        }
     }
 }

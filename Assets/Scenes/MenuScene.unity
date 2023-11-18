@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -248,6 +245,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b99d7306cdcb348a7472c5ac099884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _startButtonLocalisation:
+    m_TableReference:
+      m_TableCollectionName: GUID:8236e137570585a4e9350422b2dc4496
+    m_TableEntryReference:
+      m_KeyId: 41368063518744576
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _optionsButtonLocalisation:
+    m_TableReference:
+      m_TableCollectionName: GUID:8236e137570585a4e9350422b2dc4496
+    m_TableEntryReference:
+      m_KeyId: 41368065427152896
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _resumeButtonLocalisation:
+    m_TableReference:
+      m_TableCollectionName: GUID:8236e137570585a4e9350422b2dc4496
+    m_TableEntryReference:
+      m_KeyId: 41368127641264128
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _quitButtonLocalisation:
+    m_TableReference:
+      m_TableCollectionName: GUID:8236e137570585a4e9350422b2dc4496
+    m_TableEntryReference:
+      m_KeyId: 41368129423843328
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1432205818
 GameObject:
   m_ObjectHideFlags: 0

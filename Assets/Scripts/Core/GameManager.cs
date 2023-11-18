@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 [Serializable]
 public class GameData
 {
+
     #region Members
     [SerializeField]
     Party _party;
@@ -40,6 +41,7 @@ public class GameData
 
     public string Seed { get => _seed; set => _seed = value; }
 }
+
 [Serializable]
 public class ZoneInfo
 {
@@ -64,6 +66,8 @@ public class GameManager
         QuietHill,
         OldInsdutrialBlock
     }
+
+    public const string _currentSaveName = "\\Save\\CurrentSave.json";
 
     #region Members
     #region Visible
@@ -150,8 +154,8 @@ public class GameManager
 
     private void GenerateNewGameFile()
     {
-        _partyManager.Party.Create( _character);
-   
+        _partyManager.Party.Create(_character);
+
     }
 
     //--------------------------------------------------------
@@ -204,24 +208,46 @@ public class GameManager
     }
 
     //--------------------------------------------------------
+    public void SaveCurrentGame()
+    {
+        Save(Application.persistentDataPath + _currentSaveName);
+    }
 
+    //--------------------------------------------------------
     public void Save(string filename)
     {
+
         string persistantDatapath = System.IO.Path.Combine(
             Application.persistentDataPath, "Save",
             "save.json");
 
+        if (!Directory.Exists(System.IO.Path.Combine(
+            Application.persistentDataPath, "Save")))
+        {
+            Directory.CreateDirectory(System.IO.Path.Combine(
+            Application.persistentDataPath, "Save"));
+        }
         GameData gamedata = new GameData();
         gamedata.Party = _partyManager.Party;
         gamedata.PlayerPosition = _explorationManager.PlayerPosition;
         gamedata.CurrentLevel = _explorationManager.CurrentLevel;
         File.WriteAllText(persistantDatapath,
             JsonUtility.ToJson(gamedata));
+
     }
 
 
     //--------------------------------------------------------
     #endregion
+
+    //--------------------------------------------------------
+
+    public void ReturnToMap()
+    {
+        SceneManager.LoadScene( "ExplorationScene" );
+        //ExplorationManager.Instance.ReturnToMap( );
+    }
+    //--------------------------------------------------------
 
     //--------------------------------------------------------
 
@@ -233,6 +259,7 @@ public class GameManager
     }
 
     //--------------------------------------------------------
+
     #region InitScenePostLaunch
 
     //--------------------------------------------------------
@@ -242,9 +269,11 @@ public class GameManager
         LootWindow lootWindow = 
             GameObject.FindObjectOfType<LootWindow>();
         lootWindow.InitLoot( _vars.Adversaires );
+        SceneManager.sceneLoaded -= InitLootScene;
     }
 
     //--------------------------------------------------------
+
     /// <summary>
     /// Launch Tutoriel Level
     /// </summary>

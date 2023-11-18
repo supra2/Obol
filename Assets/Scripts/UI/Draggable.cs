@@ -86,7 +86,7 @@ public class Draggable : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHa
     /// <param name="eventData"> Event Data </param>
     public void OnEndDrag(PointerEventData eventData)
     {
-        if( _slot == null )
+        if( _slot != null )
         {
             _slot.UnSlot(this);
         }

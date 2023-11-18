@@ -86,9 +86,12 @@ namespace Core.Exploration.ExplorationKeyword
         public void Apply(ITargetable itargetable)
         {
             CombatVar vars = new CombatVar();
-            vars.Party = GameManager.Instance.PartyManager.Party.CharacterParty;
+            vars.Party = GameManager.Instance.PartyManager.
+                Party.CharacterParty;
             vars.Adversaires = GetAdversaires();
             vars.FightInitiative = CombatVar.Initiative.Normal;
+            GameManager.Instance.SaveCurrentGame();
+
             GameManager.Instance.StartCombat( vars );
         }
 

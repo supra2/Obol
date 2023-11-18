@@ -28,6 +28,7 @@ public class LootPanel : MonoBehaviour
             as ItemDisplayer;
         displayer.Item = item;
         displayer.transform.SetParent(_Content);
+        displayer.gameObject.SetActive(true);
     }
 
     //------------------------------------------------

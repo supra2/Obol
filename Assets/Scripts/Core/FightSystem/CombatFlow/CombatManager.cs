@@ -93,18 +93,18 @@ public class CombatManager : Singleton<CombatManager>
         SceneManager.sceneLoaded += DelayedStart;
     }
     //---------------------------------------------------
+
     protected void OnDisable()
     {
         SceneManager.sceneLoaded -= DelayedStart;
     }
+
     //---------------------------------------------------
 
     public void DelayedStart( Scene scene, LoadSceneMode mode)
     {
-
         _vars.NbRound = 0;
         CurrentCombatPhase = CombatPhase.Initialisation;
-
     }
 
     //---------------------------------------------------

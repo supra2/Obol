@@ -10,6 +10,10 @@ public class ExplorationUIManager : MonoBehaviour
     #region Members
     #region Visible
     [SerializeField]
+    protected Color _midnightColor;
+    [SerializeField]
+    protected Color _noonColor;
+    [SerializeField]
     protected GridView _gridview;
     [SerializeField]
     protected ExplorationManager _explorationManager;
@@ -22,6 +26,7 @@ public class ExplorationUIManager : MonoBehaviour
     protected Label _foodLabel;
     protected Label _hour;
     protected UICardDisplayer _cardDisplayer;
+    protected Gradient _gradient;
     #endregion
     #endregion
 
@@ -53,6 +58,7 @@ public class ExplorationUIManager : MonoBehaviour
         _rightArrow = root.Q<Button>("RightArrow");
         _leftArrow = root.Q<Button>("LeftArrow");
         _foodLabel = root.Q<Label>("foodlabel");
+        _gradient = root.Q<Gradient>("GradientBackground");
         _cardDisplayer = new UICardDisplayer( root.Q<VisualElement>("CardUI"));
          _hour = root.Q<Label>("hour");
         _upArrow.clicked +=() => _directionButtonClicked?.Invoke(0);
@@ -120,6 +126,31 @@ public class ExplorationUIManager : MonoBehaviour
             _cardDisplayer.SetCard(tiledisplayer.Event);
             _cardDisplayer.Show();
         }
+    }
+
+    public void HourChanged(int newHour)
+    {
+        int starthour = newHour - 6;
+        if( starthour<0)
+        {
+            starthour += 24;
+        }
+        _gradient.LeftColor = GetColor(starthour);
+        int endhour = newHour + 6;
+        if (endhour > 24)
+        {
+            endhour -= 24;
+        }
+        _gradient.RightColor = GetColor(endhour);
+    }
+
+    protected Color GetColor(int hour)
+    {
+        if (hour > 12)
+            hour = 12 - (hour - 12);
+    
+        float lerpfactor = (12 - hour) / 12f;
+        return Color.Lerp(_midnightColor, _noonColor, lerpfactor);
     }
 
     #endregion

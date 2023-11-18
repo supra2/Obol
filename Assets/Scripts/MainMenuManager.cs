@@ -1,13 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UIElements;
 
 public class MainMenuManager : MonoBehaviour
 {
+
+    #region Members
+    #region Visible
+    [SerializeField]
+    protected LocalizedString _startButtonLocalisation;
+    [SerializeField]
+    protected LocalizedString _optionsButtonLocalisation;
+    [SerializeField]
+    protected LocalizedString _resumeButtonLocalisation;
+    [SerializeField]
+    protected LocalizedString _quitButtonLocalisation;
+    #endregion
+    #region Hidden
     protected Button startGame;
     protected Button optionsButton;
     protected Button optionsQuit;
+    #endregion
+    #endregion
+
     void OnEnable()
     {
         // The UXML is already instantiated by the UIDocument component
@@ -31,8 +48,10 @@ public class MainMenuManager : MonoBehaviour
         startGame.clicked += StartGame;
         optionsButton.clicked += OpenOptions;
         optionsQuit.clicked += Quit;
-    
-       
+        _startButtonLocalisation.StringChanged += SetLocStartGame;
+        _optionsButtonLocalisation.StringChanged += SetLocContinue;
+        _resumeButtonLocalisation.StringChanged += SetLocOptions;
+        _quitButtonLocalisation.StringChanged += SetLocQuit;
     }
 
 
@@ -49,5 +68,27 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
     }
+    #endregion
+
+    #region Localization
+
+    public void SetLocStartGame(string newValue)
+    {
+        startGame.text = newValue;
+    }
+    public void SetLocContinue(string newValue)
+    {
+
+    }
+    public void SetLocOptions(string newValue)
+    {
+        optionsButton.text = newValue;
+    }
+
+    public void SetLocQuit( string newValue )
+    {
+        optionsQuit.text = newValue;
+    }
+
     #endregion
 }

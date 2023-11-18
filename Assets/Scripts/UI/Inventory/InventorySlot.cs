@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
+using UI.ItemSystem;
 
 public class InventorySlot : Slot
 {
@@ -22,8 +24,17 @@ public class InventorySlot : Slot
         base.OnDrop(eventData);
         Draggable draggableItem = _slot.GetComponent<Draggable>();
         RightClickHandler RCH = _slot.AddComponent<RightClickHandler>();
+        if( RCH.RightClicked == null)
+        {
+            RCH.RightClicked = new UnityEvent();
+        }
         RCH.RightClicked.AddListener( () => _optionsList.Show(true) );
         draggableItem._parentAfterDrag = transform;
+
+        ItemDisplayer itemDisplayer = draggableItem.
+            gameObject.GetComponent<ItemDisplayer>();
+        GameManager.Instance.PartyManager.Inventory.Add( 
+            itemDisplayer.Item );
     }
 
 
@@ -53,6 +64,8 @@ public class InventorySlot : Slot
 
     public override void UnSlot(Draggable draggable)
     {
+        ItemDisplayer itemDisplayer = draggable.gameObject.GetComponent<ItemDisplayer>();
+        GameManager.Instance.PartyManager.Inventory.Remove( itemDisplayer.Item );
         Destroy(_slot.GetComponent<RightClickHandler>());
     }
 
