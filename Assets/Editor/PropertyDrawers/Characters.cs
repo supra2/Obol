@@ -1,18 +1,25 @@
+using Core.FightSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class Characters : MonoBehaviour
+[CustomPropertyDrawer(typeof(Character))]
+public class CharactersDrawer : PropertyDrawer
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public override VisualElement CreatePropertyGUI(SerializedProperty property)
     {
-        
+        // Create property container element.
+        var container = new VisualElement();
+
+        var intelligenceField = new PropertyField ( property.FindPropertyRelative("_intelligence") );
+        var strengthField = new PropertyField(property.FindPropertyRelative("_strength"));
+
+        var constField = new PropertyField();
+        return container;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

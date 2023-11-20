@@ -11,9 +11,9 @@ scopes = {
 	"last_search.B655092D" = "st:sword"
 	"OpenInspectorPreview.B655092D" = "0"
 	"currentGroup.B655092D" = "all"
-	"picker_window_position_offset.45F317DD" = "-479;64;320;550"
-	"picker_search_text.45F317DD" = ""
-	"last_search.45F317DD" = ""
+	"picker_window_position_offset.45F317DD" = "-479;63.99999;320;550"
+	"picker_search_text.45F317DD" = "locali "
+	"last_search.45F317DD" = "locali "
 	"OpenInspectorPreview.45F317DD" = "0"
 	"currentGroup.45F317DD" = "all"
 }
@@ -71,6 +71,11 @@ providers = {
 	profilermarkers = {
 		active = false
 		priority = 100
+		defaultAction = null
+	}
+	presets_provider = {
+		active = false
+		priority = -10
 		defaultAction = null
 	}
 }
