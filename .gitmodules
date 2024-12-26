@@ -1,0 +1,3 @@
+[submodule "UniTask"]
+	path = UniTask
+	url = https://github.com/Cysharp/UniTask.git
