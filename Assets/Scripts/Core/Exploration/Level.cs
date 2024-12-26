@@ -68,6 +68,7 @@ namespace Core.Exploration
         public ExplorationEvent StartingEvent => _startingEvent;
 
         public Tile StartingTile => _startingTile;
+
         #endregion
 
         #region Methods
@@ -87,14 +88,11 @@ namespace Core.Exploration
         public void PlaceStartingTile(Vector2 position, Tile tile,
                                         GridView gridview)
         {
-
             TileDisplayer instance = gridview.CreateTile(tile);
             instance.Position = position;
             //_tileDisplayer.Add(instance);
-            _tileDisplayer.AddVertex(
-                new Vertex<TileDisplayer>(instance) );
+            _tileDisplayer.AddVertex(new Vertex<TileDisplayer>(instance) );
             gridview.PlaceTileVisible(instance);
-
         }
 
         //--------------------------------------------------------
@@ -160,6 +158,7 @@ namespace Core.Exploration
                 _currentTileDisplayer.Event.Reveal();
             }
             _currentTileDisplayer.Event?.Enter(movementDirection);
+
             Explore(_currentTileDisplayer, gridview, explorationDeck);
         }
 
@@ -262,7 +261,7 @@ namespace Core.Exploration
         //--------------------------------------------------------
 
         /// <summary>
-        /// Place random tiles at ppsition respecting a set of contraints
+        /// Place random tiles at position respecting a set of contraints
         /// defined by a tuble of direction ant boolean indicating a connection or a block constraints
         /// </summary>
         /// <param name="gridview"></param>
@@ -270,7 +269,6 @@ namespace Core.Exploration
         private void PlaceRandomTileAtPosition(GridView gridview,
             List<Tuple<Direction, bool>> constraints,Vector2 posi,List<TileDisplayer> displayer)
         {
-
             List<Tile> tiles = gridview.TileManager.GetListOfTiles(constraints);
             int randomId = SeedManager.NextInt(0, tiles.Count);
             Tile PickedTile = tiles[randomId];
@@ -298,7 +296,7 @@ namespace Core.Exploration
         //--------------------------------------------------------
 
         /// <summary>
-        /// tile visible
+        ///Tile visible
         /// </summary>
         /// <param name="tile"></param>
         /// <returns></returns>

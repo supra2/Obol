@@ -1,14 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="HourDisplay" src="project://database/Assets/UI%20Toolkit/TestUIDocument/ExplorationUI/HourDisplay.uxml?fileID=9197481963319205126&amp;guid=f395d399c5c369444a946cfeab7a03da&amp;type=3#HourDisplay" />
     <ui:Template name="CardUI" src="project://database/Assets/UI%20Toolkit/CardUI.uxml?fileID=9197481963319205126&amp;guid=4da4022c71fa13b429452f1b7688d560&amp;type=3#CardUI" />
-    <ui:Template name="HourDisplay" src="project://database/Assets/UI%20Toolkit/HourDisplay.uxml?fileID=9197481963319205126&amp;guid=c05ddcbde4fa8d147a339efe907c68ad&amp;type=3#HourDisplay" />
-    <ui:VisualElement name="UpperMenu" style="flex-grow: 1; background-color: rgba(136, 139, 146, 0.87); height: 0; min-height: 5%; min-width: auto; max-height: 5%; flex-direction: row-reverse; padding-left: 10px; padding-top: 15px;">
-        <ui:Button text="Button" display-tooltip-when-elided="true" name="Button" style="flex-direction: row-reverse; max-width: 10px; max-height: 10px; min-width: 3px; justify-content: flex-start; background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;); background-color: rgba(0, 0, 0, 0); font-size: 1px; color: rgba(27, 27, 27, 0);">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;);" />
+    <ui:VisualElement name="UpperMenu" style="flex-grow: 1; background-color: rgba(136, 139, 146, 0.87); height: 100px; min-height: 5%; min-width: auto; max-height: 10%; flex-direction: row; padding-left: 50px; padding-top: 0; justify-content: flex-start; align-self: auto; align-items: stretch; flex-wrap: nowrap; overflow: visible; padding-bottom: 50px;">
+        <ui:Instance template="HourDisplay" style="flex-direction: row; flex-grow: 1; align-self: center;" />
+        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="foodlabel" style="flex-direction: row; -unity-text-align: middle-center; white-space: nowrap; align-self: center;" />
+        <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="Button" style="flex-direction: row; max-width: 50px; max-height: 50px; min-width: 3px; justify-content: flex-start; background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;); background-color: rgba(0, 0, 0, 0); font-size: 1px; color: rgba(27, 27, 27, 0); flex-grow: 1; align-self: center; width: 50px; height: 50px;">
+            <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Textures/UI/menuIcon.png?fileID=2800000&amp;guid=2b411ba1b9b8dc44d8e84b43a3929c01&amp;type=3#menuIcon&apos;); max-width: 100%; max-height: 100%;" />
         </ui:Button>
-        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="foodlabel" />
-        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="hour" />
-        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-        <ui:Instance template="HourDisplay" name="HourDisplay" />
     </ui:VisualElement>
     <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
         <ui:Button text="Button" display-tooltip-when-elided="true" name="UpArrow" class="ArrowButton" style="width: 100px; height: 100px; background-image: url(&apos;project://database/Assets/Textures/UI/Arrow.png?fileID=2800000&amp;guid=b1382c4317bde4848b4855b3292a0aac&amp;type=3#Arrow&apos;); -unity-background-scale-mode: scale-to-fit; background-color: rgba(255, 255, 255, 0); color: rgba(27, 27, 27, 0);" />

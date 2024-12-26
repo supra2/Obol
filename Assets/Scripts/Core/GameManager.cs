@@ -214,6 +214,7 @@ public class GameManager
     }
 
     //--------------------------------------------------------
+
     public void Save(string filename)
     {
 
@@ -236,7 +237,6 @@ public class GameManager
 
     }
 
-
     //--------------------------------------------------------
     #endregion
 
@@ -247,8 +247,7 @@ public class GameManager
         SceneManager.LoadScene( "ExplorationScene" );
         //ExplorationManager.Instance.ReturnToMap( );
     }
-    //--------------------------------------------------------
-
+    
     //--------------------------------------------------------
 
     public void WinFight() 
@@ -267,7 +266,7 @@ public class GameManager
     public void InitLootScene(Scene scene, LoadSceneMode mode)
     {
         LootWindow lootWindow = 
-            GameObject.FindObjectOfType<LootWindow>();
+            GameObject.FindFirstObjectByType<LootWindow>();
         lootWindow.InitLoot( _vars.Adversaires );
         SceneManager.sceneLoaded -= InitLootScene;
     }

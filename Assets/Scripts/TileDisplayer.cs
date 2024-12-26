@@ -77,6 +77,24 @@ public class TileDisplayer : MonoBehaviour
 
     #endregion
 
+    #region Event
+    /// <summary>
+    /// TileEvent
+    /// </summary>
+    /// <param name="displayer"></param>
+    public delegate void TileEvent(TileDisplayer displayer);
+
+    /// <summary>
+    /// Called when the tile becomeVisible
+    /// </summary>
+    public TileEvent TileShownEvent;
+
+    /// <summary>
+    /// Called when the tile is hidden after being visible
+    /// </summary>
+    public TileEvent TileHiddenEvent;
+    #endregion
+
     #region Enum
 
     public enum VisibilityMode

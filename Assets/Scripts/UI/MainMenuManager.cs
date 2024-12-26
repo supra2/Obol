@@ -17,6 +17,8 @@ public class MainMenuManager : MonoBehaviour
     protected LocalizedString _resumeButtonLocalisation;
     [SerializeField]
     protected LocalizedString _quitButtonLocalisation;
+    [SerializeField]
+    protected Animator _animatorBalance;
     #endregion
     #region Hidden
     protected Button startGame;
@@ -48,9 +50,11 @@ public class MainMenuManager : MonoBehaviour
         startGame.clicked += StartGame;
         optionsButton.clicked += OpenOptions;
         optionsQuit.clicked += Quit;
+        startGame.RegisterCallback<MouseOverEvent>((e) => { ResetTriggers();  _animatorBalance.SetTrigger("pos3"); });
+        optionsButton.RegisterCallback<MouseOverEvent>((e) => { ResetTriggers();  _animatorBalance.SetTrigger("pos2"); });
+        optionsQuit.RegisterCallback<MouseOverEvent>((e) => { ResetTriggers(); _animatorBalance.SetTrigger("pos1"); });
         _startButtonLocalisation.StringChanged += SetLocStartGame;
-        _optionsButtonLocalisation.StringChanged += SetLocContinue;
-        _resumeButtonLocalisation.StringChanged += SetLocOptions;
+        _optionsButtonLocalisation.StringChanged += SetLocOptions;
         _quitButtonLocalisation.StringChanged += SetLocQuit;
     }
 
@@ -76,18 +80,27 @@ public class MainMenuManager : MonoBehaviour
     {
         startGame.text = newValue;
     }
-    public void SetLocContinue(string newValue)
-    {
 
-    }
     public void SetLocOptions(string newValue)
     {
         optionsButton.text = newValue;
     }
 
-    public void SetLocQuit( string newValue )
+    public void SetLocQuit(string newValue)
     {
         optionsQuit.text = newValue;
+    }
+
+    #endregion
+
+    #region Animation
+
+    protected void ResetTriggers()
+    {
+        for (int i = 1; i <= 3; i++)
+        {
+            _animatorBalance.ResetTrigger($"pos{i}");
+        }
     }
 
     #endregion

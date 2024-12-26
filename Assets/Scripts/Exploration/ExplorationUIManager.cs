@@ -26,7 +26,10 @@ public class ExplorationUIManager : MonoBehaviour
     protected Label _foodLabel;
     protected Label _hour;
     protected UICardDisplayer _cardDisplayer;
-    protected Gradient _gradient;
+    protected VisualElement _gradient1;
+    protected VisualElement _gradient2;
+    protected VisualElement _logoSun;
+    protected VisualElement _logoMoon;
     #endregion
     #endregion
 
@@ -58,7 +61,10 @@ public class ExplorationUIManager : MonoBehaviour
         _rightArrow = root.Q<Button>("RightArrow");
         _leftArrow = root.Q<Button>("LeftArrow");
         _foodLabel = root.Q<Label>("foodlabel");
-        _gradient = root.Q<Gradient>("GradientBackground");
+        _gradient1 = root.Q<VisualElement>("gradient1");
+        _gradient2 = root.Q<VisualElement>("gradient2");
+        _logoSun = root.Q<VisualElement>("logosun");
+        _logoMoon = root.Q<VisualElement>("logomoon");
         _cardDisplayer = new UICardDisplayer( root.Q<VisualElement>("CardUI"));
          _hour = root.Q<Label>("hour");
         _upArrow.clicked +=() => _directionButtonClicked?.Invoke(0);
@@ -101,6 +107,7 @@ public class ExplorationUIManager : MonoBehaviour
                     break;
             }
         }
+
     }
 
     protected void ShowEvent(ExplorationEvent EEvent)
@@ -111,7 +118,7 @@ public class ExplorationUIManager : MonoBehaviour
 
     protected void HourChanged( float newhour)
     {
-        _hour.text = string.Format("{0:hhmm}",newhour);
+        ;
     }
 
     protected void FoodChanged(int foodchanged)
@@ -128,20 +135,23 @@ public class ExplorationUIManager : MonoBehaviour
         }
     }
 
-    public void HourChanged(int newHour)
+    public void HourChanged(int newHour,int oldHour)
     {
-        int starthour = newHour - 6;
-        if( starthour<0)
+        if (newHour != oldHour)
         {
-            starthour += 24;
+            _gradient1.style.left = -935 + (newHour / 24) * 935;
+                _gradient2.style.left = 138 + (newHour / 24) * 935;
         }
-        _gradient.LeftColor = GetColor(starthour);
-        int endhour = newHour + 6;
-        if (endhour > 24)
+        if( newHour <= 6 || newHour >= 19 )
         {
-            endhour -= 24;
+            _logoMoon.style.opacity = 1;
+            _logoSun.style.opacity = 0;
         }
-        _gradient.RightColor = GetColor(endhour);
+        else
+        {
+            _logoMoon.style.opacity = 0;
+            _logoSun.style.opacity = 1;
+        }
     }
 
     protected Color GetColor(int hour)

@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class RightClickHandler : MonoBehaviour,IPointerDownHandler, IPointerUpHandler
 {
+
     #region Members
     [SerializeField]
     protected float _timeRightClickMobile=2.0F;
@@ -18,7 +19,6 @@ public class RightClickHandler : MonoBehaviour,IPointerDownHandler, IPointerUpHa
     #region Event
     public UnityEvent RightClicked;
     #endregion
-
 
     #region Public Method
     public void OnPointerDown(PointerEventData eventData)
@@ -42,7 +42,6 @@ public class RightClickHandler : MonoBehaviour,IPointerDownHandler, IPointerUpHa
 
     public void Update()
     {
-
 #if !UNITY_IOS && !UNITY_ANDROID
         if (Input.GetMouseButtonDown(1))
         {
@@ -52,4 +51,5 @@ public class RightClickHandler : MonoBehaviour,IPointerDownHandler, IPointerUpHa
     }
 
 #endregion
+
 }

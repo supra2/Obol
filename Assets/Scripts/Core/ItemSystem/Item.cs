@@ -15,6 +15,8 @@ public class Item : ScriptableObject
 
     #region Members
     #region Item
+     [SerializeField]
+    protected Guid _cardID=Guid.NewGuid();
     [SerializeField]
     protected int _value;
     [SerializeField]

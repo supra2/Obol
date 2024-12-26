@@ -21,14 +21,14 @@ public class TimeManager : MonoBehaviour
         set
         {
             if ( _currentTimeHour != value)
-                OnHourChanged?.Invoke(value);
+                OnHourChanged?.Invoke(value, _currentTimeHour);
            _currentTimeHour = value;
         }
     }
     #endregion
     #region Event
 
-    public UnityIntEvent OnHourChanged;
+    public UnityDoubleIntEvent OnHourChanged;
 
 
     #endregion 

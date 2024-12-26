@@ -15,8 +15,7 @@ namespace Core.Items
 
         #region Members
         #region Visible
-        [SerializeField]
-        protected int _cardID;
+        
         #endregion
         #endregion
 

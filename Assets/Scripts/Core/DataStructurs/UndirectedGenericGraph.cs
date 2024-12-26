@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Implementation of a generic, unweighted, undirected graph
@@ -48,21 +49,47 @@ public class UndirectedGenericGraph<T>: ISerializationCallbackReceiver
         return AdjacencyMatrices.ContainsKey(vertex);
     }
 
-    public void DepthFirstSearch(Vertex<T> root)
+
+    /// <summary>
+    /// Reccursive search depth first
+    /// </summary>
+    /// <param name="root"></param>
+    public List<Vertex<T>> RDepthFirstSearch(Vertex<T> root,Vertex<T> destination)
     {
-        ResetVertex();
-        if (!root.IsVisited)
-        {
-            root.Visit();
-
-            foreach (Vertex<T> neighbor in root.Neighbors)
-            {
-                DepthFirstSearch(neighbor);
-            }
-
-        }
+       ResetVertex();
+       return DepthFirstSearch( destination,new List<Vertex<T>>() { root });
     }
 
+    protected List<Vertex<T>> DepthFirstSearch( Vertex<T> destination,List<Vertex<T>> path )
+    {
+        var last = path[path.Count - 1];
+        if (!last.IsVisited)
+        {
+            last.Visit();
+            if(destination == last)
+            {
+                path.Add(last);
+                return path;
+            }
+            foreach (Vertex<T> neighbor in last.Neighbors)
+            {
+                var newPath = new List<Vertex<T>>(path);
+                newPath.Add(neighbor);
+                var resultpath = DepthFirstSearch(neighbor, newPath);
+                if(resultpath != null)
+                {
+                    return resultpath;
+                }
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// BFS search in an undirected graph implementation
+    /// Non reccursive based on a queue
+    /// </summary>
+    /// <param name="root"> Starting Vertex</param>
     public void BreadthFirstSearch(Vertex<T> root)
     {
         ResetVertex();
@@ -85,9 +112,10 @@ public class UndirectedGenericGraph<T>: ISerializationCallbackReceiver
                 }
             }
         }
-
     }
 
+
+    // remove visited flags on vertex 
     protected  void ResetVertex()
     {
         foreach(Vertex<T> vertex in Vertices)
@@ -111,7 +139,6 @@ public class UndirectedGenericGraph<T>: ISerializationCallbackReceiver
         }
     }
 
-
     public void AddEdge(Vertex<T> from, Vertex<T> to)
     {
         if(!from.Neighbors.Contains(to))
@@ -132,6 +159,11 @@ public class UndirectedGenericGraph<T>: ISerializationCallbackReceiver
     public void RemoveEdge(Vertex<T> from, Vertex<T> vertex)
     {
         from.Neighbors.Remove(vertex);
+    }
+
+    public int Distance(Vertex<T> v1, Vertex<T> v2)
+    {
+        return RDepthFirstSearch(v1,v2).Count;
     }
 
 }

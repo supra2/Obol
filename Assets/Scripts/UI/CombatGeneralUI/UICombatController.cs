@@ -14,6 +14,12 @@ public class UnityIntEvent:UnityEvent<int>
 
 }
 
+[Serializable]
+public class UnityDoubleIntEvent : UnityEvent<int,int>
+{
+
+}
+
 public class UICombatController : Singleton<UICombatController>
 {
 

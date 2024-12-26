@@ -19,7 +19,7 @@ public class Singleton<T> : MonoBehaviour where T:UnityEngine.MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<T>();
+                _instance = FindFirstObjectByType<T>();
             }
             if( _instance == null)
             {

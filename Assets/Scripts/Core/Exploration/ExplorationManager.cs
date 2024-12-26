@@ -40,6 +40,11 @@ namespace Core.Exploration
         /// </summary>
         [SerializeField]
         protected PartyPion _pion;
+        /// <summary>
+        /// FogMask
+        /// </summary>
+        [SerializeField]
+        protected SpriteMask _fogMask;
         #endregion
         #region Hidden
         protected Level _currentLevel;
@@ -63,6 +68,7 @@ namespace Core.Exploration
         //--------------------------------------------------------
 
         public GridView GridView => _gridview;
+
         //--------------------------------------------------------
 
         public Vector2 PlayerPosition
@@ -92,6 +98,9 @@ namespace Core.Exploration
         #region Event
         //--------------------------------------------------------
 
+        /// <summary>
+        /// Unity Event Position : 
+        /// </summary>
         public UnityEventPosition OnPlayerMoved;
 
         //--------------------------------------------------------
@@ -103,8 +112,8 @@ namespace Core.Exploration
         /// <summary>
         ///  Initialise Exploration Manager
         /// </summary>
-        /// <param name="levelToExplore"></param>
-        public void Init(Level levelToExplore)  
+        /// <param name="levelToExplore"> Level Explored </param>
+        public void Init(Level levelToExplore)
         {
 
             _tileManager.Init();
@@ -114,6 +123,8 @@ namespace Core.Exploration
             _timeManager.SetTime(0);
 
             _currentLevel = levelToExplore;
+
+            OnPlayerMoved?.AddListener( UpdateFog);
 
             if ( _currentLevel.EventList != null )
             {
@@ -156,9 +167,8 @@ namespace Core.Exploration
         }
 
         //--------------------------------------------------------
-
-        public void Load( Level levelToExplore , 
-                          Vector2 saved_PlayerPosition )
+        
+        public void Load( Level levelToExplore, Vector2 saved_PlayerPosition )
         {
 
             _lastDirectionWalked = Direction.None;
@@ -213,6 +223,14 @@ namespace Core.Exploration
                                     _lastDirectionWalked,
                                     _gridview,
                                     _explorationEvents);
+            
+        }
+
+        //--------------------------------------------------------
+
+        public void UpdateFog(Vector2 playerPosition)
+        {
+            
         }
 
         //--------------------------------------------------------
