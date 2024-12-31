@@ -1,4 +1,5 @@
 using Core.FightSystem;
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UI.ItemSystem;
@@ -182,10 +183,10 @@ public class CombatManager : Singleton<CombatManager>
 
     //---------------------------------------------------
 
-    public void StartNewRound()
+    public async UniTask StartNewRound()
     {
         _vars.NbRound++;
-        UpdateOrder();
+        await UpdateOrder();
     }
 
     //---------------------------------------------------
@@ -263,7 +264,7 @@ public class CombatManager : Singleton<CombatManager>
     /// <summary>
     ///  Update Orders 
     /// </summary>
-    protected void UpdateOrder()
+    protected async UniTask UpdateOrder()
     { 
         int i = 0;
         for (int k = 5 ; k >= 0 ; k--)

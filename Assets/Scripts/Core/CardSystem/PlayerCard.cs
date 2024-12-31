@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -149,7 +150,7 @@ namespace Core.CardSystem
                 || (_dynamicStaminaCost && staminaAvailable >= 1);
         }
 
-        public virtual void Play()
+        public virtual async void Play()
         {
             if( CanPayStaminaCost() )
             {
@@ -165,13 +166,9 @@ namespace Core.CardSystem
                 }
                 if (_targetMonster )
                 {
-                    UICombatController.Instance.SelectAdversaire(
-                    Resolve);
+                    await UICombatController.Instance.SelectAdversaire(CancellationToken.None);
                 }
-                else
-                {
-                   Resolve ();
-                }
+                Resolve ();
             }
             else
             {

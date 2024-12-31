@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,7 @@ namespace Core.FightSystem.CombatFlow
 {
     public interface ICommand
     {
-        public void Execute();
-
-        public bool IsCommandEnded();
+        public UniTask Execute();
 
     }
 }

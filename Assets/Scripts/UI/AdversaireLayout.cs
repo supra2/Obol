@@ -6,6 +6,8 @@ using UnityEngine.Events;
 using static AdversaireDisplayer;
 using System;
 using Core.FightSystem.AttackSystem;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 public class AdversaireEvent : UnityEvent<AdversaireDisplayer>
 { 
@@ -41,6 +43,7 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
     #region Hidden
     protected List<AdversaireDisplayer> _displayers;
     protected Action<ITargetable> _callback;
+    protected UniTaskCompletionSource<ITargetable> _taskCompletionSource;
     #endregion
     #endregion
 
@@ -81,32 +84,43 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
 
     //-------------------------------------------------------
 
-    public void SelectAdversaireMode( 
-        Action<ITargetable> callback )
+    public async UniTask<ITargetable> SelectAdversaire(CancellationToken token)
     {
+
+        if( _taskCompletionSource != null)
+        {
+            if (!_taskCompletionSource.TrySetCanceled())
+            {
+                Debug.Log(" failed to cancel Adversary Tasks");
+            }
+        }
         foreach (AdversaireDisplayer advDisplayer 
             in _displayers)
         {
             advDisplayer.SetMode(
                 AdversaireDisplayerMode.Selection);
-            _callback = callback;
             advDisplayer._onAdversairePicked.AddListener(
                 AdversarySelected);
-            advDisplayer._onAdversairePicked.AddListener(
-                StopSelectingAdversaries);
         }
         _adversaireScreen.gameObject.SetActive(true);
+         var adversaire = await _taskCompletionSource.Task;
+        StopSelectingAdversaries();
+        return adversaire;
+
     }
 
     //-------------------------------------------------------
 
     /// <summary>
-    /// 
+    /// Character 
     /// </summary>
     /// <param name="character"></param>
-    public void AdversarySelected( Character character )
+    public void AdversarySelected(Character character)
     {
-        _callback?.Invoke((ITargetable)character);
+      if(!_taskCompletionSource.TrySetResult(character))
+      {
+            Debug.LogError("not able to set result for adversaire fetch task");
+      }
     }
 
     //-------------------------------------------------------
@@ -115,14 +129,12 @@ public class AdversaireLayout : MonoBehaviour,IEnumerable<Core.FightSystem.Adver
     /// Stop Selecting Adversaries
     /// </summary>
     /// <param name="character"></param>
-    public void StopSelectingAdversaries( Character character )
+    public void StopSelectingAdversaries()
     {
         foreach (AdversaireDisplayer advDisplayer in _displayers)
         {
             advDisplayer.SetMode( AdversaireDisplayerMode.Neutral );
             advDisplayer._onAdversairePicked.RemoveListener(AdversarySelected);
-            advDisplayer._onAdversairePicked.RemoveListener(
-                StopSelectingAdversaries);
         }
 
         _adversaireScreen.gameObject.SetActive(false);

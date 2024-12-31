@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Splines;
+using Cysharp.Threading.Tasks;
 
 
 public class HandDisplayer : MonoBehaviour
@@ -15,6 +16,7 @@ public class HandDisplayer : MonoBehaviour
     #region Visible
     [SerializeField]
     protected Core.FightSystem.PlayableCharacter character;
+    protected UniTaskCompletionSource<List<PlayerCard>> taskCompletionSource;
     [SerializeField]
     protected List<CardDisplayer> _cardDisplayers;
     [SerializeField]
@@ -163,18 +165,24 @@ public class HandDisplayer : MonoBehaviour
     /// Discard i card from hand
     /// </summary>
     /// <param name="nbcard">number of card to select </param>
-    public void DiscardCard(int nbcard, Action<List<ICard>> Discarded)
+    public async UniTask DiscardCard(int nbcard)
+
     {
         //first of all check if the nbcard not superior to the total of 
         //card in hands; elsewhere the discard autoresolve by emptying hand automtically
         // Todo: UI INSTRUCTION DISCLAIMING THE REMAINING CARD TO PICK
+
         _selection = new CardDisplayer[nbcard];
         _selectionSize = nbcard;
+        
         foreach (CardDisplayer cd in _cardDisplayers)
         {
             cd.ChangeMode(CardDisplayer.CardMode.Pickable,
                 SelectCard, DeselectCard);
         }
+       var cardListDiscarded = await taskCompletionSource.Task;
+
+
     }
 
     //_______________________________________________________
@@ -199,7 +207,7 @@ public class HandDisplayer : MonoBehaviour
                     displayer.CardPicked.RemoveListener(SelectCard);
                     displayer.CardUnpicked.RemoveListener(DeselectCard);
                 }
-                _characterDisplayer.Discarded(cards);
+                taskCompletionSource.TrySetResult(cards);
             }
         }
     }

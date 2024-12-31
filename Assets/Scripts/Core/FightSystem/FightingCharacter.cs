@@ -1,6 +1,7 @@
 using Core.CardSystem;
 using Core.FightSystem;
 using Core.FightSystem.AttackSystem;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -180,7 +181,7 @@ public class FightingCharacter : MonoBehaviour
 
     #region Action Implementation
     //--------------------------------------------------------
-    public void Draw(int nbcard, Action callBack)
+    public async UniTask Draw(int nbcard, Action callBack)
     {
         List<PlayerCard> drawnCard = new List<PlayerCard>();
         for (int i = 0; i < nbcard; i++)
@@ -189,17 +190,17 @@ public class FightingCharacter : MonoBehaviour
             //_hand.Add(drawncard);
             OnCardDrawn?.Invoke(drawncard);
         }
-        StartCoroutine(WaitForStartDrawing(callBack));
+       await WaitForStartDrawing(callBack);
     }
 
     //--------------------------------------------------------
 
-    public IEnumerator WaitForStartDrawing(Action callBack)
+    public async UniTask WaitForStartDrawing(Action callBack)
     {
         HandDisplayer handDisplayer = GetComponentInChildren<HandDisplayer>();
         while (handDisplayer.Drawing)
         {
-            yield return new WaitForEndOfFrame();
+            await UniTask.NextFrame();
         }
         callBack?.Invoke();
     }

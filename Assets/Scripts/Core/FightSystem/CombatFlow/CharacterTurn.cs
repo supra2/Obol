@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,11 +38,11 @@ namespace Core.FightSystem.CombatFlow
 
         #region ICommand Interface Implementation
 
-        public void Execute()
+        public async UniTask Execute()
         {
             if ( _nbTurn != 0 )
             {
-                _character.Draw( 1 , ContinueTurn );
+                await _character.Draw( 1 , ContinueTurn );
             }
             else
             {
@@ -60,11 +61,6 @@ namespace Core.FightSystem.CombatFlow
             _character.Character.Recover();
             _character.OnTurnEnded.RemoveListener(TurnEnded);
             _turnEnded = true;
-        }
-
-        public bool IsCommandEnded()
-        {
-            return _turnEnded;
         }
         
         #endregion

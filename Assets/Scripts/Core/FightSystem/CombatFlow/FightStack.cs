@@ -4,10 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
+using Cysharp.Threading.Tasks;
 
 public class FightStack : MonoBehaviour
 {
-
     #region Members
     /// <summary>
     /// Stack: command
@@ -24,7 +24,7 @@ public class FightStack : MonoBehaviour
     public void Awake()
     {
         _commandStack = new List<ICommand>();
-        StartCoroutine(Run());
+        Run();
     }
 
     #endregion
@@ -32,6 +32,10 @@ public class FightStack : MonoBehaviour
     #region Public Methods
     //__________________________________________________________________
 
+    /// <summary>
+    /// Pile a command on top 
+    /// </summary>
+    /// <param name="command"></param>
     public void PileOnTop(ICommand command)
     {
         _commandStack.Add(command);
@@ -65,23 +69,23 @@ public class FightStack : MonoBehaviour
 
     //__________________________________________________________________
 
-    public void DepileAction( )
+    public async UniTask DepileAction( )
     {
         _command = _commandStack[0];
         _commandStack.RemoveAt(0);
-        _command.Execute();
+        await _command.Execute();
     }
 
     //__________________________________________________________________
 
-    public IEnumerator Run()
+    public async UniTaskVoid Run()
     {
         while(true)
         {
-            yield return new WaitForEndOfFrame();
-            if((_command == null || _command.IsCommandEnded()) && _commandStack.Count> 0 )
+            await UniTask.NextFrame();
+            if (_command == null && _commandStack.Count> 0 )
             {
-                DepileAction();
+               await DepileAction();
             }
         }
     }

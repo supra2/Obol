@@ -1,9 +1,11 @@
 using Core.CardSystem;
 using Core.FightSystem;
 using Core.FightSystem.AttackSystem;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -84,9 +86,9 @@ public class UICombatController : Singleton<UICombatController>
 
     }
 
-    public void SelectAdversaire( Action<ITargetable> callback )
+    public async UniTask<ITargetable> SelectAdversaire(CancellationToken token)
     {
-        _adversaireLayout.SelectAdversaireMode( callback   );
+        return await _adversaireLayout.SelectAdversaire(token);
     }
 
     public void CancelAttack()

@@ -1,4 +1,5 @@
 using Core.FightSystem.CombatFlow;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ public class ActionCommand : ICommand
         _action = action;
     }
 
-    public void Execute()
+    public async UniTask Execute()
     {
         _action?.Invoke();
         executed = true;

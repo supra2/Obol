@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Core.FightSystem.CombatFlow
 
         #region Interface
 
-        public void Execute()
+        public async UniTask Execute()
         {
             List<Attack> AvailableAttack = new List<Attack>();
             _adversaire.ApplyAlteration(true);

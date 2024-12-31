@@ -1,8 +1,10 @@
 ﻿using Core.FightSystem.AttackSystem;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -35,15 +37,9 @@ namespace Core.FightSystem.CombatFlow
         #endregion
 
         #region Public Methods
-        public void Execute()
+        public async UniTask Execute()
         {
-            UICombatController.Instance.SelectAdversaire(
-                OnAdversaireSelected);
-        }
-        //-------------------------------------------------------
-        public bool IsCommandEnded()
-        {
-            return _ended;
+           var target =  await UICombatController.Instance.SelectAdversaire(CancellationToken.None);
         }
         //-------------------------------------------------------
         protected void OnAdversaireSelected(ITargetable targetable)

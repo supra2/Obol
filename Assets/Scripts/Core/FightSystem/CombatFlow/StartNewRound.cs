@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,15 +9,11 @@ namespace Core.FightSystem.CombatFlow
 {
     public class StartNewRound : ICommand
     {
-        void ICommand.Execute()
+        UniTask ICommand.Execute()
         {
-            CombatManager.Instance.StartNewRound();
+            return CombatManager.Instance.StartNewRound();
         }
 
-        bool ICommand.IsCommandEnded()
-        {
-            return true;
-        }
     }
 }
 

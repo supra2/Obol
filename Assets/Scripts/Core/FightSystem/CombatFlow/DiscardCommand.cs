@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.FightSystem.CombatFlow
 {
@@ -16,10 +13,9 @@ namespace Core.FightSystem.CombatFlow
         /// </summary>
         protected HandDisplayer _displayer;
         /// <summary>
-        /// 
+        /// nb card to discard 
         /// </summary>
         protected int _nbcard;
-        protected bool _discarded;
         #endregion
         #endregion
 
@@ -28,29 +24,20 @@ namespace Core.FightSystem.CombatFlow
         public DiscardCommand ( HandDisplayer displayer , int nbcard )
         {
             _nbcard = nbcard;
-            _displayer.DiscardCard(_nbcard, Discarded);
         }
 
         #endregion
 
         #region Interface implementation
 
-        public void Execute()
+        public async UniTask Execute()
         {
-            _displayer.DiscardCard( _nbcard , Discarded );
+            await _displayer.DiscardCard( _nbcard );
         }
 
-        public bool IsCommandEnded()
-        {
-            return _discarded;
-        }
 
         #endregion
 
-        protected void Discarded(List<ICard> discarded)
-        {
-            _discarded = true;
-        }
 
     }
 }
