@@ -62,6 +62,12 @@ public class GridView : MonoBehaviour
     #region Public Methods
     //-----------------------------------------------------------
 
+
+    /// <summary>
+    /// create new tile to match 
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
     public TileDisplayer CreateTile(Tile tile)
     {
         TileDisplayer tiledisplayer =

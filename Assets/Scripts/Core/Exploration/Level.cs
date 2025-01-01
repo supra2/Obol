@@ -90,7 +90,6 @@ namespace Core.Exploration
         {
             TileDisplayer instance = gridview.CreateTile(tile);
             instance.Position = position;
-            //_tileDisplayer.Add(instance);
             _tileDisplayer.AddVertex(new Vertex<TileDisplayer>(instance) );
             gridview.PlaceTileVisible(instance);
         }
@@ -202,7 +201,7 @@ namespace Core.Exploration
                         newposition == X.Position) )
                     { 
                         ExplorationEvent events = explorationDeck.Draw();
-                        PlaceConnectedTiles(newposition, gridview);
+                        PlaceAdjacentTilesRecursively(newposition, gridview, new List<TileDisplayer> { tiledisplayer }, GameManager.Instance.PartyManager.VisionRange);
                     }
                 }
             }
@@ -216,8 +215,8 @@ namespace Core.Exploration
         /// </summary>
         /// <param name="newposition"></param>
         /// <param name=""></param>
-        protected void PlaceConnectedTiles(Vector2 newposition
-            , GridView gridview)
+        protected void PlaceAdjacentTilesRecursively(Vector2 newposition
+            , GridView gridview, List<TileDisplayer> visited, int lightDistance)
         {
             List<Vector2> list = new List<Vector2>() {
                 new Vector2(0,-1) , new Vector2(0, 1) ,
@@ -225,13 +224,16 @@ namespace Core.Exploration
             List<Tuple<Direction, bool>> tuples = new List<Tuple<Direction, bool>>();
             List<TileDisplayer> neighbours = new List<TileDisplayer>();
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 9; i++)
             {
                 TileDisplayer tileDisplayer = gridview.Tiles.Find((X) =>
                 (newposition + list[i]) == X.Position);
                 neighbours.Add(tileDisplayer);
                 if (tileDisplayer != null)
                 {
+                    if (visited.Contains(tileDisplayer))
+                        return;
+
                     bool walkable;
                     switch ((Tile.Direction)(1 << i))
                     {
@@ -254,8 +256,32 @@ namespace Core.Exploration
                     }
                 }
             }
-
+            visited.AddRange(neighbours);
             PlaceRandomTileAtPosition(gridview, tuples, newposition, neighbours);
+            lightDistance--;
+            if(lightDistance > 0)
+            {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        var pos = newposition;
+                        switch ((Tile.Direction)(1 << i))
+                        {
+                            case Tile.Direction.Bottom:
+                                pos += Vector2.down;
+                                break;
+                            case Tile.Direction.Up:
+                                pos += Vector2.up;
+                                break;
+                            case Tile.Direction.Left:
+                                pos += Vector2.left;
+                                break;
+                            case Tile.Direction.Right:
+                                pos += Vector2.right;
+                                break;
+                        }
+                        PlaceAdjacentTilesRecursively(pos, gridview, visited, lightDistance);
+                    }
+                }
         }
 
         //--------------------------------------------------------

@@ -45,7 +45,7 @@ namespace Core.Exploration
                 {
                     ExplorationManager.Instance.GridView.PlaceTileHidden(td);
                 }
-                if ((i > 1))
+                if (i > 1)
                 {
                     td.Visibility = 
                         TileDisplayer.VisibilityMode.Hidden;
