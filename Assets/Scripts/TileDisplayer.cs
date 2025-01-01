@@ -1,8 +1,7 @@
 using Core.Exploration;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class TileDisplayer : MonoBehaviour
 {
 
@@ -47,8 +46,11 @@ public class TileDisplayer : MonoBehaviour
         }
         set
         {
-            _illustrationRenderer.sprite = value.Sprite;
-            _tile = value;
+            if (value != null)
+            {
+                _illustrationRenderer.sprite = value.Sprite;
+                _tile = value;
+            }
         }
 
     }

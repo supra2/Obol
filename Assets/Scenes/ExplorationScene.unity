@@ -207,21 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileDisplayer:
-  - {fileID: 11400000, guid: fb9448b861bd93248b5f35d78bf53284, type: 2}
-  - {fileID: 11400000, guid: 665f92cb33472f945bd172f392b65498, type: 2}
-  - {fileID: 11400000, guid: 5d9fff7421c16d74a95053e91f74d9ef, type: 2}
-  - {fileID: 11400000, guid: ec0a1a3514bca7f4396ec92be2f4907b, type: 2}
-  - {fileID: 11400000, guid: a54c5cbc83edd0c4e99783b6ce041f67, type: 2}
-  - {fileID: 11400000, guid: e136af061ad4ffa41abd75e301be2071, type: 2}
-  - {fileID: 11400000, guid: 842542871dd929a4496e7dc2d406d2ff, type: 2}
-  - {fileID: 11400000, guid: 190b77be11746af4b99530ad37c27e27, type: 2}
-  - {fileID: 11400000, guid: 9398ca9b4c016a942ac99dcf8e630fd9, type: 2}
-  - {fileID: 11400000, guid: 57a5a72e0a69d7a44b941f3ce3018586, type: 2}
-  - {fileID: 11400000, guid: 288b9c7b68f58f044975a6ae707c77d2, type: 2}
-  - {fileID: 11400000, guid: c1a1381188b999742b686c77ac8500e0, type: 2}
-  - {fileID: 11400000, guid: 7bef1c8b501962a4398e7cba5d63199e, type: 2}
-  - {fileID: 11400000, guid: 7d582e2a01dcdbd48857066a62a867d5, type: 2}
-  - {fileID: 11400000, guid: b3ddda5d74b395741a5464931096126f, type: 2}
+  - {fileID: 11400000, guid: c16154e911cb79241a35d2f12d79078d, type: 2}
   _prefabInstanciation: {fileID: 3111761872801088411}
 --- !u!65 &19008188
 BoxCollider:
